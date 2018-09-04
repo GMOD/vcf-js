@@ -9,5 +9,23 @@
     "email": "stevens.garrett.j@gmail.com",
     "url": "https://github.com/garrettjstevens"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "build": "babel src -d dist"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^2.6.2",
+    "jest": "^23.5.0",
+    "prettier": "^1.14.2"
+  },
+  "dependencies": {}
 }
