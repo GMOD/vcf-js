@@ -1,0 +1,13 @@
+{
+  "name": "vcf-js",
+  "version": "1.0.0",
+  "description": "High performance streaming VCF parser in pure JavaScript",
+  "main": "index.js",
+  "repository": "https://github.com/GMOD/vcf-js.git",
+  "author": {
+    "name": "Garrett Stevens",
+    "email": "stevens.garrett.j@gmail.com",
+    "url": "https://github.com/garrettjstevens"
+  },
+  "license": "MIT"
+}
