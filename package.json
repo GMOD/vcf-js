@@ -1,15 +1,25 @@
 {
-  "name": "vcf-js",
+  "name": "@gmod/vcf",
   "version": "1.0.0",
   "description": "High performance streaming VCF parser in pure JavaScript",
-  "main": "index.js",
-  "repository": "https://github.com/GMOD/vcf-js.git",
+  "main": "dist/index.js",
+  "repository": "github:GMOD/vcf-js",
   "author": {
     "name": "Garrett Stevens",
     "email": "stevens.garrett.j@gmail.com",
     "url": "https://github.com/garrettjstevens"
   },
   "license": "MIT",
+  "homepage": "https://github.com/GMOD/vcf-js#vcf-js",
+  "bugs": {
+    "url": "https://github.com/GMOD/vcf-js/issues"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=6"
+  },
   "scripts": {
     "test": "jest",
     "build": "babel src -d dist"
@@ -17,6 +27,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
+    "babel-jest": "^23.4.2",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.5.0",
@@ -25,7 +36,17 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^2.6.2",
     "jest": "^23.5.0",
-    "prettier": "^1.14.2"
+    "prettier": "^1.14.2",
+    "regenerator-runtime": "^0.12.1"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "keywords": [
+    "vcf",
+    "genomics",
+    "bionode",
+    "biojs"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
