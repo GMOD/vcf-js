@@ -22,7 +22,15 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "babel src -d dist"
+    "build": "babel src -d dist",
+    "watch": "npm-watch",
+    "lint": "eslint src test",
+    "coverage": "npm test -- --coverage"
+  },
+  "watch": {
+    "test": "{src,test}/*.js",
+    "lint": "{src,test}/*.js",
+    "build": "src"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -39,7 +47,9 @@
     "prettier": "^1.14.2",
     "regenerator-runtime": "^0.12.1"
   },
-  "dependencies": {},
+  "dependencies": {
+    "npm-watch": "^0.3.0"
+  },
   "keywords": [
     "vcf",
     "genomics",
