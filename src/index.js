@@ -1,3 +1,3 @@
-const HelloWorld = 'Hello, world! This is going to be a VCF parser!'
+const VCF = require('./parse')
 
-module.exports = { HelloWorld }
+module.exports = VCF
