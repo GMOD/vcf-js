@@ -20,6 +20,7 @@ class VCF {
         this.samples = fields.slice(9)
       }
     })
+    if (!this.samples) throw new Error('VCF does not have a header line')
   }
 
   parseLine(line) {
@@ -27,17 +28,20 @@ class VCF {
     const variant = {
       CHROM: fields[0],
       POS: Number(fields[1]),
-      ID: fields[2],
+      ID: fields[2] === '.' ? null : fields[2],
       REF: fields[3],
-      ALT: fields[4].split(','),
-      QUAL: Number(fields[5]),
-      FILTER: fields[6],
+      ALT: fields[4] === '.' ? null : fields[4].split(','),
+      QUAL: fields[5] === '.' ? null : Number(fields[5]),
+      FILTER: fields[6] === '.' ? null : fields[6],
     }
-    const info = fields[7].split(';').reduce((accumulator, currentValue) => {
-      const [key, val] = currentValue.split('=')
-      accumulator[key] = val === undefined ? null : val
-      return accumulator
-    }, {})
+    const info =
+      fields[7] === '.'
+        ? {}
+        : fields[7].split(';').reduce((accumulator, currentValue) => {
+            const [key, val] = currentValue.split('=')
+            accumulator[key] = val === undefined ? null : val
+            return accumulator
+          }, {})
     variant.INFO = info
     variant.SAMPLES = {}
     const formatKeys = fields[8] && fields[8].split(':')
