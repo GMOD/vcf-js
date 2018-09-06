@@ -40,15 +40,21 @@ The `variant` object returned by `parseLine()` would be
   QUAL: 100,
   FILTER: 'PASS',
   INFO: {
-    NS: 3,
-    DP: 14,
-    AF: 0.5,
+    NS: '3',
+    DP: '14',
+    AF: '0.5',
     DB: null,
     H2: null,
   },
-  HG00096: {
-    GT: '0|0',
-    AP: '0.000,0.000',
+  SAMPLES: {
+    HG00096: {
+      GT: '0|0',
+      AP: '0.000,0.000',
+    },
   },
 }
 ```
+
+The parser will try to use metadata from the header if present to convert INFO
+and FORMAT values to their proper type (int, float) or split them into an
+array if they represent multiple values.
