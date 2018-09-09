@@ -75,7 +75,7 @@ metadata. For example, a VCF with this header:
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
 ```
 
-Can access the metadata like this:
+you can access the metadata like this:
 
 ```javascript
 > console.log(this.getMetadata())
@@ -109,4 +109,11 @@ Can access the metadata like this:
 { Number: 1, Type: 'Integer', Description: 'Total Depth' }
 > console.log(this.getMetadata('INFO', 'DP', 'Number'))
 1
+```
+
+Samples are also available.
+
+```javascript
+> console.log(this.samples)
+[ 'HG00096' ]
 ```
