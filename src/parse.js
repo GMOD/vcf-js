@@ -4,6 +4,7 @@ class VCF {
     this.metadata = {
       INFO: this._vcfReservedInfoFields,
       FORMAT: this._vcfReservedGenotypeFields,
+      ALT: this._vcfReservedAltTypes,
     }
     headerLines.forEach(line => {
       if (!line.startsWith('#')) {
@@ -32,7 +33,7 @@ class VCF {
   _parseMetadata(line) {
     const [metaKey, metaVal] = line
       .trim()
-      .match(/^##(\w+)=(.*)/)
+      .match(/^##(.+?)=(.*)/)
       .slice(1, 3)
     if (metaVal.startsWith('<')) {
       if (!(metaKey in this.metadata)) {
@@ -60,7 +61,7 @@ class VCF {
   getMetadata(...args) {
     let last = this.metadata
     for (let i = 0; args.length; i += 1) {
-      if (args[i] && !args[i + 1]) return last[args[i]]
+      if (last[args[i]] && !last[args[i]][args[i + 1]]) return last[args[i]]
       last = last[args[i]]
     }
     return this.metadata
@@ -123,8 +124,14 @@ class VCF {
       ID: fields[2] === '.' ? null : fields[2].split(';'),
       REF: fields[3],
       ALT: fields[4] === '.' ? null : fields[4].split(','),
-      QUAL: fields[5] === '.' ? null : Number(fields[5]),
-      FILTER: fields[6] === '.' ? null : fields[6],
+      QUAL: fields[5] === '.' ? null : parseFloat(fields[5]),
+    }
+    if (fields[6] === '.') {
+      variant.FILTER = null
+    } else if (fields[6] === 'PASS') {
+      variant.FILTER = 'PASS'
+    } else {
+      variant.FILTER = fields[6].split(';')
     }
     const info = fields[7] === '.' ? {} : this._parseKeyValue(fields[7])
     Object.keys(info).forEach(key => {
@@ -156,9 +163,21 @@ class VCF {
     this.samples.forEach((sample, index) => {
       const sampleFormats = fields[9 + index]
         .split(':')
-        .reduce((accumulator, currentValue, currentIndex) => {
-          accumulator[formatKeys[currentIndex]] =
-            currentValue === ('' || undefined) ? null : currentValue
+        .reduce((accumulator, formatValue, formatIndex) => {
+          let thisValue =
+            formatValue === '' || formatValue === undefined ? null : formatValue
+          if (typeof thisValue === 'string') {
+            thisValue = thisValue.split(',')
+          }
+          const valueType = this.getMetadata(
+            'FORMAT',
+            formatKeys[formatIndex],
+            'Type',
+          )
+          if (valueType === 'Integer' || valueType === 'Float') {
+            thisValue = thisValue.map(val => Number(val))
+          }
+          accumulator[formatKeys[formatIndex]] = thisValue
           return accumulator
         }, {})
       variant.SAMPLES[sample] = sampleFormats
