@@ -1,6 +1,6 @@
 class VCF {
-  constructor(header) {
-    const headerLines = header.split(/[\r\n]+/).filter(line => line)
+  constructor(args) {
+    const headerLines = args.header.split(/[\r\n]+/).filter(line => line)
     this.metadata = {
       INFO: this._vcfReservedInfoFields,
       FORMAT: this._vcfReservedGenotypeFields,
