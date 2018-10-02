@@ -120,7 +120,7 @@ class VCF {
     const variant = {
       CHROM: fields[0],
       POS: Number(fields[1]),
-      ID: fields[2] === '.' ? null : fields[2],
+      ID: fields[2] === '.' ? null : fields[2].split(';'),
       REF: fields[3],
       ALT: fields[4] === '.' ? null : fields[4].split(','),
       QUAL: fields[5] === '.' ? null : Number(fields[5]),

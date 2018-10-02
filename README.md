@@ -36,7 +36,7 @@ The `variant` object returned by `parseLine()` would be
 {
   CHROM: 'contigA',
   POS: 3000,
-  ID: 'rs17883296',
+  ID: ['rs17883296'],
   REF: 'G',
   ALT: ['T', 'A'],
   QUAL: 100,
