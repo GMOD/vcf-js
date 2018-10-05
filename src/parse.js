@@ -14,19 +14,30 @@ class VCF {
     }
     headerLines.forEach(line => {
       if (!line.startsWith('#')) {
-        console.warn(`Bad line in header:\n${line}`)
+        throw new Error(`Bad line in header:\n${line}`)
       }
-      if (!line.startsWith('#CHROM')) {
+      if (line.startsWith('##')) {
         this._parseMetadata(line)
       } else if (line) {
         const fields = line.split('\t')
+        const thisHeader = fields.slice(0, 8)
+        const correctHeader = [
+          '#CHROM',
+          'POS',
+          'ID',
+          'REF',
+          'ALT',
+          'QUAL',
+          'FILTER',
+          'INFO',
+        ]
         if (fields.length < 8) {
           throw new Error(`VCF header missing columns:\n${line}`)
         } else if (fields.length === 9) {
           throw new Error(`VCF header has FORMAT but no samples:\n${line}`)
         } else if (
-          !fields.slice(0, 8) ===
-          ['#CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO']
+          thisHeader.length !== correctHeader.length ||
+          !thisHeader.every((value, index) => value === correctHeader[index])
         ) {
           throw new Error(`VCF column headers not correct:\n${line}`)
         }
