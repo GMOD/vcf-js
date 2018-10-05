@@ -214,33 +214,31 @@ class VCF {
     variant.SAMPLES = {}
     const formatKeys = fields[8] && fields[8].split(':')
     this.samples.forEach((sample, index) => {
-      const sampleFormats = fields[9 + index]
-        .split(':')
-        .reduce((accumulator, formatValue, formatIndex) => {
-          let thisValue =
-            formatValue === '' ||
-            formatValue === '.' ||
-            formatValue === undefined
-              ? null
-              : formatValue
-          if (typeof thisValue === 'string') {
-            thisValue = thisValue.split(',')
-          }
-          const valueType = this.getMetadata(
-            'FORMAT',
-            formatKeys[formatIndex],
-            'Type',
-          )
-          if (valueType === 'Integer' || (valueType === 'Float' && thisValue)) {
-            thisValue = thisValue.map(val => {
-              if (val === '.') return null
-              return Number(val)
-            })
-          }
-          accumulator[formatKeys[formatIndex]] = thisValue
-          return accumulator
-        }, {})
-      variant.SAMPLES[sample] = sampleFormats
+      variant.SAMPLES[sample] = {}
+      formatKeys.forEach(key => {
+        variant.SAMPLES[sample][key] = null
+      })
+      fields[9 + index].split(':').forEach((formatValue, formatIndex) => {
+        let thisValue =
+          formatValue === '' || formatValue === '.' || formatValue === undefined
+            ? null
+            : formatValue
+        if (typeof thisValue === 'string') {
+          thisValue = thisValue.split(',')
+        }
+        const valueType = this.getMetadata(
+          'FORMAT',
+          formatKeys[formatIndex],
+          'Type',
+        )
+        if (valueType === 'Integer' || (valueType === 'Float' && thisValue)) {
+          thisValue = thisValue.map(val => {
+            if (val === '.') return null
+            return Number(val)
+          })
+        }
+        variant.SAMPLES[sample][formatKeys[formatIndex]] = thisValue
+      }, {})
     })
     return variant
   }
