@@ -10,17 +10,24 @@ High performance streaming VCF parser in pure JavaScript
 
 ## Usage
 
+This module is best used when combined with some easy way of retrieving the
+header and individual lines from a VCF, like the @gmod/tabix module.
+
 ```javascript
 const { TabixIndexedFile } = require('@gmod/tabix')
-const { VCF } = require('@gmod/vcf')
+const VCF = require('@gmod/vcf')
 
-const tbiIndexed = new TabixIndexedFile({ path: 'path/to/my/file.gz' })
-const headerText = tbiIndexed.getHeader()
-const tbiVCFParser = new VCF({ header: headerText })
-const variants = []
-tbiIndexed.getLines('ctgA', 200, 300, line =>
-  variants.push(tbiVCFParser.parseLine(line)),
-)
+const tbiIndexed = new TabixIndexedFile({ path: '/path/to/my.vcf.gz' })
+
+async function doStuff() {
+  const headerText = await tbiIndexed.getHeader()
+  const tbiVCFParser = new VCF({ header: headerText })
+  const variants = []
+  await tbiIndexed.getLines('ctgA', 200, 300, line =>
+    variants.push(tbiVCFParser.parseLine(line)),
+  )
+  console.log(variants)
+}
 ```
 
 Given a VCF with a single variant line
