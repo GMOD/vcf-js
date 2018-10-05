@@ -1,24 +1,14 @@
-// const { TabixIndexedFile } = require('@gmod/tabix')
 const VCF = require('../src')
 
-// function getVariants(filename, chrom, start, stop) {
-//   const tbiIndexed = new TabixIndexedFile({ path: filename })
-//   const headerText = tbiIndexed.getHeader()
-//   const VCFParser = new VCF({ header: headerText })
-//   const variants = []
-//   tbiIndexed.getLines(chrom, start, stop, line =>
-//     variants.push(VCFParser.parseLine(line)),
-//   )
-//   return variants
-// }
-
-test('Just testing', () => {
-  const VCFParser = new VCF(
-    `##fileformat=VCFv4.3
+describe('VCF parser', () => {
+  let VCFParser
+  beforeAll(() => {
+    VCFParser = new VCF({
+      header: `##fileformat=VCFv4.3
 ##fileDate=20090805
 ##source=myImputationProgramV3.1
 ##reference=file:///seq/references/1000GenomesPilot-NCBI36.fasta
-##contig=<ID=contigA,length=62435964,assembly=B36,md5=f126cdf8a6e0c7f379d618ff66beb2da,species="Homo sapiens",taxonomy=x>
+##contig=<ID=20,length=62435964,assembly=B36,md5=f126cdf8a6e0c7f379d618ff66beb2da,species="Homo sapiens",taxonomy=x>
 ##phasing=partial
 ##INFO=<ID=NS,Number=1,Type=Integer,Description="Number of Samples With Data">
 ##INFO=<ID=DP,Number=1,Type=Integer,Description="Total Depth">
@@ -32,76 +22,87 @@ test('Just testing', () => {
 ##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">
 ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
 ##FORMAT=<ID=HQ,Number=2,Type=Integer,Description="Haplotype Quality">
-#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tHG00096\n`,
-  )
-  const variant = VCFParser.parseLine(
-    'contigA\t3000\trs17883296\tG\tT,A\t100\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:AP\t0|0:0.000,0.000\n',
-  )
-  console.log(variant)
+#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tNA00001\tNA00002\tNA00003
+`,
+    })
+  })
+
+  it('can get metadata from the header', () => {
+    const metadata = VCFParser.getMetadata()
+    expect(metadata.FILTER.q10).toEqual({ Description: 'Quality below 10' })
+    expect(metadata.source).toEqual('myImputationProgramV3.1')
+  })
+
+  it('can get default metadata not in the header', () => {
+    const metadata = VCFParser.getMetadata()
+    expect(metadata.INFO.AC).toEqual({
+      Number: 'A',
+      Type: 'Integer',
+      Description:
+        'Allele count in genotypes, for each ALT allele, in the same order as listed',
+    })
+  })
+
+  it('can parse a line from the VCF spec', () => {
+    const variant = VCFParser.parseLine(
+      '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
+    )
+    expect(variant).toEqual({
+      CHROM: '20',
+      POS: 14370,
+      ID: ['rs6054257'],
+      REF: 'G',
+      ALT: ['A'],
+      QUAL: 29,
+      FILTER: 'PASS',
+      INFO: { NS: [3], DP: [14], AF: [0.5], DB: null, H2: null },
+      SAMPLES: {
+        NA00001: { GT: ['0|0'], GQ: [48], DP: [1], HQ: [51, 51] },
+        NA00002: { GT: ['1|0'], GQ: [48], DP: [8], HQ: [51, 51] },
+        NA00003: { GT: ['1/1'], GQ: [43], DP: [5], HQ: [null, null] },
+      },
+    })
+  })
+
+  it('can parse a line with minimal entries', () => {
+    const variant = VCFParser.parseLine(
+      '20\t14370\t.\tG\tA\t.\t.\t.\tGT:GQ:DP:HQ\t.\t.\t.\n',
+    )
+    expect(variant).toEqual({
+      CHROM: '20',
+      POS: 14370,
+      ID: null,
+      REF: 'G',
+      ALT: ['A'],
+      QUAL: null,
+      FILTER: null,
+      INFO: {},
+      SAMPLES: {
+        NA00001: { GT: null, GQ: null, DP: null, HQ: null },
+        NA00002: { GT: null, GQ: null, DP: null, HQ: null },
+        NA00003: { GT: null, GQ: null, DP: null, HQ: null },
+      },
+    })
+  })
+
+  let tmp // eslint-disable-line
+  it('throws errors with bad header lines', () => {
+    expect(() => {
+      tmp = new VCF({ header: 'notARealHeader' })
+    }).toThrow('Bad line in header')
+    expect(() => {
+      tmp = new VCF({ header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\n' })
+    }).toThrow('VCF header missing columns')
+    expect(() => {
+      tmp = new VCF({
+        header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\n',
+      })
+    }).toThrow('VCF header has FORMAT but no samples')
+    expect(() => {
+      tmp = new VCF({ header: '#CHROM\tPS\tID\tRF\tALT\tQUAL\tFILTER\tINFO\n' })
+    }).toThrow('VCF column headers not correct')
+    expect(() => {
+      tmp = new VCF({ header: '##this=badHeader\n' })
+    }).toThrow('VCF does not have a header line')
+  })
 })
-
-// describe('VCF parser', () => {
-//   xit('reads big dbsnp', async () => {
-//     const variants = getVariants(
-//       '../../../data/big_vcf/00-All.vcf.gz',
-//       'chr10',
-//       33870887,
-//       33896487,
-//     )
-//     expect(variants.length).toEqual(560)
-//   })
-
-//   it('reads gvcf * alleles', () => {
-//     const variants = getVariants(
-//       '../../docs/tutorial/data_files/gvcf.vcf.gz',
-//       'ctgA',
-//       0,
-//       5000,
-//     )
-//     expect(variants.length).toEqual(7)
-//     expect(variants[2].ALT).toEqual(['TC', '<*>'])
-//   })
-
-//   it('no newline in VCF genotypes', () => {
-//     const variants = getVariants(
-//       '../../docs/tutorial/data_files/volvox.test.vcf.gz',
-//       'ctgA',
-//       0,
-//       7000,
-//     )
-//     const hasGT = Object.keys(variants[0]).map((currentValue, index) => {
-//       if (index < 8) return true
-//       if ('GT' in currentValue) return true
-//       return false
-//     })
-//     expect(hasGT.every(currentValue => currentValue)).toEqual(true)
-//   })
-
-//   it('reads gatk non_ref alleles', () => {
-//     const variants = getVariants('../data/raw.g.vcf.gz', 'ctgA', 0, 100)
-//     expect(variants.length).toEqual(37)
-//     expect(variants[0].ALT).toEqual(['<NON_REF>'])
-//   })
-
-//   it('parses END field', () => {
-//     const variants = getVariants(
-//       '../../docs/tutorial/data_files/volvox.test.vcf.gz',
-//       '1',
-//       1,
-//       5000,
-//     )
-//     expect(variants[0].INFO.END).toEqual(4388)
-//     expect(variants[1].INFO.END).toEqual(4600)
-//     expect(variants.length).toEqual(2)
-//   })
-
-//   xit('large VCF header', () => {
-//     const variants = getVariants(
-//       '../data/large_vcf_header/large_vcf_header.vcf.gz',
-//       'LcChr1',
-//       1,
-//       10000,
-//     )
-//     expect(Object.keys(variants[0]).length).toEqual(332) // expect non empty object
-//   })
-// })
