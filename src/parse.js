@@ -1,3 +1,9 @@
+/**
+ * Class representing a VCF parser, instantiated with the VCF header.
+ * @param {object} args
+ * @param {string} args.header - The VCF header. Supports both LF and CRLF
+ * newlines.
+ */
 class VCF {
   constructor(args) {
     const headerLines = args.header.split(/[\r\n]+/).filter(line => line)
@@ -30,6 +36,12 @@ class VCF {
     if (!this.samples) throw new Error('VCF does not have a header line')
   }
 
+  /**
+   * Parse a VCF metadata line (i.e. a line that starts with "##") and add its
+   * properties to the object.
+   * @param {string} line - A line from the VCF. Supports both LF and CRLF
+   * newlines.
+   */
   _parseMetadata(line) {
     const [metaKey, metaVal] = line
       .trim()
@@ -46,6 +58,14 @@ class VCF {
     }
   }
 
+  /**
+   * Parse a VCF header structured meta string (i.e. a meta value that starts
+   * with "<ID=...")
+   * @param {string} metaVal - The VCF metadata value
+   *
+   * @returns {Array} - Array with two entries, 1) a string of the metadata ID
+   * and 2) an object with the other key-value pairs in the metadata
+   */
   _parseStructuredMetaVal(metaVal) {
     const keyVals = this._parseKeyValue(metaVal.replace(/^<|>$/g, ''), ',')
     const id = keyVals.ID
@@ -58,6 +78,14 @@ class VCF {
     return [id, keyVals]
   }
 
+  /**
+   * Get metadata filtered by the elements in args. For example, can pass
+   * ('INFO', 'DP') to only get info on an metadata tag that was like
+   * "##INFO=<ID=DP,...>"
+   * @param  {...string} args - List of metadata filter strings.
+   *
+   * @returns {any} An object, string, or number, depending on the filtering
+   */
   getMetadata(...args) {
     let last = this.metadata
     for (let i = 0; args.length; i += 1) {
@@ -75,6 +103,11 @@ class VCF {
    * Parse this at a low level since we can't just split at "," (or whatever
    * separator). Above line would be parsed to:
    * {ID: 'DB', Number: '0', Type: 'Flag', Description: 'dbSNP membership, build 129'}
+   * @param {string} str - Key-value pairs in a string
+   * @param {string} [pairSeparator] - A string that separates sets of key-value
+   * pairs
+   *
+   * @returns {object} An object containing the key-value pairs
    */
   _parseKeyValue(str, pairSeparator = ';') {
     const data = {}
@@ -116,6 +149,12 @@ class VCF {
     return data
   }
 
+  /**
+   * Parse a VCF line into an object like { CHROM POS ID REF ALT QUAL FILTER
+   * INFO } with SAMPLES optionally included if present in the VCF
+   * @param {string} line - A string of a line from a VCF. Supports both LF and
+   * CRLF newlines.
+   */
   parseLine(line) {
     const fields = line.trim().split('\t')
     const variant = {
@@ -185,6 +224,9 @@ class VCF {
     return variant
   }
 
+  /**
+   * A getter that returns the INFO fields that are reserved in the VCF spec.
+   */
   get _vcfReservedInfoFields() {
     return {
       // from the VCF4.3 spec, https://samtools.github.io/hts-specs/VCFv4.3.pdf
@@ -420,6 +462,9 @@ class VCF {
     }
   }
 
+  /**
+   * A getter that returns the FORMAT fields that are reserved in the VCF spec.
+   */
   get _vcfReservedGenotypeFields() {
     return {
       // from the VCF4.3 spec, https://samtools.github.io/hts-specs/VCFv4.3.pdf
@@ -502,6 +547,9 @@ class VCF {
     }
   }
 
+  /**
+   * A getter that returns the ALT fields that are reserved in the VCF spec.
+   */
   get _vcfReservedAltTypes() {
     return {
       DEL: {
