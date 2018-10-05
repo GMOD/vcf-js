@@ -185,7 +185,10 @@ class VCF {
       const itemType = this.getMetadata('INFO', key, 'Type')
       if (itemType) {
         if (itemType === 'Integer' || itemType === 'Float') {
-          items = items.map(val => Number(val))
+          items = items.map(val => {
+            if (val === null) return null
+            return Number(val)
+          })
         } else if (itemType === 'Flag' && info[key]) {
           console.warn(
             `Info field ${key} is a Flag and shoud not have a value (got value ${
@@ -204,7 +207,11 @@ class VCF {
         .split(':')
         .reduce((accumulator, formatValue, formatIndex) => {
           let thisValue =
-            formatValue === '' || formatValue === undefined ? null : formatValue
+            formatValue === '' ||
+            formatValue === '.' ||
+            formatValue === undefined
+              ? null
+              : formatValue
           if (typeof thisValue === 'string') {
             thisValue = thisValue.split(',')
           }
@@ -213,8 +220,11 @@ class VCF {
             formatKeys[formatIndex],
             'Type',
           )
-          if (valueType === 'Integer' || valueType === 'Float') {
-            thisValue = thisValue.map(val => Number(val))
+          if (valueType === 'Integer' || (valueType === 'Float' && thisValue)) {
+            thisValue = thisValue.map(val => {
+              if (val === '.') return null
+              return Number(val)
+            })
           }
           accumulator[formatKeys[formatIndex]] = thisValue
           return accumulator
