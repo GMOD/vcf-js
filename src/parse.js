@@ -82,7 +82,7 @@ class VCF {
     const id = keyVals.ID
     delete keyVals.ID
     if ('Number' in keyVals) {
-      if (!Number.isNaN(keyVals.Number)) {
+      if (!Number.isNaN(Number(keyVals.Number))) {
         keyVals.Number = Number(keyVals.Number)
       }
     }

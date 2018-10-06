@@ -22,6 +22,7 @@ describe('VCF parser', () => {
 ##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">
 ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
 ##FORMAT=<ID=HQ,Number=2,Type=Integer,Description="Haplotype Quality">
+##FORMAT=<ID=PL,Number=G,Type=Integer,Description="List of Phred-scaled genotype likelihoods">
 #CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tNA00001\tNA00002\tNA00003
 `,
     })
@@ -29,6 +30,17 @@ describe('VCF parser', () => {
 
   it('can get metadata from the header', () => {
     const metadata = VCFParser.getMetadata()
+    expect(metadata.INFO.AF).toEqual({
+      Number: 'A',
+      Type: 'Float',
+      Description: 'Allele Frequency',
+    })
+    // Custom PL overrides default PL
+    expect(metadata.FORMAT.PL).toEqual({
+      Number: 'G',
+      Type: 'Integer',
+      Description: 'List of Phred-scaled genotype likelihoods',
+    })
     expect(metadata.FILTER.q10).toEqual({ Description: 'Quality below 10' })
     expect(metadata.source).toEqual('myImputationProgramV3.1')
   })
