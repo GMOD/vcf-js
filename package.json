@@ -1,6 +1,6 @@
 {
   "name": "@gmod/vcf",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "High performance streaming VCF parser in pure JavaScript",
   "main": "dist/index.js",
   "repository": "github:GMOD/vcf-js",
