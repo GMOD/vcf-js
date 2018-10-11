@@ -145,6 +145,7 @@ Samples are also available.
     -   [\_vcfReservedInfoFields](#_vcfreservedinfofields)
     -   [\_vcfReservedGenotypeFields](#_vcfreservedgenotypefields)
     -   [\_vcfReservedAltTypes](#_vcfreservedalttypes)
+    -   [\_vcfReservedFilterTypes](#_vcfreservedfiltertypes)
 
 ### VCF
 
@@ -227,5 +228,9 @@ A getter that returns the INFO fields that are reserved in the VCF spec.
 A getter that returns the FORMAT fields that are reserved in the VCF spec.
 
 #### \_vcfReservedAltTypes
+
+A getter that returns the ALT fields that are reserved in the VCF spec.
+
+#### \_vcfReservedFilterTypes
 
 A getter that returns the ALT fields that are reserved in the VCF spec.

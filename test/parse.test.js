@@ -43,6 +43,8 @@ describe('VCF parser', () => {
     })
     expect(metadata.FILTER.q10).toEqual({ Description: 'Quality below 10' })
     expect(metadata.source).toEqual('myImputationProgramV3.1')
+    const badMetadata = VCFParser.getMetadata('nonexistant')
+    expect(badMetadata).toBe(undefined)
   })
 
   it('can get default metadata not in the header', () => {

@@ -11,6 +11,7 @@ class VCF {
       INFO: this._vcfReservedInfoFields,
       FORMAT: this._vcfReservedGenotypeFields,
       ALT: this._vcfReservedAltTypes,
+      FILTER: this._vcfReservedFilterTypes,
     }
     headerLines.forEach(line => {
       if (!line.startsWith('#')) {
@@ -98,6 +99,7 @@ class VCF {
    * @returns {any} An object, string, or number, depending on the filtering
    */
   getMetadata(...args) {
+    if (args.length && !(args[0] in this.metadata)) return undefined
     let last = this.metadata
     for (let i = 0; args.length; i += 1) {
       if (last[args[i]] && !last[args[i]][args[i + 1]]) return last[args[i]]
@@ -573,28 +575,22 @@ class VCF {
     return {
       DEL: {
         Description: 'Deletion relative to the reference',
-        so_term: 'deletion',
       },
       INS: {
         Description: 'Insertion of novel sequence relative to the reference',
-        so_term: 'insertion',
       },
       DUP: {
         Description: 'Region of elevated copy number relative to the reference',
-        so_term: 'copy_number_gain',
       },
       INV: {
         Description: 'Inversion of reference sequence',
-        so_term: 'inversion',
       },
       CNV: {
         Description:
           'Copy number variable region (may be both deletion and duplication)',
-        so_term: 'copy_number_variation',
       },
       'DUP:TANDEM': {
         Description: 'Tandem duplication',
-        so_term: 'copy_number_gain',
       },
       'DEL:ME': {
         Description: 'Deletion of mobile element relative to the reference',
@@ -605,12 +601,21 @@ class VCF {
       NON_REF: {
         Description:
           'Represents any possible alternative allele at this location',
-        so_term: 'sequence_variant',
       },
       '*': {
         Description:
           'Represents any possible alternative allele at this location',
-        so_term: 'sequence_variant',
+      },
+    }
+  }
+
+  /**
+   * A getter that returns the ALT fields that are reserved in the VCF spec.
+   */
+  get _vcfReservedFilterTypes() {
+    return {
+      PASS: {
+        Description: 'Passed all filters',
       },
     }
   }
