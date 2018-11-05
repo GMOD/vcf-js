@@ -179,41 +179,12 @@ describe('VCF parser for Y chrom (haploid)', () => {
 
   it('can parse a line from the VCF spec', () => {
     const variant = VCFParser.parseLine(
-      'Y\t14483990\tCNV_Y_14483990_15232198\tC\t<CN0>\t100\tPASS\tAC=1;AF=0.000817661;AN=1223;END=15232198;NS=1233;SVTYPE=CNV;AMR_AF=0;AFR_AF=0;EUR_AF=0.0042;SAS_AF=0;EAS_AF=0;VT=SV;EX_TARGET\tGT:CN:CNL:CNP:CNQ:GP:GQ:PL\t0:1:-1000,0,-119.08:-1000,0,-218.16:99:0,-1000:99:0,10000\t0:1:-1000,0,-43.56:-1000,0,-142.64:99:0,-1000:99:0,10000\t.:.:.:.:.:.:.:.'
+      'Y\t14483990\tCNV_Y_14483990_15232198\tC\t<CN0>\t100\tPASS\tAC=1;AF=0.000817661;AN=1223;END=15232198;NS=1233;SVTYPE=CNV;AMR_AF=0;AFR_AF=0;EUR_AF=0.0042;SAS_AF=0;EAS_AF=0;VT=SV;EX_TARGET\tGT:CN:CNL:CNP:CNQ:GP:GQ:PL\t0:1:-1000,0,-119.08:-1000,0,-218.16:99:0,-1000:99:0,10000\t0:1:-1000,0,-43.56:-1000,0,-142.64:99:0,-1000:99:0,10000\t.:.:.:.:.:.:.:.\t.:.:.:.:.:.:.:.',
     )
     const variant2 = VCFParser.parseLine(
       'Y\t2655180\trs11575897\tG\tA\t100\tPASS\tAA=G;AC=22;AF=0.0178427;AN=1233;DP=84761;NS=1233;AMR_AF=0;AFR_AF=0;EUR_AF=0;SAS_AF=0;EAS_AF=0.0902;VT=SNP;EX_TARGET\tGT\t0\t0\t0\t.',
     )
-    console.log(variant)
-    expect(variant2).toEqual({
-      CHROM: 'Y',
-      POS: 2655180,
-      ID: ['rs11575897'],
-      REF: 'G',
-      ALT: ['A'],
-      QUAL: 100,
-      FILTER: 'PASS',
-      INFO: {
-        AA: ['G'],
-        AC: [22],
-        AF: [0.0178427],
-        AN: [1233],
-        DP: [84761],
-        NS: [1233],
-        AMR_AF: [0],
-        AFR_AF: [0],
-        EUR_AF: [0],
-        SAS_AF: [0],
-        EAS_AF: [0.0902],
-        VT: ['SNP'],
-        EX_TARGET: null,
-      },
-      SAMPLES: {
-        HG00096: { GT: ['0'] },
-        HG00101: { GT: ['0'] },
-        HG00103: { GT: ['0'] },
-        HG001055: { GT: ['.'] },
-      },
-    })
+    expect(variant).toMatchSnapshot()
+    expect(variant2).toMatchSnapshot()
   })
 })

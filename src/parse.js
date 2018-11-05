@@ -223,23 +223,30 @@ class VCF {
         variant.SAMPLES[sample][key] = null
       })
       fields[9 + index].split(':').forEach((formatValue, formatIndex) => {
-        let thisValue =
-          formatValue === '' || formatValue === '.' || formatValue === undefined
-            ? null
-            : formatValue
-        if (typeof thisValue === 'string') {
-          thisValue = thisValue.split(',')
-        }
-        const valueType = this.getMetadata(
-          'FORMAT',
-          formatKeys[formatIndex],
-          'Type',
-        )
-        if (valueType === 'Integer' || (valueType === 'Float' && thisValue)) {
+        let thisValue
+        if (
+          formatValue === '' ||
+          formatValue === '.' ||
+          formatValue === undefined
+        ) {
+          thisValue = null
+        } else {
+          thisValue = formatValue.split(',')
           thisValue = thisValue.map(val => {
             if (val === '.') return null
-            return Number(val)
+            return val
           })
+          const valueType = this.getMetadata(
+            'FORMAT',
+            formatKeys[formatIndex],
+            'Type',
+          )
+          if ((valueType === 'Integer' || valueType === 'Float') && thisValue) {
+            thisValue = thisValue.map(val => {
+              if (!val) return null
+              return Number(val)
+            })
+          }
         }
         variant.SAMPLES[sample][formatKeys[formatIndex]] = thisValue
       }, {})
