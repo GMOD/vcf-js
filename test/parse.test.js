@@ -61,42 +61,14 @@ describe('VCF parser', () => {
     const variant = VCFParser.parseLine(
       '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
     )
-    expect(variant).toEqual({
-      CHROM: '20',
-      POS: 14370,
-      ID: ['rs6054257'],
-      REF: 'G',
-      ALT: ['A'],
-      QUAL: 29,
-      FILTER: 'PASS',
-      INFO: { NS: [3], DP: [14], AF: [0.5], DB: null, H2: null },
-      SAMPLES: {
-        NA00001: { GT: ['0|0'], GQ: [48], DP: [1], HQ: [51, 51] },
-        NA00002: { GT: ['1|0'], GQ: [48], DP: [8], HQ: [51, 51] },
-        NA00003: { GT: ['1/1'], GQ: [43], DP: [5], HQ: [null, null] },
-      },
-    })
+    expect(variant).toMatchSnapshot()
   })
 
   it('can parse a line with minimal entries', () => {
     const variant = VCFParser.parseLine(
       '20\t14370\t.\tG\tA\t.\t.\t.\tGT:GQ:DP:HQ\t.\t.\t.\n',
     )
-    expect(variant).toEqual({
-      CHROM: '20',
-      POS: 14370,
-      ID: null,
-      REF: 'G',
-      ALT: ['A'],
-      QUAL: null,
-      FILTER: null,
-      INFO: {},
-      SAMPLES: {
-        NA00001: { GT: null, GQ: null, DP: null, HQ: null },
-        NA00002: { GT: null, GQ: null, DP: null, HQ: null },
-        NA00003: { GT: null, GQ: null, DP: null, HQ: null },
-      },
-    })
+    expect(variant).toMatchSnapshot()
   })
 
   let tmp // eslint-disable-line
@@ -154,39 +126,7 @@ describe('VCF parser for structural variants', () => {
     const variant = VCFParser.parseLine(
       '8\t17709115\t28329_0\tN\t<DEL>\t.\tPASS\tPRECISE;SVMETHOD=Snifflesv1.0.3;CHR2=8;END=17709148;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=20.524521;Kurtosis_quant_stop=3.925926;SVTYPE=DEL;SUPTYPE=AL;SVLEN=33;STRANDS=+-;STRANDS2=20,14,20,14;RE=34;AF=0.971429\tGT:DR:DV\t1/1:1:34',
     )
-    expect(variant).toEqual({
-      CHROM: '8',
-      POS: 17709115,
-      ID: ['28329_0'],
-      REF: 'N',
-      ALT: ['<DEL>'],
-      QUAL: null,
-      FILTER: 'PASS',
-      INFO: {
-        PRECISE: null,
-        SVMETHOD: ['Snifflesv1.0.3'],
-        CHR2: ['8'],
-        END: [17709148],
-        STD_quant_start: ['0.000000'],
-        STD_quant_stop: ['0.000000'],
-        Kurtosis_quant_start: ['20.524521'],
-        Kurtosis_quant_stop: ['3.925926'],
-        SVTYPE: ['DEL'],
-        SUPTYPE: ['AL'],
-        SVLEN: [33],
-        STRANDS: ['+-'],
-        STRANDS2: ['20', '14', '20', '14'],
-        RE: [34],
-        AF: [0.971429],
-      },
-      SAMPLES: {
-        '/seq/schatz/fritz/sv-paper/real/Nanopore_NA12878/mapped/ngm_Nanopore_human_ngmlr-0.2.3_mapped.bam': {
-          GT: ['1/1'],
-          DR: [1],
-          DV: [34],
-        },
-      },
-    })
+    expect(variant).toMatchSnapshot()
   })
 })
 
