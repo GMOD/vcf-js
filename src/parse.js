@@ -361,6 +361,11 @@ class VCF {
         Type: 'Flag',
         Description: 'Imprecise structural variation',
       },
+      PRECISE: {
+        Number: 0,
+        Type: 'Flag',
+        Description: 'Precise structural variation',
+      },
       NOVEL: {
         Number: 0,
         Type: 'Flag',
