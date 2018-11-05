@@ -1,0 +1,405 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VCF parser can parse a line from the VCF spec 1`] = `
+Object {
+  "ALT": Array [
+    "A",
+  ],
+  "CHROM": "20",
+  "FILTER": "PASS",
+  "ID": Array [
+    "rs6054257",
+  ],
+  "INFO": Object {
+    "AF": Array [
+      0.5,
+    ],
+    "DB": null,
+    "DP": Array [
+      14,
+    ],
+    "H2": null,
+    "NS": Array [
+      3,
+    ],
+  },
+  "POS": 14370,
+  "QUAL": 29,
+  "REF": "G",
+  "SAMPLES": Object {
+    "NA00001": Object {
+      "DP": Array [
+        1,
+      ],
+      "GQ": Array [
+        48,
+      ],
+      "GT": Array [
+        "0|0",
+      ],
+      "HQ": Array [
+        51,
+        51,
+      ],
+    },
+    "NA00002": Object {
+      "DP": Array [
+        8,
+      ],
+      "GQ": Array [
+        48,
+      ],
+      "GT": Array [
+        "1|0",
+      ],
+      "HQ": Array [
+        51,
+        51,
+      ],
+    },
+    "NA00003": Object {
+      "DP": Array [
+        5,
+      ],
+      "GQ": Array [
+        43,
+      ],
+      "GT": Array [
+        "1/1",
+      ],
+      "HQ": Array [
+        null,
+        null,
+      ],
+    },
+  },
+}
+`;
+
+exports[`VCF parser can parse a line with minimal entries 1`] = `
+Object {
+  "ALT": Array [
+    "A",
+  ],
+  "CHROM": "20",
+  "FILTER": null,
+  "ID": null,
+  "INFO": Object {},
+  "POS": 14370,
+  "QUAL": null,
+  "REF": "G",
+  "SAMPLES": Object {
+    "NA00001": Object {
+      "DP": null,
+      "GQ": null,
+      "GT": null,
+      "HQ": null,
+    },
+    "NA00002": Object {
+      "DP": null,
+      "GQ": null,
+      "GT": null,
+      "HQ": null,
+    },
+    "NA00003": Object {
+      "DP": null,
+      "GQ": null,
+      "GT": null,
+      "HQ": null,
+    },
+  },
+}
+`;
+
+exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 1`] = `
+Object {
+  "ALT": Array [
+    "<CN0>",
+  ],
+  "CHROM": "Y",
+  "FILTER": "PASS",
+  "ID": Array [
+    "CNV_Y_14483990_15232198",
+  ],
+  "INFO": Object {
+    "AC": Array [
+      1,
+    ],
+    "AF": Array [
+      0.000817661,
+    ],
+    "AFR_AF": Array [
+      0,
+    ],
+    "AMR_AF": Array [
+      0,
+    ],
+    "AN": Array [
+      1223,
+    ],
+    "EAS_AF": Array [
+      0,
+    ],
+    "END": Array [
+      15232198,
+    ],
+    "EUR_AF": Array [
+      0.0042,
+    ],
+    "EX_TARGET": null,
+    "NS": Array [
+      1233,
+    ],
+    "SAS_AF": Array [
+      0,
+    ],
+    "SVTYPE": Array [
+      "CNV",
+    ],
+    "VT": Array [
+      "SV",
+    ],
+  },
+  "POS": 14483990,
+  "QUAL": 100,
+  "REF": "C",
+  "SAMPLES": Object {
+    "HG00096": Object {
+      "CN": Array [
+        1,
+      ],
+      "CNL": Array [
+        -1000,
+        0,
+        -119.08,
+      ],
+      "CNP": Array [
+        -1000,
+        0,
+        -218.16,
+      ],
+      "CNQ": Array [
+        99,
+      ],
+      "GP": Array [
+        0,
+        -1000,
+      ],
+      "GQ": Array [
+        99,
+      ],
+      "GT": Array [
+        "0",
+      ],
+      "PL": Array [
+        0,
+        10000,
+      ],
+    },
+    "HG00101": Object {
+      "CN": Array [
+        1,
+      ],
+      "CNL": Array [
+        -1000,
+        0,
+        -43.56,
+      ],
+      "CNP": Array [
+        -1000,
+        0,
+        -142.64,
+      ],
+      "CNQ": Array [
+        99,
+      ],
+      "GP": Array [
+        0,
+        -1000,
+      ],
+      "GQ": Array [
+        99,
+      ],
+      "GT": Array [
+        "0",
+      ],
+      "PL": Array [
+        0,
+        10000,
+      ],
+    },
+    "HG00103": Object {
+      "CN": null,
+      "CNL": null,
+      "CNP": null,
+      "CNQ": null,
+      "GP": null,
+      "GQ": null,
+      "GT": null,
+      "PL": null,
+    },
+    "HG001055": Object {
+      "CN": null,
+      "CNL": null,
+      "CNP": null,
+      "CNQ": null,
+      "GP": null,
+      "GQ": null,
+      "GT": null,
+      "PL": null,
+    },
+  },
+}
+`;
+
+exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 2`] = `
+Object {
+  "ALT": Array [
+    "A",
+  ],
+  "CHROM": "Y",
+  "FILTER": "PASS",
+  "ID": Array [
+    "rs11575897",
+  ],
+  "INFO": Object {
+    "AA": Array [
+      "G",
+    ],
+    "AC": Array [
+      22,
+    ],
+    "AF": Array [
+      0.0178427,
+    ],
+    "AFR_AF": Array [
+      0,
+    ],
+    "AMR_AF": Array [
+      0,
+    ],
+    "AN": Array [
+      1233,
+    ],
+    "DP": Array [
+      84761,
+    ],
+    "EAS_AF": Array [
+      0.0902,
+    ],
+    "EUR_AF": Array [
+      0,
+    ],
+    "EX_TARGET": null,
+    "NS": Array [
+      1233,
+    ],
+    "SAS_AF": Array [
+      0,
+    ],
+    "VT": Array [
+      "SNP",
+    ],
+  },
+  "POS": 2655180,
+  "QUAL": 100,
+  "REF": "G",
+  "SAMPLES": Object {
+    "HG00096": Object {
+      "GT": Array [
+        "0",
+      ],
+    },
+    "HG00101": Object {
+      "GT": Array [
+        "0",
+      ],
+    },
+    "HG00103": Object {
+      "GT": Array [
+        "0",
+      ],
+    },
+    "HG001055": Object {
+      "GT": null,
+    },
+  },
+}
+`;
+
+exports[`VCF parser for structural variants can parse a line from the VCF spec 1`] = `
+Object {
+  "ALT": Array [
+    "<DEL>",
+  ],
+  "CHROM": "8",
+  "FILTER": "PASS",
+  "ID": Array [
+    "28329_0",
+  ],
+  "INFO": Object {
+    "AF": Array [
+      0.971429,
+    ],
+    "CHR2": Array [
+      "8",
+    ],
+    "END": Array [
+      17709148,
+    ],
+    "Kurtosis_quant_start": Array [
+      "20.524521",
+    ],
+    "Kurtosis_quant_stop": Array [
+      "3.925926",
+    ],
+    "PRECISE": null,
+    "RE": Array [
+      34,
+    ],
+    "STD_quant_start": Array [
+      "0.000000",
+    ],
+    "STD_quant_stop": Array [
+      "0.000000",
+    ],
+    "STRANDS": Array [
+      "+-",
+    ],
+    "STRANDS2": Array [
+      "20",
+      "14",
+      "20",
+      "14",
+    ],
+    "SUPTYPE": Array [
+      "AL",
+    ],
+    "SVLEN": Array [
+      33,
+    ],
+    "SVMETHOD": Array [
+      "Snifflesv1.0.3",
+    ],
+    "SVTYPE": Array [
+      "DEL",
+    ],
+  },
+  "POS": 17709115,
+  "QUAL": null,
+  "REF": "N",
+  "SAMPLES": Object {
+    "/seq/schatz/fritz/sv-paper/real/Nanopore_NA12878/mapped/ngm_Nanopore_human_ngmlr-0.2.3_mapped.bam": Object {
+      "DR": Array [
+        1,
+      ],
+      "DV": Array [
+        34,
+      ],
+      "GT": Array [
+        "1/1",
+      ],
+    },
+  },
+}
+`;
