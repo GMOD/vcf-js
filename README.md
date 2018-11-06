@@ -140,7 +140,7 @@ Samples are also available.
         -   [Parameters](#parameters-3)
     -   [\_parseKeyValue](#_parsekeyvalue)
         -   [Parameters](#parameters-4)
-    -   [parseLine](#parseline)
+    -   [\_percentDecode](#_percentdecode)
         -   [Parameters](#parameters-5)
     -   [parseLine](#parseline)
         -   [Parameters](#parameters-6)
@@ -207,6 +207,17 @@ separator). Above line would be parsed to:
 
 Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing the key-value pairs
 
+#### \_percentDecode
+
+Decode any of the eight percent-encoded values allowed in a string by the
+VCF spec.
+
+##### Parameters
+
+-   `str` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string that may contain percent-encoded characters
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string with any percent-encoded characters decoded
+
 #### parseLine
 
 Parse a VCF line into an object like { CHROM POS ID REF ALT QUAL FILTER
@@ -216,4 +227,3 @@ INFO } with SAMPLES optionally included if present in the VCF
 
 -   `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string of a line from a VCF. Supports both LF and
     CRLF newlines.
-

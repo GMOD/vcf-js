@@ -165,6 +165,40 @@ class VCF {
   }
 
   /**
+   * Decode any of the eight percent-encoded values allowed in a string by the
+   * VCF spec.
+   * @param {string} str - A string that may contain percent-encoded characters
+   *
+   * @returns {string} A string with any percent-encoded characters decoded
+   */
+  _percentDecode(str) {
+    const decodeTable = {
+      '%3A': ':',
+      '%3B': ';',
+      '%3D': '=',
+      '%25': '%',
+      '%2C': ',',
+      '%0D': '\r',
+      '%0A': '\n',
+      '%09': '\t',
+    }
+    let decodedStr = str
+    let encodedIdx = decodedStr.indexOf('%')
+    while (encodedIdx !== -1) {
+      const encodedChar = decodedStr.slice(encodedIdx, encodedIdx + 3)
+      const decodedChar = decodeTable[encodedChar]
+      if (!decodedChar)
+        throw new Error(`Invalid percent-encoded character: ${encodedChar}`)
+      decodedStr =
+        decodedStr.slice(0, encodedIdx) +
+        decodedChar +
+        decodedStr.slice(encodedIdx + 3)
+      encodedIdx = decodedStr.indexOf('%')
+    }
+    return decodedStr
+  }
+
+  /**
    * Parse a VCF line into an object like { CHROM POS ID REF ALT QUAL FILTER
    * INFO } with SAMPLES optionally included if present in the VCF
    * @param {string} line - A string of a line from a VCF. Supports both LF and
@@ -194,7 +228,7 @@ class VCF {
         items = info[key].split(',')
         items = items.map(val => {
           if (val === '.') return null
-          return val
+          return this._percentDecode(val)
         })
       } else items = info[key]
       const itemType = this.getMetadata('INFO', key, 'Type')
@@ -231,7 +265,7 @@ class VCF {
         ) {
           thisValue = null
         } else {
-          thisValue = formatValue.split(',')
+          thisValue = this._percentDecode(formatValue).split(',')
           thisValue = thisValue.map(val => {
             if (val === '.') return null
             return val

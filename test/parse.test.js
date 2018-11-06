@@ -16,6 +16,7 @@ describe('VCF parser', () => {
 ##INFO=<ID=AA,Number=1,Type=String,Description="Ancestral Allele">
 ##INFO=<ID=DB,Number=0,Type=Flag,Description="dbSNP membership, build 129">
 ##INFO=<ID=H2,Number=0,Type=Flag,Description="HapMap2 membership">
+##INFO<=ID=TEST,Number=1,Type=String,Description="Used for testing">
 ##FILTER=<ID=q10,Description="Quality below 10">
 ##FILTER=<ID=s50,Description="Less than 50% of samples have data">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
@@ -23,6 +24,7 @@ describe('VCF parser', () => {
 ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
 ##FORMAT=<ID=HQ,Number=2,Type=Integer,Description="Haplotype Quality">
 ##FORMAT=<ID=PL,Number=G,Type=Integer,Description="List of Phred-scaled genotype likelihoods">
+##FORMAT<=ID=TEST,Number=1,Type=String,Description="Used for testing">
 #CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tNA00001\tNA00002\tNA00003
 `,
     })
@@ -90,6 +92,23 @@ describe('VCF parser', () => {
     expect(() => {
       tmp = new VCF({ header: '##this=badHeader\n' })
     }).toThrow('VCF does not have a header line')
+  })
+
+  it('can decode percent-encoded INFO and FORMAT fields', () => {
+    let variant = VCFParser.parseLine(
+      '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;TEST=2+2%3D4;DB;H2\tGT:GQ:DP:HQ:TEST\t0|0:48:1:51,51:2+2%3D4\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
+    )
+    expect(variant).toMatchSnapshot()
+    // Multiple percent-encoded characters in the same string
+    variant = VCFParser.parseLine(
+      '20\t14370\trs6054257\tG\tA\t29\tPASS\tTEST=2+2%3D4%3B2+2%3D4;DB;H2\tGT:GQ:DP:HQ:TEST\t0|0:48:1:51,51:2+2%3D4\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
+    )
+    expect(variant).toMatchSnapshot()
+    expect(() => {
+      variant = VCFParser.parseLine(
+        '20\t14370\trs6054257\tG\tA\t29\tPASS\tTEST=2+2%3C4;DB;H2\tGT:GQ:DP:HQ:TEST\t0|0:48:1:51,51:2+2%3D4\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
+      )
+    }).toThrow(/Invalid percent-encoded character/)
   })
 })
 
