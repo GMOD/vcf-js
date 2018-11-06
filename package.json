@@ -27,13 +27,13 @@
     "lint": "eslint src test",
     "docs": "documentation readme src/parse.js --section API",
     "clean": "rimraf dist",
-    "prebuild": "npm run docs && npm run clean",
+    "prebuild": "npm run docs && npm run clean && npm run lint",
     "build": "babel src -d dist",
     "watch": "npm-watch",
     "patch": "npm version patch && npm publish --access public",
     "minor": "npm version minor && npm publish --access public",
     "major": "npm version major && npm publish --access public",
-    "prepublishOnly": "npm run lint && npm test && npm run build",
+    "prepublishOnly": "npm test && npm run build",
     "postpublish": "git push origin master --follow-tags"
   },
   "watch": {
