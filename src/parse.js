@@ -1,4 +1,4 @@
-import * as vcfReserved from './vcfReserved'
+import vcfReserved from './vcfReserved'
 
 /**
  * Class representing a VCF parser, instantiated with the VCF header.

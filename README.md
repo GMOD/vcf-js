@@ -142,10 +142,8 @@ Samples are also available.
         -   [Parameters](#parameters-4)
     -   [parseLine](#parseline)
         -   [Parameters](#parameters-5)
-    -   [\_vcfReservedInfoFields](#_vcfreservedinfofields)
-    -   [\_vcfReservedGenotypeFields](#_vcfreservedgenotypefields)
-    -   [\_vcfReservedAltTypes](#_vcfreservedalttypes)
-    -   [\_vcfReservedFilterTypes](#_vcfreservedfiltertypes)
+    -   [parseLine](#parseline)
+        -   [Parameters](#parameters-6)
 
 ### VCF
 
@@ -219,18 +217,3 @@ INFO } with SAMPLES optionally included if present in the VCF
 -   `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string of a line from a VCF. Supports both LF and
     CRLF newlines.
 
-#### \_vcfReservedInfoFields
-
-A getter that returns the INFO fields that are reserved in the VCF spec.
-
-#### \_vcfReservedGenotypeFields
-
-A getter that returns the FORMAT fields that are reserved in the VCF spec.
-
-#### \_vcfReservedAltTypes
-
-A getter that returns the ALT fields that are reserved in the VCF spec.
-
-#### \_vcfReservedFilterTypes
-
-A getter that returns the ALT fields that are reserved in the VCF spec.
