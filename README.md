@@ -55,13 +55,22 @@ The `variant` object returned by `parseLine()` would be
     DB: null,
     H2: null,
   },
-  SAMPLES: {
-    HG00096: {
-      GT: '0|0',
-      AP: '0.000,0.000',
-    },
-  },
 }
+```
+
+The `variant` object will also have a lazy attribute called "`SAMPLES`" that
+will not be evaluated unless it is called. This can save time if you only want
+the variant information and not the sample-specific information, especially if
+your VCF has a lot of samples in it. In the above case the `variant.SAMPLES`
+object would look like
+
+```javascript
+{
+  HG00096: {
+    GT: '0|0',
+    AP: '0.000,0.000',
+  },
+},
 ```
 
 The parser will try to use metadata from the header if present to convert INFO

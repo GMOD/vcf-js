@@ -250,6 +250,9 @@ class VCF {
     })
     variant.INFO = info
 
+    // This creates a closure that allows us to attach "SAMPLES" as a lazy
+    // attribute
+
     function Variant(stuff) {
       Object.assign(this, stuff)
     }
@@ -268,9 +271,7 @@ class VCF {
       },
     })
 
-    const varObj = new Variant(variant)
-
-    return varObj
+    return new Variant(variant)
   }
 
   _parseGenotypes(fields) {
