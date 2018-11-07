@@ -64,6 +64,7 @@ describe('VCF parser', () => {
       '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
     )
     expect(variant).toMatchSnapshot()
+    expect(variant.SAMPLES).toMatchSnapshot()
   })
 
   it('can parse a line with minimal entries', () => {
@@ -71,6 +72,7 @@ describe('VCF parser', () => {
       '20\t14370\t.\tG\tA\t.\t.\t.\tGT:GQ:DP:HQ\t.\t.\t.\n',
     )
     expect(variant).toMatchSnapshot()
+    expect(variant.SAMPLES).toMatchSnapshot()
   })
 
   let tmp // eslint-disable-line
@@ -99,11 +101,13 @@ describe('VCF parser', () => {
       '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;TEST=2+2%3D4;DB;H2\tGT:GQ:DP:HQ:TEST\t0|0:48:1:51,51:2+2%3D4\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
     )
     expect(variant).toMatchSnapshot()
+    expect(variant.SAMPLES).toMatchSnapshot()
     // Multiple percent-encoded characters in the same string
     variant = VCFParser.parseLine(
       '20\t14370\trs6054257\tG\tA\t29\tPASS\tTEST=2+2%3D4%3B2+2%3D4;DB;H2\tGT:GQ:DP:HQ:TEST\t0|0:48:1:51,51:2+2%3D4\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
     )
     expect(variant).toMatchSnapshot()
+    expect(variant.SAMPLES).toMatchSnapshot()
     expect(() => {
       variant = VCFParser.parseLine(
         '20\t14370\trs6054257\tG\tA\t29\tPASS\tTEST=2+2%3C4;DB;H2\tGT:GQ:DP:HQ:TEST\t0|0:48:1:51,51:2+2%3D4\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
@@ -146,6 +150,7 @@ describe('VCF parser for structural variants', () => {
       '8\t17709115\t28329_0\tN\t<DEL>\t.\tPASS\tPRECISE;SVMETHOD=Snifflesv1.0.3;CHR2=8;END=17709148;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=20.524521;Kurtosis_quant_stop=3.925926;SVTYPE=DEL;SUPTYPE=AL;SVLEN=33;STRANDS=+-;STRANDS2=20,14,20,14;RE=34;AF=0.971429\tGT:DR:DV\t1/1:1:34',
     )
     expect(variant).toMatchSnapshot()
+    expect(variant.SAMPLES).toMatchSnapshot()
   })
 })
 
@@ -204,7 +209,9 @@ describe('VCF parser for Y chrom (haploid)', () => {
       'Y\t2655180\trs11575897\tG\tA\t100\tPASS\tAA=G;AC=22;AF=0.0178427;AN=1233;DP=84761;NS=1233;AMR_AF=0;AFR_AF=0;EUR_AF=0;SAS_AF=0;EAS_AF=0.0902;VT=SNP;EX_TARGET\tGT\t0\t0\t0\t.',
     )
     expect(variant).toMatchSnapshot()
+    expect(variant.SAMPLES).toMatchSnapshot()
     expect(variant2).toMatchSnapshot()
+    expect(variant2.SAMPLES).toMatchSnapshot()
   })
 })
 
@@ -242,7 +249,9 @@ describe('VCF spec header', () => {
 	20	1234567	microsat1	GTC	G,GTCT	50	PASS	NS=3;DP=9;AA=G	GT:GQ:DP	0/1:35:4	0/2:17:2	1/1:40:3`.split(
       '\n',
     )
-    const parsedLines = lines.map(line => VCFParser.parseLine(line))
-    expect(parsedLines).toMatchSnapshot()
+    const variants = lines.map(line => VCFParser.parseLine(line))
+    expect(variants).toMatchSnapshot()
+    const samples = variants.map(variant => variant.SAMPLES)
+    expect(samples).toMatchSnapshot()
   })
 })
