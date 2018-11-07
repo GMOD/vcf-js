@@ -249,12 +249,38 @@ class VCF {
       info[key] = items
     })
     variant.INFO = info
-    variant.SAMPLES = {}
+
+    // This creates a closure that allows us to attach "SAMPLES" as a lazy
+    // attribute
+
+    function Variant(stuff) {
+      Object.assign(this, stuff)
+    }
+
+    const that = this
+
+    Object.defineProperty(Variant.prototype, 'SAMPLES', {
+      get() {
+        const samples = that._parseGenotypes(fields)
+
+        Object.defineProperty(this, 'SAMPLES', {
+          value: samples,
+        })
+
+        return samples
+      },
+    })
+
+    return new Variant(variant)
+  }
+
+  _parseGenotypes(fields) {
+    const genotypes = {}
     const formatKeys = fields[8] && fields[8].split(':')
     this.samples.forEach((sample, index) => {
-      variant.SAMPLES[sample] = {}
+      genotypes[sample] = {}
       formatKeys.forEach(key => {
-        variant.SAMPLES[sample][key] = null
+        genotypes[sample][key] = null
       })
       fields[9 + index].split(':').forEach((formatValue, formatIndex) => {
         let thisValue
@@ -282,10 +308,10 @@ class VCF {
             })
           }
         }
-        variant.SAMPLES[sample][formatKeys[formatIndex]] = thisValue
+        genotypes[sample][formatKeys[formatIndex]] = thisValue
       }, {})
     })
-    return variant
+    return genotypes
   }
 }
 
