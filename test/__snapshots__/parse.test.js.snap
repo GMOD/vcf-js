@@ -165,6 +165,586 @@ Object {
 }
 `;
 
+exports[`VCF parser can get metadata from the header 1`] = `
+Object {
+  "ALT": Object {
+    "*": Object {
+      "Description": "Represents any possible alternative allele at this location",
+    },
+    "CNV": Object {
+      "Description": "Copy number variable region (may be both deletion and duplication)",
+    },
+    "DEL": Object {
+      "Description": "Deletion relative to the reference",
+    },
+    "DEL:ME": Object {
+      "Description": "Deletion of mobile element relative to the reference",
+    },
+    "DUP": Object {
+      "Description": "Region of elevated copy number relative to the reference",
+    },
+    "DUP:TANDEM": Object {
+      "Description": "Tandem duplication",
+    },
+    "INS": Object {
+      "Description": "Insertion of novel sequence relative to the reference",
+    },
+    "INS:ME": Object {
+      "Description": "Insertion of a mobile element relative to the reference",
+    },
+    "INV": Object {
+      "Description": "Inversion of reference sequence",
+    },
+    "NON_REF": Object {
+      "Description": "Represents any possible alternative allele at this location",
+    },
+  },
+  "FILTER": Object {
+    "PASS": Object {
+      "Description": "Passed all filters",
+    },
+    "q10": Object {
+      "Description": "Quality below 10",
+    },
+    "s50": Object {
+      "Description": "Less than 50% of samples have data",
+    },
+  },
+  "FORMAT": Object {
+    "AD": Object {
+      "Description": "Read depth for each allele",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADF": Object {
+      "Description": "Read depth for each allele on the forward strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADR": Object {
+      "Description": "Read depth for each allele on the reverse strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "DP": Object {
+      "Description": "Read Depth",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "EC": Object {
+      "Description": "Expected alternate allele counts",
+      "Number": "A",
+      "Type": "Integer",
+    },
+    "FT": Object {
+      "Description": "Filter indicating if this genotype was \\"called\\"",
+      "Number": 1,
+      "Type": "String",
+    },
+    "GL": Object {
+      "Description": "Genotype likelihoods",
+      "Number": "G",
+      "Type": "Float",
+    },
+    "GP": Object {
+      "Description": "Genotype posterior probabilities",
+      "Number": "G",
+      "Type": "Float",
+    },
+    "GQ": Object {
+      "Description": "Genotype Quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "GT": Object {
+      "Description": "Genotype",
+      "Number": 1,
+      "Type": "String",
+    },
+    "HQ": Object {
+      "Description": "Haplotype Quality",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "MQ": Object {
+      "Description": "RMS mapping quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PL": Object {
+      "Description": "List of Phred-scaled genotype likelihoods",
+      "Number": "G",
+      "Type": "Integer",
+    },
+    "PQ": Object {
+      "Description": "Phasing quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PS": Object {
+      "Description": "Phase set",
+      "Number": 1,
+      "Type": "Integer",
+    },
+  },
+  "FORMAT<": "ID=TEST,Number=1,Type=String,Description=\\"Used for testing\\">",
+  "INFO": Object {
+    "1000G": Object {
+      "Description": "1000 Genomes membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "AA": Object {
+      "Description": "Ancestral Allele",
+      "Number": 1,
+      "Type": "String",
+    },
+    "AC": Object {
+      "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
+      "Number": "A",
+      "Type": "Integer",
+    },
+    "AD": Object {
+      "Description": "Total read depth for each allele",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADF": Object {
+      "Description": "Read depth for each allele on the forward strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADR": Object {
+      "Description": "Read depth for each allele on the reverse strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "AF": Object {
+      "Description": "Allele Frequency",
+      "Number": "A",
+      "Type": "Float",
+    },
+    "AN": Object {
+      "Description": "Total number of alleles in called genotypes",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "BKPTID": Object {
+      "Description": "ID of the assembled alternate allele in the assembly file",
+      "Type": "String",
+    },
+    "BQ": Object {
+      "Description": "RMS base quality",
+      "Number": 1,
+      "Type": "Float",
+    },
+    "CICN": Object {
+      "Description": "Confidence interval around copy number for the segment",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CICNADJ": Object {
+      "Description": "Confidence interval around copy number for the adjacency",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "CIEND": Object {
+      "Description": "Confidence interval around END for imprecise variants",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CIGAR": Object {
+      "Description": "Cigar string describing how to align an alternate allele to the reference allele",
+      "Number": 1,
+      "Type": "Float",
+    },
+    "CILEN": Object {
+      "Description": "Confidence interval around the inserted material between breakend",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CIPOS": Object {
+      "Description": "Confidence interval around POS for imprecise variants",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CN": Object {
+      "Description": "Copy number of segment containing breakend",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "CNADJ": Object {
+      "Description": "Copy number of adjacency",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "DB": Object {
+      "Description": "dbSNP membership, build 129",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "DBRIPID": Object {
+      "Description": "ID of this element in DBRIP",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DBVARID": Object {
+      "Description": "ID of this element in DBVAR",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DGVID": Object {
+      "Description": "ID of this element in Database of Genomic Variation",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DP": Object {
+      "Description": "Total Depth",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "DPADJ": Object {
+      "Description": "Read Depth of adjacency",
+      "Type": "Integer",
+    },
+    "END": Object {
+      "Description": "End position (for use with symbolic alleles)",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "EVENT": Object {
+      "Description": "ID of event associated to breakend",
+      "Number": 1,
+      "Type": "String",
+    },
+    "H2": Object {
+      "Description": "HapMap2 membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "H3": Object {
+      "Description": "HapMap3 membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "HOMLEN": Object {
+      "Description": "Length of base pair identical micro-homology at event breakpoints",
+      "Type": "Integer",
+    },
+    "HOMSEQ": Object {
+      "Description": "Sequence of base pair identical micro-homology at event breakpoints",
+      "Type": "String",
+    },
+    "IMPRECISE": Object {
+      "Description": "Imprecise structural variation",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "MATEID": Object {
+      "Description": "ID of mate breakends",
+      "Number": null,
+      "Type": "String",
+    },
+    "MEINFO": Object {
+      "Description": "Mobile element info of the form NAME,START,END,POLARITY",
+      "Number": 4,
+      "Type": "String",
+    },
+    "METRANS": Object {
+      "Description": "Mobile element transduction info of the form CHR,START,END,POLARITY",
+      "Number": 4,
+      "Type": "String",
+    },
+    "MQ": Object {
+      "Description": "RMS mapping quality",
+      "Number": 1,
+      "Type": null,
+    },
+    "MQ0": Object {
+      "Description": "Number of MAPQ == 0 reads",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "NOVEL": Object {
+      "Description": "Indicates a novel structural variation",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "NS": Object {
+      "Description": "Number of Samples With Data",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PARID": Object {
+      "Description": "ID of partner breakend",
+      "Number": 1,
+      "Type": "String",
+    },
+    "SB": Object {
+      "Description": "Strand bias",
+      "Number": 4,
+      "Type": "Integer",
+    },
+    "SOMATIC": Object {
+      "Description": "Somatic mutation (for cancer genomics)",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "SVLEN": Object {
+      "Description": "Difference in length between REF and ALT alleles",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "SVTYPE": Object {
+      "Description": "Type of structural variant",
+      "Number": 1,
+      "Type": "String",
+    },
+    "VALIDATED": Object {
+      "Description": "Validated by follow-up experiment",
+      "Number": 0,
+      "Type": "Flag",
+    },
+  },
+  "INFO<": "ID=TEST,Number=1,Type=String,Description=\\"Used for testing\\">",
+  "contig": Object {
+    "20": Object {
+      "assembly": "B36",
+      "length": "62435964",
+      "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+      "species": "Homo sapiens",
+      "taxonomy": "x",
+    },
+  },
+  "fileDate": "20090805",
+  "fileformat": "VCFv4.3",
+  "phasing": "partial",
+  "reference": "file:///seq/references/1000GenomesPilot-NCBI36.fasta",
+  "source": "myImputationProgramV3.1",
+}
+`;
+
+exports[`VCF parser can get metadata from the header 2`] = `
+Object {
+  "1000G": Object {
+    "Description": "1000 Genomes membership",
+    "Number": 0,
+    "Type": "Flag",
+  },
+  "AA": Object {
+    "Description": "Ancestral Allele",
+    "Number": 1,
+    "Type": "String",
+  },
+  "AC": Object {
+    "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
+    "Number": "A",
+    "Type": "Integer",
+  },
+  "AD": Object {
+    "Description": "Total read depth for each allele",
+    "Number": "R",
+    "Type": "Integer",
+  },
+  "ADF": Object {
+    "Description": "Read depth for each allele on the forward strand",
+    "Number": "R",
+    "Type": "Integer",
+  },
+  "ADR": Object {
+    "Description": "Read depth for each allele on the reverse strand",
+    "Number": "R",
+    "Type": "Integer",
+  },
+  "AF": Object {
+    "Description": "Allele Frequency",
+    "Number": "A",
+    "Type": "Float",
+  },
+  "AN": Object {
+    "Description": "Total number of alleles in called genotypes",
+    "Number": 1,
+    "Type": "Integer",
+  },
+  "BKPTID": Object {
+    "Description": "ID of the assembled alternate allele in the assembly file",
+    "Type": "String",
+  },
+  "BQ": Object {
+    "Description": "RMS base quality",
+    "Number": 1,
+    "Type": "Float",
+  },
+  "CICN": Object {
+    "Description": "Confidence interval around copy number for the segment",
+    "Number": 2,
+    "Type": "Integer",
+  },
+  "CICNADJ": Object {
+    "Description": "Confidence interval around copy number for the adjacency",
+    "Number": null,
+    "Type": "Integer",
+  },
+  "CIEND": Object {
+    "Description": "Confidence interval around END for imprecise variants",
+    "Number": 2,
+    "Type": "Integer",
+  },
+  "CIGAR": Object {
+    "Description": "Cigar string describing how to align an alternate allele to the reference allele",
+    "Number": 1,
+    "Type": "Float",
+  },
+  "CILEN": Object {
+    "Description": "Confidence interval around the inserted material between breakend",
+    "Number": 2,
+    "Type": "Integer",
+  },
+  "CIPOS": Object {
+    "Description": "Confidence interval around POS for imprecise variants",
+    "Number": 2,
+    "Type": "Integer",
+  },
+  "CN": Object {
+    "Description": "Copy number of segment containing breakend",
+    "Number": 1,
+    "Type": "Integer",
+  },
+  "CNADJ": Object {
+    "Description": "Copy number of adjacency",
+    "Number": null,
+    "Type": "Integer",
+  },
+  "DB": Object {
+    "Description": "dbSNP membership, build 129",
+    "Number": 0,
+    "Type": "Flag",
+  },
+  "DBRIPID": Object {
+    "Description": "ID of this element in DBRIP",
+    "Number": 1,
+    "Type": "String",
+  },
+  "DBVARID": Object {
+    "Description": "ID of this element in DBVAR",
+    "Number": 1,
+    "Type": "String",
+  },
+  "DGVID": Object {
+    "Description": "ID of this element in Database of Genomic Variation",
+    "Number": 1,
+    "Type": "String",
+  },
+  "DP": Object {
+    "Description": "Total Depth",
+    "Number": 1,
+    "Type": "Integer",
+  },
+  "DPADJ": Object {
+    "Description": "Read Depth of adjacency",
+    "Type": "Integer",
+  },
+  "END": Object {
+    "Description": "End position (for use with symbolic alleles)",
+    "Number": 1,
+    "Type": "Integer",
+  },
+  "EVENT": Object {
+    "Description": "ID of event associated to breakend",
+    "Number": 1,
+    "Type": "String",
+  },
+  "H2": Object {
+    "Description": "HapMap2 membership",
+    "Number": 0,
+    "Type": "Flag",
+  },
+  "H3": Object {
+    "Description": "HapMap3 membership",
+    "Number": 0,
+    "Type": "Flag",
+  },
+  "HOMLEN": Object {
+    "Description": "Length of base pair identical micro-homology at event breakpoints",
+    "Type": "Integer",
+  },
+  "HOMSEQ": Object {
+    "Description": "Sequence of base pair identical micro-homology at event breakpoints",
+    "Type": "String",
+  },
+  "IMPRECISE": Object {
+    "Description": "Imprecise structural variation",
+    "Number": 0,
+    "Type": "Flag",
+  },
+  "MATEID": Object {
+    "Description": "ID of mate breakends",
+    "Number": null,
+    "Type": "String",
+  },
+  "MEINFO": Object {
+    "Description": "Mobile element info of the form NAME,START,END,POLARITY",
+    "Number": 4,
+    "Type": "String",
+  },
+  "METRANS": Object {
+    "Description": "Mobile element transduction info of the form CHR,START,END,POLARITY",
+    "Number": 4,
+    "Type": "String",
+  },
+  "MQ": Object {
+    "Description": "RMS mapping quality",
+    "Number": 1,
+    "Type": null,
+  },
+  "MQ0": Object {
+    "Description": "Number of MAPQ == 0 reads",
+    "Number": 1,
+    "Type": "Integer",
+  },
+  "NOVEL": Object {
+    "Description": "Indicates a novel structural variation",
+    "Number": 0,
+    "Type": "Flag",
+  },
+  "NS": Object {
+    "Description": "Number of Samples With Data",
+    "Number": 1,
+    "Type": "Integer",
+  },
+  "PARID": Object {
+    "Description": "ID of partner breakend",
+    "Number": 1,
+    "Type": "String",
+  },
+  "SB": Object {
+    "Description": "Strand bias",
+    "Number": 4,
+    "Type": "Integer",
+  },
+  "SOMATIC": Object {
+    "Description": "Somatic mutation (for cancer genomics)",
+    "Number": 0,
+    "Type": "Flag",
+  },
+  "SVLEN": Object {
+    "Description": "Difference in length between REF and ALT alleles",
+    "Number": null,
+    "Type": "Integer",
+  },
+  "SVTYPE": Object {
+    "Description": "Type of structural variant",
+    "Number": 1,
+    "Type": "String",
+  },
+  "VALIDATED": Object {
+    "Description": "Validated by follow-up experiment",
+    "Number": 0,
+    "Type": "Flag",
+  },
+}
+`;
+
 exports[`VCF parser can parse a line from the VCF spec 1`] = `
 Variant {
   "ALT": Array [

@@ -101,13 +101,12 @@ class VCF {
    * @returns {any} An object, string, or number, depending on the filtering
    */
   getMetadata(...args) {
-    if (args.length && !(args[0] in this.metadata)) return undefined
-    let last = this.metadata
-    for (let i = 0; args.length; i += 1) {
-      if (last[args[i]] && !last[args[i]][args[i + 1]]) return last[args[i]]
-      last = last[args[i]]
+    let filteredMetadata = this.metadata
+    for (let i = 0; i < args.length; i += 1) {
+      filteredMetadata = filteredMetadata[args[i]]
+      if (!filteredMetadata) return filteredMetadata
     }
-    return this.metadata
+    return filteredMetadata
   }
 
   /**

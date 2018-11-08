@@ -31,22 +31,24 @@ describe('VCF parser', () => {
   })
 
   it('can get metadata from the header', () => {
-    const metadata = VCFParser.getMetadata()
-    expect(metadata.INFO.AF).toEqual({
-      Number: 'A',
-      Type: 'Float',
-      Description: 'Allele Frequency',
-    })
-    // Custom PL overrides default PL
-    expect(metadata.FORMAT.PL).toEqual({
-      Number: 'G',
-      Type: 'Integer',
-      Description: 'List of Phred-scaled genotype likelihoods',
-    })
-    expect(metadata.FILTER.q10).toEqual({ Description: 'Quality below 10' })
-    expect(metadata.source).toEqual('myImputationProgramV3.1')
-    const badMetadata = VCFParser.getMetadata('nonexistant')
-    expect(badMetadata).toBe(undefined)
+    // Note that there is a custom PL that overrides the default PL
+    expect(VCFParser.getMetadata()).toMatchSnapshot()
+    expect(VCFParser.getMetadata('nonexistant')).toBe(undefined)
+    expect(VCFParser.getMetadata('fileDate')).toBe('20090805')
+    expect(VCFParser.getMetadata('INFO')).toMatchSnapshot()
+    expect(VCFParser.getMetadata('INFO', 'nonexistant')).toBe(undefined)
+    expect(VCFParser.getMetadata('INFO', 'AA')).toMatchInlineSnapshot(`
+Object {
+  "Description": "Ancestral Allele",
+  "Number": 1,
+  "Type": "String",
+}
+`)
+    expect(VCFParser.getMetadata('INFO', 'AA', 'nonexistant')).toBe(undefined)
+    expect(VCFParser.getMetadata('INFO', 'AA', 'Type')).toBe('String')
+    expect(VCFParser.getMetadata('INFO', 'AA', 'Type', 'nonexistant')).toBe(
+      undefined,
+    )
   })
 
   it('can get default metadata not in the header', () => {
