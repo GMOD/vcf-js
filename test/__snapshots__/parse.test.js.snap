@@ -1494,6 +1494,133 @@ Array [
 ]
 `;
 
+exports[`shortcut parsing with 1000 genomes 1`] = `
+Array [
+  "HG00096",
+  "HG00101",
+  "HG00103",
+  "HG00105",
+  "HG00107",
+]
+`;
+
+exports[`shortcut parsing with 1000 genomes 2`] = `
+Array [
+  "NA21128",
+  "NA21129",
+  "NA21130",
+  "NA21133",
+  "NA21135",
+]
+`;
+
+exports[`shortcut parsing with 1000 genomes 3`] = `
+Array [
+  Object {
+    "ALT": Array [
+      "A",
+    ],
+    "CHROM": "Y",
+    "FILTER": "PASS",
+    "ID": Array [
+      "rs11575897",
+    ],
+    "INFO": Object {
+      "AA": Array [
+        "G",
+      ],
+      "AC": Array [
+        22,
+      ],
+      "AF": Array [
+        0.0178427,
+      ],
+      "AFR_AF": Array [
+        0,
+      ],
+      "AMR_AF": Array [
+        0,
+      ],
+      "AN": Array [
+        1233,
+      ],
+      "DP": Array [
+        84761,
+      ],
+      "EAS_AF": Array [
+        0.0902,
+      ],
+      "EUR_AF": Array [
+        0,
+      ],
+      "EX_TARGET": null,
+      "NS": Array [
+        1233,
+      ],
+      "SAS_AF": Array [
+        0,
+      ],
+      "VT": Array [
+        "SNP",
+      ],
+    },
+    "POS": 2655180,
+    "QUAL": 100,
+    "REF": "G",
+  },
+  Object {
+    "ALT": Array [
+      "C",
+    ],
+    "CHROM": "Y",
+    "FILTER": "PASS",
+    "ID": null,
+    "INFO": Object {
+      "AA": Array [
+        "A",
+      ],
+      "AC": Array [
+        5,
+      ],
+      "AF": Array [
+        0.00405515,
+      ],
+      "AFR_AF": Array [
+        0,
+      ],
+      "AMR_AF": Array [
+        0,
+      ],
+      "AN": Array [
+        1233,
+      ],
+      "DP": Array [
+        72067,
+      ],
+      "EAS_AF": Array [
+        0.0205,
+      ],
+      "EUR_AF": Array [
+        0,
+      ],
+      "EX_TARGET": null,
+      "NS": Array [
+        1233,
+      ],
+      "SAS_AF": Array [
+        0,
+      ],
+      "VT": Array [
+        "SNP",
+      ],
+    },
+    "POS": 2655471,
+    "QUAL": 100,
+    "REF": "A",
+  },
+]
+`;
+
 exports[`snippet from VCF 4.3 spec 1`] = `
 Array [
   Variant {
