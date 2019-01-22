@@ -23,7 +23,6 @@
   "scripts": {
     "test": "jest",
     "coverage": "npm test -- --coverage",
-    "postcoverage": "opn coverage/lcov-report/index.html",
     "lint": "eslint src test",
     "docs": "documentation readme src/parse.js --section API",
     "clean": "rimraf dist",
@@ -55,7 +54,6 @@
     "eslint-plugin-prettier": "^3.0.1",
     "jest": "^23.5.0",
     "npm-watch": "^0.5.0",
-    "opn-cli": "^4.0.0",
     "prettier": "^1.14.2",
     "regenerator-runtime": "^0.13.1",
     "rimraf": "^2.6.2"
