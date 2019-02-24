@@ -1,7 +1,7 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
         "targets": {
           "browsers": [
@@ -17,7 +17,7 @@
   "sourceMaps": true,
   "plugins": [
     [
-      "transform-runtime"
+      "@babel/plugin-transform-runtime"
     ]
   ]
 }
