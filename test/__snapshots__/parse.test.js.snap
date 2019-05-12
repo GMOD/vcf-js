@@ -1925,157 +1925,63 @@ Array [
 ]
 `;
 
-exports[`VCF thigies thingies 1`] = `
+exports[`test no format/genotypes 1`] = `
 Array [
   Variant {
     "ALT": Array [
-      "A",
+      "<DEL>",
     ],
-    "CHROM": "lcl|Scaffald_1",
-    "FILTER": "PASS",
-    "ID": Array [
-      "rs118266897",
-    ],
-    "INFO": Object {
-      "0,14": null,
-      "112": null,
-      "AF": Array [
-        0.5,
-      ],
-      "DB": null,
-      "NS": Array [
-        3,
-      ],
-      "PG2.1": null,
-    },
-    "POS": 80465,
-    "QUAL": 29,
-    "REF": "R",
+    "CHROM": "chr1",
+    "FILTER": null,
+    "ID": null,
+    "INFO": Object {},
+    "POS": 1,
+    "QUAL": null,
+    "REF": "A",
   },
   Variant {
     "ALT": Array [
-      "G",
+      "C",
+      "<DEL>",
     ],
-    "CHROM": "lcl|Scaffald_1",
-    "FILTER": "PASS",
-    "ID": Array [
-      "rs118269296",
-    ],
-    "INFO": Object {
-      "0,14": null,
-      "112": null,
-      "AF": Array [
-        0.5,
-      ],
-      "DB": null,
-      "NS": Array [
-        3,
-      ],
-      "PG2.1": null,
-    },
-    "POS": 84818,
-    "QUAL": 29,
-    "REF": "R",
+    "CHROM": "chr1",
+    "FILTER": null,
+    "ID": null,
+    "INFO": Object {},
+    "POS": 1,
+    "QUAL": null,
+    "REF": "A",
   },
   Variant {
     "ALT": Array [
-      "T",
+      "<DEL>",
+      "<INS>",
     ],
-    "CHROM": "lcl|Scaffald_1",
-    "FILTER": "PASS",
-    "ID": Array [
-      "rs118218236",
-    ],
-    "INFO": Object {
-      "0,14": null,
-      "112": null,
-      "AF": Array [
-        0.5,
-      ],
-      "DB": null,
-      "NS": Array [
-        3,
-      ],
-      "PG2.1": null,
-    },
-    "POS": 95414,
-    "QUAL": 29,
-    "REF": "W",
+    "CHROM": "chr1",
+    "FILTER": null,
+    "ID": null,
+    "INFO": Object {},
+    "POS": 1,
+    "QUAL": null,
+    "REF": "A",
   },
   Variant {
     "ALT": Array [
-      "A",
+      "A[chr1:1[",
+      "A]chr1:1]",
     ],
-    "CHROM": "lcl|Scaffald_1",
-    "FILTER": "PASS",
-    "ID": Array [
-      "rs118264755",
-    ],
+    "CHROM": "chr1",
+    "FILTER": null,
+    "ID": null,
     "INFO": Object {
-      "0,14": null,
-      "112": null,
-      "AF": Array [
-        0.5,
+      "SVTYPE": Array [
+        "BND",
       ],
-      "DB": null,
-      "NS": Array [
-        3,
-      ],
-      "PG2.1": null,
     },
-    "POS": 231384,
-    "QUAL": 29,
-    "REF": "R",
+    "POS": 1,
+    "QUAL": null,
+    "REF": "A",
   },
-  Variant {
-    "ALT": Array [
-      "G",
-    ],
-    "CHROM": "lcl|Scaffald_1",
-    "FILTER": "PASS",
-    "ID": Array [
-      "rs118223336",
-    ],
-    "INFO": Object {
-      "0,14": null,
-      "112": null,
-      "AF": Array [
-        6.5,
-      ],
-      "DB": null,
-      "NS": Array [
-        3,
-      ],
-      "PG2.1": null,
-    },
-    "POS": 236429,
-    "QUAL": 29,
-    "REF": "R",
-  },
-  Variant {
-    "ALT": Array [
-      "G",
-    ],
-    "CHROM": "lcl|Scaffald_1",
-    "FILTER": "PASS",
-    "ID": Array [
-      "rs118217257",
-    ],
-    "INFO": Object {
-      "0,14": null,
-      "112": null,
-      "AF": Array [
-        0.5,
-      ],
-      "DB": null,
-      "NS": Array [
-        3,
-      ],
-      "PG2.1": null,
-    },
-    "POS": 245378,
-    "QUAL": 29,
-    "REF": "R",
-  },
+  undefined,
 ]
 `;

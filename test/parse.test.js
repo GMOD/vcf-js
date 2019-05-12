@@ -334,5 +334,5 @@ test('test no format/genotypes', () => {
   const VCFParser = new VCF({ header })
   const variants = lines.map(line => VCFParser.parseLine(line))
   expect(variants).toMatchSnapshot()
-  console.log(variants)
+  // console.log(variants)
 })

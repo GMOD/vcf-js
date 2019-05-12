@@ -204,7 +204,9 @@ class VCF {
    * CRLF newlines.
    */
   parseLine(line) {
-    const fields = line.trim().split('\t')
+    line = line.trim()
+    if (!line.length) return undefined
+    const fields = line.split('\t')
     const variant = {
       CHROM: fields[0],
       POS: Number(fields[1]),
@@ -220,7 +222,10 @@ class VCF {
     } else {
       variant.FILTER = fields[6].split(';')
     }
-    const info = fields[7] === '.' ? {} : this._parseKeyValue(fields[7])
+    const info =
+      fields[7] === undefined || fields[7] === '.'
+        ? {}
+        : this._parseKeyValue(fields[7])
     Object.keys(info).forEach(key => {
       let items
       if (info[key]) {
