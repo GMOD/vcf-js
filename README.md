@@ -1,6 +1,6 @@
 # vcf-js
 
-High performance streaming VCF parser in pure JavaScript
+High performance VCF parser in pure JavaScript.
 
 ## Status
 
@@ -12,7 +12,7 @@ High performance streaming VCF parser in pure JavaScript
 ## Usage
 
 This module is best used when combined with some easy way of retrieving the
-header and individual lines from a VCF, like the @gmod/tabix module.
+header and individual lines from a VCF, like the `@gmod/tabix` module.
 
 ```javascript
 const { TabixIndexedFile } = require('@gmod/tabix')
@@ -78,7 +78,7 @@ The parser will try to use metadata from the header if present to convert INFO
 and FORMAT values to their proper type (int, float) or split them into an
 array if they represent multiple values.
 
-Metadata can be accessed with the `getMetadata()` method. With no paramters it
+Metadata can be accessed with the `getMetadata()` method. With no parameters it
 will return all the data. Any parameters passed will further filter the
 metadata. For example, a VCF with this header:
 
@@ -92,10 +92,10 @@ metadata. For example, a VCF with this header:
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
 ```
 
-you can access the metadata like this:
+You can access the VCF's header metadata like:
 
 ```javascript
-> console.log(this.getMetadata())
+> console.log(vcfParser.getMetadata())
 { INFO:
   { NS:
     { Number: 1,
@@ -109,7 +109,7 @@ you can access the metadata like this:
       Type: 'Flag',
       Description: 'dbSNP membership, build 129' },
     H2: { Number: 0, Type: 'Flag', Description: 'HapMap2 membership' } },}
-> console.log(this.getMetadata('INFO'))
+> console.log(vcfParser.getMetadata('INFO'))
 { NS:
   { Number: 1,
     Type: 'Integer',
@@ -121,16 +121,16 @@ you can access the metadata like this:
     Type: 'Flag',
     Description: 'dbSNP membership, build 129' },
   H2: { Number: 0, Type: 'Flag', Description: 'HapMap2 membership' } }
-> console.log(this.getMetadata('INFO', 'DP'))
+> console.log(vcfParser.getMetadata('INFO', 'DP'))
 { Number: 1, Type: 'Integer', Description: 'Total Depth' }
-> console.log(this.getMetadata('INFO', 'DP', 'Number'))
+> console.log(vcfParser.getMetadata('INFO', 'DP', 'Number'))
 1
 ```
 
-Samples are also available.
+A list of sample names is also available in the `samples` attribute of the parser object:
 
 ```javascript
-> console.log(this.samples)
+> console.log(vcfParser.samples)
 [ 'HG00096' ]
 ```
 
@@ -161,7 +161,7 @@ Class representing a VCF parser, instantiated with the VCF header.
 
 #### Parameters
 
--   `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**
     -   `args.header` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF header. Supports both LF and CRLF
         newlines.
 
