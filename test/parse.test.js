@@ -88,14 +88,15 @@ Object {
     expect(variant).toMatchSnapshot()
   })
 
-  it(`parses a line with multiple breakends`, () => {
+  it(`parses a line with mix of multiple breakends and non breakends`, () => {
     const variant = VCFParser.parseLine(
-      `13\t123456\tbnd_U\tC\tC[2 : 321682[,C[17 : 198983[\t6\tPASS\tSVTYPE=BND;MATEID=bnd V,bnd Z`,
+      `13\t123456\tbnd_U\tC\tCTATGTCG,C[2 : 321682[,C[17 : 198983[\t6\tPASS\tSVTYPE=BND;MATEID=bnd V,bnd Z`,
     )
-    expect(variant.ALT.length).toBe(2)
+    expect(variant.ALT.length).toBe(3)
     expect(variant.INFO.SVTYPE).toEqual(['BND'])
-    expect(variant.ALT[0] instanceof VCFParser.Breakend).toBe(true)
+    expect(variant.ALT[0] instanceof VCFParser.Breakend).toBe(false)
     expect(variant.ALT[1] instanceof VCFParser.Breakend).toBe(true)
+    expect(variant.ALT[2] instanceof VCFParser.Breakend).toBe(true)
     // console.log(JSON.stringify(variant, null, '  '));
     expect(variant).toMatchSnapshot()
   })

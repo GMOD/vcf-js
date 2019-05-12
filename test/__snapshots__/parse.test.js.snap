@@ -1190,9 +1190,10 @@ Variant {
 }
 `;
 
-exports[`VCF parser parses a line with multiple breakends 1`] = `
+exports[`VCF parser parses a line with mix of multiple breakends and non breakends 1`] = `
 Variant {
   "ALT": Array [
+    "CTATGTCG",
     Breakend {
       "Join": "right",
       "MateDirection": "right",
