@@ -256,6 +256,7 @@ class VCF {
             return Number(val)
           })
         } else if (itemType === 'Flag' && info[key]) {
+          // eslint-disable-next-line no-console
           console.warn(
             `Info field ${key} is a Flag and should not have a value (got value ${
               info[key]
