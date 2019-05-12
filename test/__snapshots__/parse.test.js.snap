@@ -1164,6 +1164,68 @@ Object {
 }
 `;
 
+exports[`VCF parser parses a line with a breakend ALT 1`] = `
+Variant {
+  "ALT": Array [
+    Breakend {
+      "Join": "right",
+      "MateDirection": "left",
+      "MatePosition": "17:198982",
+      "Replacement": "G",
+    },
+  ],
+  "CHROM": "2",
+  "FILTER": "PASS",
+  "ID": Array [
+    "bnd_W",
+  ],
+  "INFO": Object {
+    "SVTYPE": Array [
+      "BND",
+    ],
+  },
+  "POS": 321681,
+  "QUAL": 6,
+  "REF": "G",
+}
+`;
+
+exports[`VCF parser parses a line with multiple breakends 1`] = `
+Variant {
+  "ALT": Array [
+    Breakend {
+      "Join": "right",
+      "MateDirection": "right",
+      "MatePosition": "2 : 321682",
+      "Replacement": "C",
+    },
+    Breakend {
+      "Join": "right",
+      "MateDirection": "right",
+      "MatePosition": "17 : 198983",
+      "Replacement": "C",
+    },
+  ],
+  "CHROM": "13",
+  "FILTER": "PASS",
+  "ID": Array [
+    "bnd_U",
+  ],
+  "INFO": Object {
+    "MATEID": Array [
+      "bnd V",
+      "bnd Z",
+    ],
+    "SVTYPE": Array [
+      "BND",
+    ],
+  },
+  "POS": 123456,
+  "QUAL": 6,
+  "REF": "C",
+}
+`;
+
 exports[`VCF spec header can parse the spec example 1`] = `
 Array [
   Variant {
