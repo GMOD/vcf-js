@@ -30,6 +30,7 @@ describe('VCF parser', () => {
 ##INFO=<ID=DB,Number=0,Type=Flag,Description="dbSNP membership, build 129">
 ##INFO=<ID=H2,Number=0,Type=Flag,Description="HapMap2 membership">
 ##INFO<=ID=TEST,Number=1,Type=String,Description="Used for testing">
+##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant">
 ##FILTER=<ID=q10,Description="Quality below 10">
 ##FILTER=<ID=s50,Description="Less than 50% of samples have data">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
@@ -88,6 +89,29 @@ Object {
     )
     expect(variant).toMatchSnapshot()
     expect(variant.SAMPLES).toMatchSnapshot()
+  })
+
+  it('parses a line with a breakend ALT', () => {
+    const variant = VCFParser.parseLine(
+      '2\t321681\tbnd_W\tG\tG]17:198982]\t6\tPASS\tSVTYPE=BND\n',
+    )
+    expect(variant.ALT.length).toBe(1)
+    expect(variant.INFO.SVTYPE).toEqual(['BND'])
+    expect(variant.ALT[0] instanceof VCFParser.Breakend).toBe(true)
+    expect(variant).toMatchSnapshot()
+  })
+
+  it(`parses a line with mix of multiple breakends and non breakends`, () => {
+    const variant = VCFParser.parseLine(
+      `13\t123456\tbnd_U\tC\tCTATGTCG,C[2 : 321682[,C[17 : 198983[\t6\tPASS\tSVTYPE=BND;MATEID=bnd V,bnd Z`,
+    )
+    expect(variant.ALT.length).toBe(3)
+    expect(variant.INFO.SVTYPE).toEqual(['BND'])
+    expect(variant.ALT[0] instanceof VCFParser.Breakend).toBe(false)
+    expect(variant.ALT[1] instanceof VCFParser.Breakend).toBe(true)
+    expect(variant.ALT[2] instanceof VCFParser.Breakend).toBe(true)
+    // console.log(JSON.stringify(variant, null, '  '));
+    expect(variant).toMatchSnapshot()
   })
 
   let tmp // eslint-disable-line

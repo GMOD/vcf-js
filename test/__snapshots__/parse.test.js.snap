@@ -1319,11 +1319,79 @@ Object {
 }
 `;
 
+exports[`VCF parser parses a line with a breakend ALT 1`] = `
+Variant {
+  "ALT": Array [
+    Breakend {
+      "Join": "right",
+      "MateDirection": "left",
+      "MatePosition": "17:198982",
+      "Replacement": "G",
+    },
+  ],
+  "CHROM": "2",
+  "FILTER": "PASS",
+  "ID": Array [
+    "bnd_W",
+  ],
+  "INFO": Object {
+    "SVTYPE": Array [
+      "BND",
+    ],
+  },
+  "POS": 321681,
+  "QUAL": 6,
+  "REF": "G",
+}
+`;
+
+exports[`VCF parser parses a line with mix of multiple breakends and non breakends 1`] = `
+Variant {
+  "ALT": Array [
+    "CTATGTCG",
+    Breakend {
+      "Join": "right",
+      "MateDirection": "right",
+      "MatePosition": "2 : 321682",
+      "Replacement": "C",
+    },
+    Breakend {
+      "Join": "right",
+      "MateDirection": "right",
+      "MatePosition": "17 : 198983",
+      "Replacement": "C",
+    },
+  ],
+  "CHROM": "13",
+  "FILTER": "PASS",
+  "ID": Array [
+    "bnd_U",
+  ],
+  "INFO": Object {
+    "MATEID": Array [
+      "bnd V",
+      "bnd Z",
+    ],
+    "SVTYPE": Array [
+      "BND",
+    ],
+  },
+  "POS": 123456,
+  "QUAL": 6,
+  "REF": "C",
+}
+`;
+
 exports[`can parse breakends 1`] = `
 Array [
   Variant {
     "ALT": Array [
-      "G]8:107653520]",
+      Breakend {
+        "Join": "right",
+        "MateDirection": "left",
+        "MatePosition": "8:107653520",
+        "Replacement": "G",
+      },
     ],
     "CHROM": "11",
     "FILTER": "PASS",
@@ -1393,7 +1461,12 @@ Array [
   },
   Variant {
     "ALT": Array [
-      "T[8:107653411[",
+      Breakend {
+        "Join": "right",
+        "MateDirection": "right",
+        "MatePosition": "8:107653411",
+        "Replacement": "T",
+      },
     ],
     "CHROM": "11",
     "FILTER": "PASS",
