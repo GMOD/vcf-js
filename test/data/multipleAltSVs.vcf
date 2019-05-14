@@ -1,0 +1,23 @@
+##fileformat=VCFv4.2
+##ALT=<ID=DEL,Description="">
+##ALT=<ID=INS,Description="">
+##ALT=<ID=INV,Description="">
+##ALT=<ID=INV,Description="">
+##FILTER=<ID=FILTER,Description="">
+##INFO=<ID=CIEND,Number=2,Type=Integer,Description="Confidence interval around END for imprecise variants">
+##INFO=<ID=CIPOS,Number=2,Type=Integer,Description="Confidence interval around POS for imprecise variants">
+##INFO=<ID=CIRPOS,Number=2,Type=Integer,Description="Confidence interval around remote breakend POS for imprecise variants">
+##INFO=<ID=END,Number=1,Type=Integer,Description="Stop position of the interval">
+##INFO=<ID=EVENT,Number=1,Type=String,Description="ID of event associated to breakend">
+##INFO=<ID=HOMLEN,Number=.,Type=Integer,Description="Length of base pair identical micro-homology at event breakpoints">
+##INFO=<ID=HOMSEQ,Number=.,Type=String,Description="Sequence of base pair identical micro-homology at event breakpoints">
+##INFO=<ID=IMPRECISE,Number=0,Type=Flag,Description="Imprecise structural variation">
+##INFO=<ID=MATEID,Number=.,Type=String,Description="ID of mate breakends">
+##INFO=<ID=SVLEN,Number=.,Type=Integer,Description="Difference in length between REF and ALT alleles">
+##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant">
+##contig=<ID=chr1,length=249250621>
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+chr1	1	.	A	<DEL>	.	.	
+chr1	1	.	A	C,<DEL>	.	.	
+chr1	1	.	A	<DEL>,<INS>	.	.	
+chr1	1	.	A	A[chr1:1[,A]chr1:1]	.	.	SVTYPE=BND
