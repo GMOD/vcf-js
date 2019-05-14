@@ -230,56 +230,31 @@ describe('VCF parser for Y chrom (haploid)', () => {
   })
 })
 
-describe('VCF spec header', () => {
-  let VCFParser
-  beforeAll(() => {
-    VCFParser = new VCF({
-      header: `##fileformat=VCFv4.3
-##fileDate=20090805
-##source=myImputationProgramV3.1
-##reference=file:///seq/references/1000GenomesPilot-NCBI36.fasta
-##contig=<ID=20,length=62435964,assembly=B36,md5=f126cdf8a6e0c7f379d618ff66beb2da,species="Homo sapiens",taxonomy=x>
-##phasing=partial
-##INFO=<ID=NS,Number=1,Type=Integer,Description="Number of Samples With Data">
-##INFO=<ID=DP,Number=1,Type=Integer,Description="Total Depth">
-##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
-##INFO=<ID=AA,Number=1,Type=String,Description="Ancestral Allele">
-##INFO=<ID=DB,Number=0,Type=Flag,Description="dbSNP membership, build 129">
-##INFO=<ID=H2,Number=0,Type=Flag,Description="HapMap2 membership">
-##FILTER=<ID=q10,Description="Quality below 10">
-##FILTER=<ID=s50,Description="Less than 50% of samples have data">
-##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">
-##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
-##FORMAT=<ID=HQ,Number=2,Type=Integer,Description="Haplotype Quality">
-#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003`,
-    })
+test('snippet from VCF 4.3 spec', () => {
+  const { header, lines } = readVcf(
+    require.resolve('./data/vcf4.3_spec_snippet.vcf'),
+  )
+  const VCFParser = new VCF({
+    header,
   })
-
-  it('can parse the spec example', () => {
-    const lines = `20	14370	rs6054257	G	A	29	PASS	NS=3;DP=14;AF=0.5;DB;H2	GT:GQ:DP:HQ	0|0:48:1:51,51	1|0:48:8:51,51	1/1:43:5:.,.
-	20	17330	.	T	A	3	q10	NS=3;DP=11;AF=0.017	GT:GQ:DP:HQ	0|0:49:3:58,50	0|1:3:5:65,3	0/0:41:3
-	20	1110696	rs6040355	A	G,T	67	PASS	NS=2;DP=10;AF=0.333,0.667;AA=T;DB	GT:GQ:DP:HQ	1|2:21:6:23,27	2|1:2:0:18,2	2/2:35:4
-	20	1230237	.	T	.	47	PASS	NS=3;DP=13;AA=T	GT:GQ:DP:HQ	0|0:54:7:56,60	0|0:48:4:51,51	0/0:61:2
-	20	1234567	microsat1	GTC	G,GTCT	50	PASS	NS=3;DP=9;AA=G	GT:GQ:DP	0/1:35:4	0/2:17:2	1/1:40:3`.split(
-      '\n',
-    )
-    const variants = lines.map(line => VCFParser.parseLine(line))
-    expect(variants).toMatchSnapshot()
-    const samples = variants.map(variant => variant.SAMPLES)
-    expect(samples).toMatchSnapshot()
+  const variants = lines.map(line => VCFParser.parseLine(line)).filter(x => x)
+  expect(variants).toMatchSnapshot()
+  const samples = variants.map(variant => variant.SAMPLES)
+  expect(samples).toMatchSnapshot()
+})
+test('can parse breakends', () => {
+  const header = `#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tBAMs/caudaus.sorted.sam`
+  const VCFParser = new VCF({
+    header,
   })
-
-  it('can parse breakends', () => {
-    const lines = `11	94975747	MantaBND:0:2:3:0:0:0:1	G	G]8:107653520]	.	PASS	SVTYPE=BND;MATEID=MantaBND:0:2:3:0:0:0:0;CIPOS=0,2;HOMLEN=2;HOMSEQ=TT;BND_DEPTH=216;MATE_BND_DEPTH=735	PR:SR	722,9:463,15
+  const lines = `11	94975747	MantaBND:0:2:3:0:0:0:1	G	G]8:107653520]	.	PASS	SVTYPE=BND;MATEID=MantaBND:0:2:3:0:0:0:0;CIPOS=0,2;HOMLEN=2;HOMSEQ=TT;BND_DEPTH=216;MATE_BND_DEPTH=735	PR:SR	722,9:463,15
 11	94975753	MantaDEL:0:1:2:0:0:0	T	<DEL>	.	PASS	END=94987865;SVTYPE=DEL;SVLEN=12112;IMPRECISE;CIPOS=-156,156;CIEND=-150,150	PR	161,13
 11	94987872	MantaBND:0:0:1:0:0:0:0	T	T[8:107653411[	.	PASS	SVTYPE=BND;MATEID=MantaBND:0:0:1:0:0:0:1;BND_DEPTH=171;MATE_BND_DEPTH=830	PR:SR	489,4:520,19`.split(
-      '\n',
-    )
+    '\n',
+  )
 
-    const variants = lines.map(line => VCFParser.parseLine(line))
-    expect(variants).toMatchSnapshot()
-  })
+  const variants = lines.map(line => VCFParser.parseLine(line))
+  expect(variants).toMatchSnapshot()
 })
 
 // from https://github.com/GMOD/jbrowse/issues/1358
@@ -304,29 +279,6 @@ lcl|Scaffald_1\t245378\trs118217257\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2
     expect(variants).toMatchSnapshot()
   })
 })
-
-describe('Obscure VCF', () => {
-  let VCFParser
-  beforeAll(() => {
-    VCFParser = new VCF({
-      header: `#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tBAMs/caudaus.sorted.sam`,
-    })
-  })
-  it('vcf lines with weird info field and missing format/genotypes', () => {
-    const lines = `lcl|Scaffald_1\t80465\trs118266897\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
-lcl|Scaffald_1\t84818\trs118269296\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
-lcl|Scaffald_1\t95414\trs118218236\tW\tT\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
-lcl|Scaffald_1\t231384\trs118264755\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
-lcl|Scaffald_1\t236429\trs118223336\tR\tG\t29\tPASS\tNS=3;0,14;AF=6.5;DB;112;PG2.1
-lcl|Scaffald_1\t245378\trs118217257\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1`.split(
-      '\n',
-    )
-
-    const variants = lines.map(line => VCFParser.parseLine(line))
-    expect(variants).toMatchSnapshot()
-  })
-})
-
 test('test no info strict', () => {
   const { header, lines } = readVcf(
     require.resolve('./data/multipleAltSVs.vcf'),
@@ -339,6 +291,19 @@ test('test no info non-strict', () => {
   const { header, lines } = readVcf(
     require.resolve('./data/multipleAltSVs.vcf'),
   )
-  const VCFParser = new VCF({ header })
+  const VCFParser = new VCF({ header, strict: false })
   expect(VCFParser.parseLine(lines[0])).toBeTruthy()
+  expect(VCFParser.parseLine('')).toBeUndefined()
+})
+
+test('empty header', () => {
+  expect(() => new VCF({ header: null })).toThrow(/empty/)
+})
+
+test('empty header lines', () => {
+  expect(() => new VCF({ header: '\n' })).toThrow(/no non-empty/)
+})
+
+test('empty header lines', () => {
+  expect(() => new VCF()).toThrow(/empty/)
 })
