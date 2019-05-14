@@ -217,9 +217,21 @@ class VCF {
    * CRLF newlines.
    */
   parseLine(line) {
+    // eslint-disable-next-line no-param-reassign
     line = line.trim()
     if (!line.length) return undefined
-    const fields = line.split('\t')
+    let currChar = 0
+    for (let currField = 0; currChar < line.length; currChar += 1) {
+      if (line[currChar] === '\t') {
+        currField += 1
+      }
+      if (currField === 9) {
+        // reached genotypes, rest of fields are evaluated lazily
+        break
+      }
+    }
+    const fields = line.substr(0, currChar).split('\t')
+    const rest = line.substr(currChar + 1)
     const variant = {
       CHROM: fields[0],
       POS: Number(fields[1]),
@@ -289,7 +301,7 @@ class VCF {
 
     Object.defineProperty(Variant.prototype, 'SAMPLES', {
       get() {
-        const samples = that._parseGenotypes(fields)
+        const samples = that._parseGenotypes(fields[8], rest)
 
         Object.defineProperty(this, 'SAMPLES', {
           value: samples,
@@ -327,15 +339,18 @@ class VCF {
     return breakendString
   }
 
-  _parseGenotypes(fields) {
+  _parseGenotypes(formatKeys, rest) {
+    // eslint-disable-next-line no-param-reassign
+    rest = rest.split('\t')
     const genotypes = {}
-    const formatKeys = fields[8] && fields[8].split(':')
+    // eslint-disable-next-line no-param-reassign
+    formatKeys = formatKeys && formatKeys.split(':')
     this.samples.forEach((sample, index) => {
       genotypes[sample] = {}
       formatKeys.forEach(key => {
         genotypes[sample][key] = null
       })
-      fields[9 + index].split(':').forEach((formatValue, formatIndex) => {
+      rest[index].split(':').forEach((formatValue, formatIndex) => {
         let thisValue
         if (
           formatValue === '' ||

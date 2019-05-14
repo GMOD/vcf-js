@@ -317,6 +317,11 @@ test('test no info non-strict', () => {
   )
   const VCFParser = new VCF({ header, strict: false })
   expect(VCFParser.parseLine(lines[0])).toBeTruthy()
+  expect(VCFParser.parseLine(lines[0]).GENOTYPES).toBeUndefined()
+})
+test('blank line returns undefined', () => {
+  const { header } = readVcf(require.resolve('./data/multipleAltSVs.vcf'))
+  const VCFParser = new VCF({ header })
   expect(VCFParser.parseLine('')).toBeUndefined()
 })
 
@@ -330,4 +335,18 @@ test('empty header lines', () => {
 
 test('empty header lines', () => {
   expect(() => new VCF()).toThrow(/empty/)
+})
+
+test('shortcut parsing with 1000 genomes', () => {
+  const { header, lines } = readVcf(require.resolve('./data/1000genomes.vcf'))
+
+  const VCFParser = new VCF({ header })
+  const variants = lines.map(line => VCFParser.parseLine(line)).filter(x => x)
+  expect(Object.keys(variants[0].SAMPLES).slice(0, 5)).toMatchSnapshot()
+  expect(Object.keys(variants[0].SAMPLES).slice(-5)).toMatchSnapshot()
+  const ret = variants.map(v => {
+    const { SAMPLES, ...rest } = v
+    return rest
+  })
+  expect(ret).toMatchSnapshot()
 })
