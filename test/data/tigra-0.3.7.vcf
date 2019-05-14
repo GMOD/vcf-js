@@ -1,0 +1,25 @@
+##fileformat=VCFv4.1
+##ALT=<ID=DEL,Description="Deletion">
+##ALT=<ID=DUP,Description="Duplication">
+##ALT=<ID=INV,Description="Inversion">
+##ALT=<ID=TRA,Description="Translocation">
+##ALT=<ID=INS,Description="Insertion">
+##INFO=<ID=CIEND,Number=2,Type=Integer,Description="PE confidence interval around END">
+##INFO=<ID=CIPOS,Number=2,Type=Integer,Description="PE confidence interval around POS">
+##INFO=<ID=IMPRECISE,Number=0,Type=Flag,Description="">
+##INFO=<ID=PRECISE,Number=0,Type=Flag,Description="Precise structural variation">
+##INFO=<ID=SOMATIC,Number=0,Type=Flag,Description="">
+##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant">
+##INFO=<ID=CHR2,Number=1,Type=String,Description="">
+##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the structural variant">
+##INFO=<ID=SVLEN,Number=1,Type=Integer,Description="">
+##INFO=<ID=MICRO,Number=1,Type=String,Description="">
+##INFO=<ID=TEMPLATE,Number=1,Type=String,Description="">
+##INFO=<ID=NONTEMPLATE,Number=1,Type=String,Description="">
+##INFO=<ID=CTG,Number=1,Type=String,Description="">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SAMPLE
+chr12	10006210	N	.	<DUP>	60	PASS	PRECISE;CIPOS=-10,10;CIEND=-10,10;SOMATIC;SVTYPE=DUP;CHR2=chr12;END=97248430;SVLEN=87242220;MICRO=NA;TEMPLATE=NA;NONTEMPLATE=NA;CTG=chr12.10006210.chr12.97248430.ITX.87242220.+-.Contig1.2	GT	./.
+chr12	10008209	N	.	<INV>	60	PASS	PRECISE;CIPOS=-10,10;CIEND=-10,10;SOMATIC;SVTYPE=INV;CHR2=chr12;END=65630406;SVLEN=55622198;MICRO=NA;TEMPLATE=NA;NONTEMPLATE=NA;CTG=chr12.10008209.chr12.65630406.ITX.55622197.+-.Contig1.-2	GT	./.
+chr12	102520604	N	.	<CTX>	30	PASS	PRECISE;CIPOS=-10,10;CIEND=-10,10;SOMATIC;SVTYPE=CTX;CHR2=chrUn_gl000223;END=70284;SVLEN=0;MICRO=NA;TEMPLATE=NA;NONTEMPLATE=NA;CTG=chr12.102520604.chr12.133612381.ITX.31091777.+-.Contig-1.-2	GT	./.
+chr12	94406729	N	.	<DEL>	60	PASS	PRECISE;CIPOS=-10,10;CIEND=-10,10;SOMATIC;SVTYPE=DEL;CHR2=chr12;END=104041300;SVLEN=-9634571;MICRO=NA;TEMPLATE=NA;NONTEMPLATE=NA;CTG=chr12.94406729.chr12.104041301.ITX.9634572.+-.Contig-1.-5.-2	GT	./.
