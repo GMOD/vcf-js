@@ -1,5 +1,160 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Obscure VCF vcf lines with weird info field and missing format/genotypes 1`] = `
+Array [
+  Variant {
+    "ALT": Array [
+      "A",
+    ],
+    "CHROM": "lcl|Scaffald_1",
+    "FILTER": "PASS",
+    "ID": Array [
+      "rs118266897",
+    ],
+    "INFO": Object {
+      "0,14": null,
+      "112": null,
+      "AF": Array [
+        0.5,
+      ],
+      "DB": null,
+      "NS": Array [
+        3,
+      ],
+      "PG2.1": null,
+    },
+    "POS": 80465,
+    "QUAL": 29,
+    "REF": "R",
+  },
+  Variant {
+    "ALT": Array [
+      "G",
+    ],
+    "CHROM": "lcl|Scaffald_1",
+    "FILTER": "PASS",
+    "ID": Array [
+      "rs118269296",
+    ],
+    "INFO": Object {
+      "0,14": null,
+      "112": null,
+      "AF": Array [
+        0.5,
+      ],
+      "DB": null,
+      "NS": Array [
+        3,
+      ],
+      "PG2.1": null,
+    },
+    "POS": 84818,
+    "QUAL": 29,
+    "REF": "R",
+  },
+  Variant {
+    "ALT": Array [
+      "T",
+    ],
+    "CHROM": "lcl|Scaffald_1",
+    "FILTER": "PASS",
+    "ID": Array [
+      "rs118218236",
+    ],
+    "INFO": Object {
+      "0,14": null,
+      "112": null,
+      "AF": Array [
+        0.5,
+      ],
+      "DB": null,
+      "NS": Array [
+        3,
+      ],
+      "PG2.1": null,
+    },
+    "POS": 95414,
+    "QUAL": 29,
+    "REF": "W",
+  },
+  Variant {
+    "ALT": Array [
+      "A",
+    ],
+    "CHROM": "lcl|Scaffald_1",
+    "FILTER": "PASS",
+    "ID": Array [
+      "rs118264755",
+    ],
+    "INFO": Object {
+      "0,14": null,
+      "112": null,
+      "AF": Array [
+        0.5,
+      ],
+      "DB": null,
+      "NS": Array [
+        3,
+      ],
+      "PG2.1": null,
+    },
+    "POS": 231384,
+    "QUAL": 29,
+    "REF": "R",
+  },
+  Variant {
+    "ALT": Array [
+      "G",
+    ],
+    "CHROM": "lcl|Scaffald_1",
+    "FILTER": "PASS",
+    "ID": Array [
+      "rs118223336",
+    ],
+    "INFO": Object {
+      "0,14": null,
+      "112": null,
+      "AF": Array [
+        6.5,
+      ],
+      "DB": null,
+      "NS": Array [
+        3,
+      ],
+      "PG2.1": null,
+    },
+    "POS": 236429,
+    "QUAL": 29,
+    "REF": "R",
+  },
+  Variant {
+    "ALT": Array [
+      "G",
+    ],
+    "CHROM": "lcl|Scaffald_1",
+    "FILTER": "PASS",
+    "ID": Array [
+      "rs118217257",
+    ],
+    "INFO": Object {
+      "0,14": null,
+      "112": null,
+      "AF": Array [
+        0.5,
+      ],
+      "DB": null,
+      "NS": Array [
+        3,
+      ],
+      "PG2.1": null,
+    },
+    "POS": 245378,
+    "QUAL": 29,
+    "REF": "R",
+  },
+]
+`;
+
 exports[`VCF parser can decode percent-encoded INFO and FORMAT fields 1`] = `
 Variant {
   "ALT": Array [
@@ -1164,7 +1319,109 @@ Object {
 }
 `;
 
-exports[`VCF spec header can parse the spec example 1`] = `
+exports[`can parse breakends 1`] = `
+Array [
+  Variant {
+    "ALT": Array [
+      "G]8:107653520]",
+    ],
+    "CHROM": "11",
+    "FILTER": "PASS",
+    "ID": Array [
+      "MantaBND:0:2:3:0:0:0:1",
+    ],
+    "INFO": Object {
+      "BND_DEPTH": Array [
+        "216",
+      ],
+      "CIPOS": Array [
+        0,
+        2,
+      ],
+      "HOMLEN": Array [
+        2,
+      ],
+      "HOMSEQ": Array [
+        "TT",
+      ],
+      "MATEID": Array [
+        "MantaBND:0:2:3:0:0:0:0",
+      ],
+      "MATE_BND_DEPTH": Array [
+        "735",
+      ],
+      "SVTYPE": Array [
+        "BND",
+      ],
+    },
+    "POS": 94975747,
+    "QUAL": null,
+    "REF": "G",
+  },
+  Variant {
+    "ALT": Array [
+      "<DEL>",
+    ],
+    "CHROM": "11",
+    "FILTER": "PASS",
+    "ID": Array [
+      "MantaDEL:0:1:2:0:0:0",
+    ],
+    "INFO": Object {
+      "CIEND": Array [
+        -150,
+        150,
+      ],
+      "CIPOS": Array [
+        -156,
+        156,
+      ],
+      "END": Array [
+        94987865,
+      ],
+      "IMPRECISE": null,
+      "SVLEN": Array [
+        12112,
+      ],
+      "SVTYPE": Array [
+        "DEL",
+      ],
+    },
+    "POS": 94975753,
+    "QUAL": null,
+    "REF": "T",
+  },
+  Variant {
+    "ALT": Array [
+      "T[8:107653411[",
+    ],
+    "CHROM": "11",
+    "FILTER": "PASS",
+    "ID": Array [
+      "MantaBND:0:0:1:0:0:0:0",
+    ],
+    "INFO": Object {
+      "BND_DEPTH": Array [
+        "171",
+      ],
+      "MATEID": Array [
+        "MantaBND:0:0:1:0:0:0:1",
+      ],
+      "MATE_BND_DEPTH": Array [
+        "830",
+      ],
+      "SVTYPE": Array [
+        "BND",
+      ],
+    },
+    "POS": 94987872,
+    "QUAL": null,
+    "REF": "T",
+  },
+]
+`;
+
+exports[`snippet from VCF 4.3 spec 1`] = `
 Array [
   Variant {
     "ALT": Array [
@@ -1294,7 +1551,7 @@ Array [
 ]
 `;
 
-exports[`VCF spec header can parse the spec example 2`] = `
+exports[`snippet from VCF 4.3 spec 2`] = `
 Array [
   Object {
     "NA00001": Object {

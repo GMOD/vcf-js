@@ -5,10 +5,18 @@ import vcfReserved from './vcfReserved'
  * @param {object} args
  * @param {string} args.header - The VCF header. Supports both LF and CRLF
  * newlines.
+ * @param {boolean} args.strict - Whether to parse in strict mode or not (default true)
  */
 class VCF {
   constructor(args) {
+    if (!args || !args.header || !args.header.length) {
+      throw new Error('empty header received')
+    }
     const headerLines = args.header.split(/[\r\n]+/).filter(line => line)
+    if (!headerLines.length) {
+      throw new Error('no non-empty header lines specified')
+    }
+    this.strict = args.strict !== undefined ? args.strict : true // true by default
     this.metadata = {
       INFO: vcfReserved.InfoFields,
       FORMAT: vcfReserved.GenotypeFields,
@@ -204,7 +212,9 @@ class VCF {
    * CRLF newlines.
    */
   parseLine(line) {
-    const fields = line.trim().split('\t')
+    line = line.trim()
+    if (!line.length) return undefined
+    const fields = line.split('\t')
     const variant = {
       CHROM: fields[0],
       POS: Number(fields[1]),
@@ -220,7 +230,15 @@ class VCF {
     } else {
       variant.FILTER = fields[6].split(';')
     }
-    const info = fields[7] === '.' ? {} : this._parseKeyValue(fields[7])
+    if (this.strict && fields[7] === undefined) {
+      throw new Error(
+        "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
+      )
+    }
+    const info =
+      fields[7] === undefined || fields[7] === '.'
+        ? {}
+        : this._parseKeyValue(fields[7])
     Object.keys(info).forEach(key => {
       let items
       if (info[key]) {
@@ -240,7 +258,7 @@ class VCF {
         } else if (itemType === 'Flag' && info[key]) {
           // eslint-disable-next-line no-console
           console.warn(
-            `Info field ${key} is a Flag and shoud not have a value (got value ${
+            `Info field ${key} is a Flag and should not have a value (got value ${
               info[key]
             })`,
           )
