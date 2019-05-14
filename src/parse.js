@@ -8,8 +8,8 @@ import vcfReserved from './vcfReserved'
  * @param {boolean} args.strict - Whether to parse in strict mode or not
  */
 class VCF {
-  constructor(args = {}) {
-    if (!args.header || !args.header.length) {
+  constructor(args) {
+    if (!args || !args.header || !args.header.length) {
       throw new Error('empty header received')
     }
     const headerLines = args.header.split(/[\r\n]+/).filter(line => line)
