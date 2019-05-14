@@ -5,7 +5,7 @@ import vcfReserved from './vcfReserved'
  * @param {object} args
  * @param {string} args.header - The VCF header. Supports both LF and CRLF
  * newlines.
- * @param {boolean} args.strict - Whether to parse in strict mode or not
+ * @param {boolean} args.strict - Whether to parse in strict mode or not (default true)
  */
 class VCF {
   constructor(args) {
