@@ -327,12 +327,18 @@ lcl|Scaffald_1\t245378\trs118217257\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2
   })
 })
 
-test('test no format/genotypes', () => {
+test('test no info strict', () => {
+  const { header, lines } = readVcf(
+    require.resolve('./data/multipleAltSVs.vcf'),
+  )
+  const VCFParser = new VCF({ header, strict: true })
+  expect(() => VCFParser.parseLine(lines[0])).toThrow(/INFO/)
+})
+
+test('test no info non-strict', () => {
   const { header, lines } = readVcf(
     require.resolve('./data/multipleAltSVs.vcf'),
   )
   const VCFParser = new VCF({ header })
-  const variants = lines.map(line => VCFParser.parseLine(line))
-  expect(variants).toMatchSnapshot()
-  // console.log(variants)
+  expect(VCFParser.parseLine(lines[0])).toBeTruthy()
 })

@@ -4,11 +4,19 @@ import vcfReserved from './vcfReserved'
  * Class representing a VCF parser, instantiated with the VCF header.
  * @param {object} args
  * @param {string} args.header - The VCF header. Supports both LF and CRLF
+ * @param {boolean} args.strict - Whether to parse in strict mode or not
  * newlines.
  */
 class VCF {
-  constructor(args) {
+  constructor(args = { strict: true, header: '' }) {
+    if (!args.header.length) {
+      throw new Error('no header specified')
+    }
     const headerLines = args.header.split(/[\r\n]+/).filter(line => line)
+    if (!headerLines.length) {
+      throw new Error('no non-empty header lines specified')
+    }
+    this.strict = args.strict
     this.metadata = {
       INFO: vcfReserved.InfoFields,
       FORMAT: vcfReserved.GenotypeFields,
@@ -221,6 +229,11 @@ class VCF {
       variant.FILTER = 'PASS'
     } else {
       variant.FILTER = fields[6].split(';')
+    }
+    if (this.strict && fields[7] === undefined) {
+      throw new Error(
+        "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
+      )
     }
     const info =
       fields[7] === undefined || fields[7] === '.'
