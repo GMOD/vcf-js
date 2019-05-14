@@ -257,7 +257,7 @@ class VCF {
           })
         } else if (itemType === 'Flag' && info[key]) {
           console.warn(
-            `Info field ${key} is a Flag and shoud not have a value (got value ${
+            `Info field ${key} is a Flag and should not have a value (got value ${
               info[key]
             })`,
           )
