@@ -35,7 +35,7 @@ Given a VCF with a single variant line
 
 ```text
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	HG00096
-contigA	3000	rs17883296	G	T,A	100	PASS	NS=3;DP=14;AF=0.5;DB;H2 GT:AP	0|0:0.000,0.000
+contigA	3000	rs17883296	G	T,A	100	PASS	NS=3;DP=14;AF=0.5;DB;XYZ=5	GT:AP	0|0:0.000,0.000
 ```
 
 The `variant` object returned by `parseLine()` would be
@@ -50,11 +50,11 @@ The `variant` object returned by `parseLine()` would be
   QUAL: 100,
   FILTER: 'PASS',
   INFO: {
-    NS: '3',
-    DP: '14',
-    AF: '0.5',
+    NS: [3],
+    DP: [14],
+    AF: [0.5],
     DB: null,
-    H2: null,
+    XYZ: ['5'],
   },
 }
 ```
@@ -68,61 +68,87 @@ object would look like
 ```javascript
 {
   HG00096: {
-    GT: '0|0',
-    AP: '0.000,0.000',
+    GT: ['0|0'],
+    AP: ['0.000', '0.000'],
   },
-},
+}
 ```
 
-The parser will try to use metadata from the header if present to convert INFO
-and FORMAT values to their proper type (int, float) or split them into an
-array if they represent multiple values.
-
-Metadata can be accessed with the `getMetadata()` method. With no parameters it
-will return all the data. Any parameters passed will further filter the
-metadata. For example, a VCF with this header:
+The parser will try to convert the values in INFO and FORMAT to the proper types
+using the header metadata. For example, if there is a header line like
 
 ```text
-##INFO=<ID=NS,Number=1,Type=Integer,Description="Number of Samples With Data">
-##INFO=<ID=DP,Number=1,Type=Integer,Description="Total Depth">
-##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
-##INFO=<ID=AA,Number=1,Type=String,Description="Ancestral Allele">
-##INFO=<ID=DB,Number=0,Type=Flag,Description="dbSNP membership, build 129">
-##INFO=<ID=H2,Number=0,Type=Flag,Description="HapMap2 membership">
+##INFO=<ID=ABC,Number=2,Type=Integer,Description="A description">
+```
+
+the parser will expect any INFO entry ABC to be an array of two integers, so it
+would convert `ABC=12,20` to `{ ABC: [12, 20] }`. Each INFO entry value will be
+an array unless `Type=Flag` is specified, in which case it will be `true`. If no
+metadata can be found for the entry, it will assume `Number=1` and
+`Type=String`.
+
+Some fields are pre-defined by the
+[VCF spec](https://samtools.github.io/hts-specs/VCFv4.3.pdf), which is why in
+the variant object above "DP" was parsed as an integer (it is defined in the VCF
+spec), but "XYZ" was left as a string (it is not defined in either the VCF spec
+or the header).
+
+Metadata can be accessed with the `getMetadata()` method, including all the
+built-in metadata from the VCF spec. With no parameters it will return all the
+data. Any parameters passed will further filter the metadata. For example, for a
+VCF with this header:
+
+```text
+##INFO=<ID=ABC,Number=2,Type=Integer,Description="A description">
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
 ```
 
-You can access the VCF's header metadata like:
+you can access the VCF's header metadata like (some output omitted for clarity):
 
 ```javascript
 > console.log(vcfParser.getMetadata())
 { INFO:
-  { NS:
-    { Number: 1,
-      Type: 'Integer',
-      Description: 'Number of Samples With Data' },
-    DP: { Number: 1, Type: 'Integer', Description: 'Total Depth' },
-    AF: { Number: NaN, Type: 'Float', Description: 'Allele Frequency' },
-    AA: { Number: 1, Type: 'String', Description: 'Ancestral Allele' },
-    DB:
-    { Number: 0,
-      Type: 'Flag',
-      Description: 'dbSNP membership, build 129' },
-    H2: { Number: 0, Type: 'Flag', Description: 'HapMap2 membership' } },}
+   { AA:
+      { Number: 1, Type: 'String', Description: 'Ancestral Allele' },
+
+...
+
+     ABC: { Number: 2, Type: 'Integer', Description: 'A description' } },
+  FORMAT:
+   { AD:
+      { Number: 'R',
+        Type: 'Integer',
+        Description: 'Read depth for each allele' },
+
+...
+
+  ALT:
+   { DEL: { Description: 'Deletion relative to the reference' },
+
+...
+
+  FILTER: { PASS: { Description: 'Passed all filters' } } }
+
 > console.log(vcfParser.getMetadata('INFO'))
-{ NS:
-  { Number: 1,
-    Type: 'Integer',
-    Description: 'Number of Samples With Data' },
-  DP: { Number: 1, Type: 'Integer', Description: 'Total Depth' },
-  AF: { Number: NaN, Type: 'Float', Description: 'Allele Frequency' },
-  AA: { Number: 1, Type: 'String', Description: 'Ancestral Allele' },
-  DB:{ Number: 0,
-    Type: 'Flag',
-    Description: 'dbSNP membership, build 129' },
-  H2: { Number: 0, Type: 'Flag', Description: 'HapMap2 membership' } }
+{ AA:
+   { Number: 1, Type: 'String', Description: 'Ancestral Allele' },
+  AC:
+   { Number: 'A',
+     Type: 'Integer',
+     Description:
+      'Allele count in genotypes, for each ALT allele, in the same order as listed' },
+  AD:
+   { Number: 'R',
+     Type: 'Integer',
+     Description: 'Total read depth for each allele' },
+
+...
+
+  ABC: { Number: 2, Type: 'Integer', Description: 'A description' } }
+
 > console.log(vcfParser.getMetadata('INFO', 'DP'))
 { Number: 1, Type: 'Integer', Description: 'Total Depth' }
+
 > console.log(vcfParser.getMetadata('INFO', 'DP', 'Number'))
 1
 ```
@@ -140,7 +166,7 @@ If a variant line has `SVTYPE=BND`, the `ALT` field will be examined for breaken
 specifications, and those will be parsed as objects.  For example:
 
 ```text
-13  123456  bnd_U C C[2 : 321682[,C[17 : 198983[  6 PASS  SVTYPE=BND;MATEID=bnd V,bnd Z
+13	123456	bnd_U	C	C[2:321682[,C[17:198983[	6	PASS	SVTYPE=BND;MATEID=bnd V,bnd Z
 ```
 
 will be parsed as
@@ -157,13 +183,13 @@ will be parsed as
     {
       "MateDirection": "right",
       "Replacement": "C",
-      "MatePosition": "2 : 321682",
+      "MatePosition": "2:321682",
       "Join": "right"
     },
     {
       "MateDirection": "right",
       "Replacement": "C",
-      "MatePosition": "17 : 198983",
+      "MatePosition": "17:198983",
       "Join": "right"
     }
   ],
@@ -208,7 +234,7 @@ Class representing a VCF parser, instantiated with the VCF header.
 
 #### Parameters
 
--   `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**
     -   `args.header` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF header. Supports both LF and CRLF
         newlines.
     -   `args.strict` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether to parse in strict mode or not (default true)
