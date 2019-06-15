@@ -53,7 +53,7 @@ The `variant` object returned by `parseLine()` would be
     NS: [3],
     DP: [14],
     AF: [0.5],
-    DB: null,
+    DB: true,
     XYZ: ['5'],
   },
 }

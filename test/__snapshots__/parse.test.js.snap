@@ -17,7 +17,7 @@ Array [
       "AF": Array [
         0.5,
       ],
-      "DB": null,
+      "DB": true,
       "NS": Array [
         3,
       ],
@@ -42,7 +42,7 @@ Array [
       "AF": Array [
         0.5,
       ],
-      "DB": null,
+      "DB": true,
       "NS": Array [
         3,
       ],
@@ -67,7 +67,7 @@ Array [
       "AF": Array [
         0.5,
       ],
-      "DB": null,
+      "DB": true,
       "NS": Array [
         3,
       ],
@@ -92,7 +92,7 @@ Array [
       "AF": Array [
         0.5,
       ],
-      "DB": null,
+      "DB": true,
       "NS": Array [
         3,
       ],
@@ -117,7 +117,7 @@ Array [
       "AF": Array [
         6.5,
       ],
-      "DB": null,
+      "DB": true,
       "NS": Array [
         3,
       ],
@@ -142,7 +142,7 @@ Array [
       "AF": Array [
         0.5,
       ],
-      "DB": null,
+      "DB": true,
       "NS": Array [
         3,
       ],
@@ -169,11 +169,11 @@ Variant {
     "AF": Array [
       0.5,
     ],
-    "DB": null,
+    "DB": true,
     "DP": Array [
       14,
     ],
-    "H2": null,
+    "H2": true,
     "NS": Array [
       3,
     ],
@@ -253,8 +253,8 @@ Variant {
     "rs6054257",
   ],
   "INFO": Object {
-    "DB": null,
-    "H2": null,
+    "DB": true,
+    "H2": true,
     "TEST": Array [
       "2+2=4;2+2=4",
     ],
@@ -914,11 +914,11 @@ Variant {
     "AF": Array [
       0.5,
     ],
-    "DB": null,
+    "DB": true,
     "DP": Array [
       14,
     ],
-    "H2": null,
+    "H2": true,
     "NS": Array [
       3,
     ],
@@ -1052,7 +1052,7 @@ Variant {
     "EUR_AF": Array [
       0.0042,
     ],
-    "EX_TARGET": null,
+    "EX_TARGET": true,
     "NS": Array [
       1233,
     ],
@@ -1199,7 +1199,7 @@ Variant {
     "EUR_AF": Array [
       0,
     ],
-    "EX_TARGET": null,
+    "EX_TARGET": true,
     "NS": Array [
       1233,
     ],
@@ -1265,7 +1265,7 @@ Variant {
     "Kurtosis_quant_stop": Array [
       "3.925926",
     ],
-    "PRECISE": null,
+    "PRECISE": true,
     "RE": Array [
       34,
     ],
@@ -1447,7 +1447,7 @@ Array [
       "END": Array [
         94987865,
       ],
-      "IMPRECISE": null,
+      "IMPRECISE": true,
       "SVLEN": Array [
         12112,
       ],
@@ -1553,7 +1553,7 @@ Array [
       "EUR_AF": Array [
         0,
       ],
-      "EX_TARGET": null,
+      "EX_TARGET": true,
       "NS": Array [
         1233,
       ],
@@ -1603,7 +1603,7 @@ Array [
       "EUR_AF": Array [
         0,
       ],
-      "EX_TARGET": null,
+      "EX_TARGET": true,
       "NS": Array [
         1233,
       ],
@@ -1636,11 +1636,11 @@ Array [
       "AF": Array [
         0.5,
       ],
-      "DB": null,
+      "DB": true,
       "DP": Array [
         14,
       ],
-      "H2": null,
+      "H2": true,
       "NS": Array [
         3,
       ],
@@ -1691,7 +1691,7 @@ Array [
         0.333,
         0.667,
       ],
-      "DB": null,
+      "DB": true,
       "DP": Array [
         10,
       ],
