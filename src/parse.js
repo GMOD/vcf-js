@@ -2,6 +2,48 @@ import vcfReserved from './vcfReserved'
 
 class Breakend {}
 
+class Variant {
+  constructor(variantData, relevantFields, rest, parser) {
+    Object.assign(this, variantData)
+    if (relevantFields) this._fields = relevantFields
+    this._rest = rest
+    this._parser = parser
+  }
+
+  get SAMPLES() {
+    if (this._memoizedSamples) {
+      return this._memoizedSamples
+    }
+    if (this._rest) {
+      this._memoizedSamples = this._parser._parseGenotypes(
+        this._fields,
+        this._rest,
+      )
+      return this._memoizedSamples
+    }
+    return undefined
+  }
+
+  get FIELDS() {
+    return (this._fields || '').split(':')
+  }
+
+  toJSON() {
+    const {
+      _fields: foo,
+      _rest: bar,
+      _parser: baz,
+      _memoizedSamples: boz,
+      ...rest
+    } = this
+    if (this._rest) {
+      rest.SAMPLES = this.SAMPLES
+      rest.FIELDS = this.FIELDS
+    }
+    return rest
+  }
+}
+
 /**
  * Class representing a VCF parser, instantiated with the VCF header.
  * @param {object} args
@@ -293,25 +335,7 @@ class VCF {
     // This creates a closure that allows us to attach "SAMPLES" as a lazy
     // attribute
 
-    function Variant(stuff) {
-      Object.assign(this, stuff)
-    }
-
-    const that = this
-
-    Object.defineProperty(Variant.prototype, 'SAMPLES', {
-      get() {
-        const samples = that._parseGenotypes(fields[8], rest)
-
-        Object.defineProperty(this, 'SAMPLES', {
-          value: samples,
-        })
-
-        return samples
-      },
-    })
-
-    return new Variant(variant)
+    return new Variant(variant, fields[8], rest, this)
   }
 
   _parseBreakend(breakendString) {
