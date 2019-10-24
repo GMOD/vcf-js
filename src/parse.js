@@ -287,7 +287,7 @@ class VCF {
 
     // if this has SVTYPE=BND, parse ALTS for breakend descriptions
     if (variant.ALT && info && info.SVTYPE && info.SVTYPE[0] === 'BND') {
-      variant.ALT = variant.ALT.map(this._parseBreakend.bind(this))
+      variant.BND = variant.ALT.map(this._parseBreakend.bind(this))
     }
 
     // This creates a closure that allows us to attach "SAMPLES" as a lazy

@@ -163,7 +163,7 @@ A list of sample names is also available in the `samples` attribute of the parse
 ## Breakends
 
 If a variant line has `SVTYPE=BND`, the `ALT` field will be examined for breakend
-specifications, and those will be parsed as objects.  For example:
+specifications, and those will be parsed and put in a 'BND' field.  For example:
 
 ```text
 13	123456	bnd_U	C	C[2:321682[,C[17:198983[	6	PASS	SVTYPE=BND;MATEID=bnd V,bnd Z
@@ -179,7 +179,8 @@ will be parsed as
     "bnd_U"
   ],
   "REF": "C",
-  "ALT": [
+  "ALT": ["C[2:321682[", "C[17:198983["]
+  "BND": [
     {
       "MateDirection": "right",
       "Replacement": "C",

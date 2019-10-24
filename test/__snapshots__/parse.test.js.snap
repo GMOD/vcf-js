@@ -1322,6 +1322,9 @@ Object {
 exports[`VCF parser parses a line with a breakend ALT 1`] = `
 Variant {
   "ALT": Array [
+    "G]17:198982]",
+  ],
+  "BND": Array [
     Breakend {
       "Join": "right",
       "MateDirection": "left",
@@ -1348,6 +1351,11 @@ Variant {
 exports[`VCF parser parses a line with mix of multiple breakends and non breakends 1`] = `
 Variant {
   "ALT": Array [
+    "CTATGTCG",
+    "C[2 : 321682[",
+    "C[17 : 198983[",
+  ],
+  "BND": Array [
     "CTATGTCG",
     Breakend {
       "Join": "right",
@@ -1386,6 +1394,9 @@ exports[`can parse breakends 1`] = `
 Array [
   Variant {
     "ALT": Array [
+      "G]8:107653520]",
+    ],
+    "BND": Array [
       Breakend {
         "Join": "right",
         "MateDirection": "left",
@@ -1461,6 +1472,9 @@ Array [
   },
   Variant {
     "ALT": Array [
+      "T[8:107653411[",
+    ],
+    "BND": Array [
       Breakend {
         "Join": "right",
         "MateDirection": "right",

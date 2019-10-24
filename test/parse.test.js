@@ -97,7 +97,7 @@ Object {
     )
     expect(variant.ALT.length).toBe(1)
     expect(variant.INFO.SVTYPE).toEqual(['BND'])
-    expect(variant.ALT[0] instanceof VCFParser.Breakend).toBe(true)
+    expect(variant.BND[0] instanceof VCFParser.Breakend).toBe(true)
     expect(variant).toMatchSnapshot()
   })
 
@@ -107,9 +107,9 @@ Object {
     )
     expect(variant.ALT.length).toBe(3)
     expect(variant.INFO.SVTYPE).toEqual(['BND'])
-    expect(variant.ALT[0] instanceof VCFParser.Breakend).toBe(false)
-    expect(variant.ALT[1] instanceof VCFParser.Breakend).toBe(true)
-    expect(variant.ALT[2] instanceof VCFParser.Breakend).toBe(true)
+    expect(variant.BND[0] instanceof VCFParser.Breakend).toBe(false)
+    expect(variant.BND[1] instanceof VCFParser.Breakend).toBe(true)
+    expect(variant.BND[2] instanceof VCFParser.Breakend).toBe(true)
     // console.log(JSON.stringify(variant, null, '  '));
     expect(variant).toMatchSnapshot()
   })
