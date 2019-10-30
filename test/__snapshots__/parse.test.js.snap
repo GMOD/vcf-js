@@ -1621,6 +1621,149 @@ Array [
 ]
 `;
 
+exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
+Array [
+  Variant {
+    "ALT": Array [
+      Breakend {
+        "Join": "right",
+        "MateDirection": "left",
+        "MatePosition": "17:198982",
+        "Replacement": "G",
+      },
+    ],
+    "CHROM": "2",
+    "FILTER": "PASS",
+    "ID": Array [
+      "bnd_W",
+    ],
+    "INFO": Object {
+      "SVTYPE": Array [
+        "BND",
+      ],
+    },
+    "POS": 321681,
+    "QUAL": 6,
+    "REF": "G",
+  },
+  Variant {
+    "ALT": Array [
+      Breakend {
+        "Join": "left",
+        "MateDirection": "left",
+        "MatePosition": "13:123456",
+        "Replacement": "T",
+      },
+    ],
+    "CHROM": "2",
+    "FILTER": "PASS",
+    "ID": Array [
+      "bnd_V",
+    ],
+    "INFO": Object {
+      "SVTYPE": Array [
+        "BND",
+      ],
+    },
+    "POS": 321682,
+    "QUAL": 6,
+    "REF": "T",
+  },
+  Variant {
+    "ALT": Array [
+      Breakend {
+        "Join": "right",
+        "MateDirection": "right",
+        "MatePosition": "2:321682",
+        "Replacement": "C",
+      },
+    ],
+    "CHROM": "13",
+    "FILTER": "PASS",
+    "ID": Array [
+      "bnd_U",
+    ],
+    "INFO": Object {
+      "SVTYPE": Array [
+        "BND",
+      ],
+    },
+    "POS": 123456,
+    "QUAL": 6,
+    "REF": "C",
+  },
+  Variant {
+    "ALT": Array [
+      Breakend {
+        "Join": "left",
+        "MateDirection": "right",
+        "MatePosition": "17:198983",
+        "Replacement": "A",
+      },
+    ],
+    "CHROM": "13",
+    "FILTER": "PASS",
+    "ID": Array [
+      "bnd_X",
+    ],
+    "INFO": Object {
+      "SVTYPE": Array [
+        "BND",
+      ],
+    },
+    "POS": 123457,
+    "QUAL": 6,
+    "REF": "A",
+  },
+  Variant {
+    "ALT": Array [
+      Breakend {
+        "Join": "right",
+        "MateDirection": "left",
+        "MatePosition": "2:321681",
+        "Replacement": "A",
+      },
+    ],
+    "CHROM": "17",
+    "FILTER": "PASS",
+    "ID": Array [
+      "bnd_Y",
+    ],
+    "INFO": Object {
+      "SVTYPE": Array [
+        "BND",
+      ],
+    },
+    "POS": 198982,
+    "QUAL": 6,
+    "REF": "A",
+  },
+  Variant {
+    "ALT": Array [
+      Breakend {
+        "Join": "left",
+        "MateDirection": "right",
+        "MatePosition": "13:123457",
+        "Replacement": "C",
+      },
+    ],
+    "CHROM": "17",
+    "FILTER": "PASS",
+    "ID": Array [
+      "bnd_Z",
+    ],
+    "INFO": Object {
+      "SVTYPE": Array [
+        "BND",
+      ],
+    },
+    "POS": 198983,
+    "QUAL": 6,
+    "REF": "C",
+  },
+]
+`;
+
 exports[`snippet from VCF 4.3 spec 1`] = `
 Array [
   Variant {
