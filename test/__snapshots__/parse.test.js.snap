@@ -2112,3 +2112,32 @@ Array [
   },
 ]
 `;
+
+exports[`vcf 4.3 single breakends 1`] = `
+Breakend {
+  "Join": "right",
+  "MateDirection": "right",
+  "MatePosition": "<ctg1>:1",
+  "Replacement": "C",
+}
+`;
+
+exports[`vcf 4.3 single breakends 2`] = `
+Breakend {
+  "Join": "right",
+  "MateDirection": "right",
+  "MatePosition": "13:123457",
+  "Replacement": ".",
+}
+`;
+
+exports[`vcf 4.3 single breakends 3`] = `
+Breakend {
+  "Join": "left",
+  "MateDirection": "left",
+  "MatePosition": "13:123456",
+  "Replacement": "AGTNNNNNCAT",
+}
+`;
+
+exports[`vcf 4.3 single breakends 4`] = `"G."`;

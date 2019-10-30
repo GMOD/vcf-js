@@ -8,7 +8,7 @@ const readVcf = file => {
   const rest = []
   lines.forEach(line => {
     if (line.startsWith('#')) header.push(line)
-    else rest.push(line)
+    else if (line) rest.push(line)
   })
   return { header: header.join('\n'), lines: rest }
 }
@@ -364,6 +364,22 @@ test('shortcut parsing with vcf 4.3 bnd example', () => {
 
   expect(variants[1].ALT[0].Join).toBe('left') // the foot goes to the "right" in this case, since the join is before the sequence
   expect(variants[1].ALT[0].MateDirection).toBe('left') // the foot goes to the "right" in this case, since the join is before the sequence
+  expect(variants.map(m => m.ALT[0].toString())).toEqual(
+    lines.map(line => line.split('\t')[4]),
+  )
 
   expect(variants).toMatchSnapshot()
+})
+
+test('vcf 4.3 single breakends', () => {
+  const header =
+    '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tNA00001\tNA00002\tNA00003'
+  const VCFParser = new VCF({ header })
+  // inserted contig
+  expect(VCFParser._parseBreakend('C[<ctg1>:1[')).toMatchSnapshot()
+  // single breakend
+  expect(VCFParser._parseBreakend('.[13:123457')).toMatchSnapshot()
+  // large insertion
+  expect(VCFParser._parseBreakend(']13:123456]AGTNNNNNCAT')).toMatchSnapshot()
+  expect(VCFParser._parseBreakend('G.')).toMatchSnapshot()
 })
