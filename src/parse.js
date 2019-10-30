@@ -1,6 +1,14 @@
 import vcfReserved from './vcfReserved'
 
-class Breakend {}
+class Breakend {
+  toString() {
+    const char = this.MateDirection === 'left' ? ']' : '['
+    if (this.Join === 'left') {
+      return `${char}${this.MatePosition}${char}${this.Replacement}`
+    }
+    return `${this.Replacement}${char}${this.MatePosition}${char}`
+  }
+}
 
 /**
  * Class representing a VCF parser, instantiated with the VCF header.
