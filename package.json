@@ -55,7 +55,7 @@
     "prettier": "^1.14.2",
     "regenerator-runtime": "^0.13.1",
     "rimraf": "^2.6.2",
-    "standard-changelog": "^2.0.15"
+    "standard-changelog": "^1.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.3.1"
