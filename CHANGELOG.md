@@ -1,3 +1,8 @@
+<a name="4.0.1"></a>
+## [4.0.1](https://github.com/GMOD/vcf-js/compare/v4.0.0...v4.0.1) (2019-10-30)
+
+
+
 - Add toString for Breakend ALTs so they are easily interpretable
 
 ## [4.0.0](https://github.com/GMOD/vcf-js/compare/v3.0.0...v4.0.0) (2019-06-14)
