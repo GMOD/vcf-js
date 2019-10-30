@@ -207,55 +207,43 @@ will be parsed as
 }
 ```
 
-
-The C[2:321682[ parses as "Join": "right" because the BND is after the C base
-The C[2:321682[ also is given "MateDirection": "right" because the square brackets point to the right. 
+The C\[2:321682\[ parses as "Join": "right" because the BND is after the C base
+The C\[2:321682\[ also is given "MateDirection": "right" because the square brackets point to the right. 
 The spec never has the square brackets pointing in different directions. Instead, the different types of joins
 can be imagined as follows
 
+For the above vcf line where chr2:123456->C\[2:321682\[ then we have this
 
-For the above vcf line where chr2:123456->C[2:321682[ then we have this
-
-
-```
-
-
-    chr13:123456
-  -------------C\
-                 \
-                  \
-                   \
-                    \
+        chr13:123456
+      -------------C\
                      \
                       \
                        \
-                        \--------------
-                         chr2:321682
+                        \
+                         \
+                          \
+                           \
+                            \--------------
+                             chr2:321682
 
-```
-
-If the alt was instead [2:321682[C then the the "Join" would be "left" since the "BND" is before "C" and then
+If the alt was instead \[2:321682\[C then the the "Join" would be "left" since the "BND" is before "C" and then
 the breakend structure looks like this
 
-```
+          chr13:123456
 
-      chr13:123456
-
-      |C--------------------
-      |
-      |
-      |
-      |
-      |
-      |
-      |
-      |
-      |
-      |
-      ----------------------
-       chr2:321682
-
-```
+          |C--------------------
+          |
+          |
+          |
+          |
+          |
+          |
+          |
+          |
+          |
+          |
+          ----------------------
+           chr2:321682
 
 ## API
 
@@ -284,7 +272,7 @@ Class representing a VCF parser, instantiated with the VCF header.
 
 #### Parameters
 
--   `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**
+-   `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
     -   `args.header` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF header. Supports both LF and CRLF
         newlines.
     -   `args.strict` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether to parse in strict mode or not (default true)
