@@ -350,3 +350,20 @@ test('shortcut parsing with 1000 genomes', () => {
   })
   expect(ret).toMatchSnapshot()
 })
+
+test('shortcut parsing with vcf 4.3 bnd example', () => {
+  const { header, lines } = readVcf(
+    require.resolve('./data/vcf4.3_spec_bnd.vcf'),
+  )
+
+  const VCFParser = new VCF({ header })
+  const variants = lines.map(line => VCFParser.parseLine(line)).filter(x => x)
+  // console.log(variants)
+  expect(variants[0].ALT[0].Join).toBe('right') // join being on the right indicates the "foot" actually goes to left (e.g. the "join" is after the sequence, so the foot points towards that sequence)
+  expect(variants[0].ALT[0].MateDirection).toBe('left') // the mates "foot" actually goes to left
+
+  expect(variants[1].ALT[0].Join).toBe('left') // the foot goes to the "right" in this case, since the join is before the sequence
+  expect(variants[1].ALT[0].MateDirection).toBe('left') // the foot goes to the "right" in this case, since the join is before the sequence
+
+  expect(variants).toMatchSnapshot()
+})
