@@ -87,6 +87,9 @@ an array unless `Type=Flag` is specified, in which case it will be `true`. If no
 metadata can be found for the entry, it will assume `Number=1` and
 `Type=String`.
 
+*NOTE: the vcf specification allows percent-encoded characters. this library
+does not decode them, an end-use library can call url-decode methods*
+
 Some fields are pre-defined by the
 [VCF spec](https://samtools.github.io/hts-specs/VCFv4.3.pdf), which is why in
 the variant object above "DP" was parsed as an integer (it is defined in the VCF
@@ -261,8 +264,6 @@ the breakend structure looks like this
         -   [Parameters](#parameters-3)
     -   [\_parseKeyValue](#_parsekeyvalue)
         -   [Parameters](#parameters-4)
-    -   [\_percentDecode](#_percentdecode)
-        -   [Parameters](#parameters-5)
     -   [parseLine](#parseline)
         -   [Parameters](#parameters-6)
 
@@ -328,17 +329,6 @@ separator). Above line would be parsed to:
     pairs (optional, default `';'`)
 
 Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing the key-value pairs
-
-#### \_percentDecode
-
-Decode any of the eight percent-encoded values allowed in a string by the
-VCF spec.
-
-##### Parameters
-
--   `str` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string that may contain percent-encoded characters
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string with any percent-encoded characters decoded
 
 #### parseLine
 
