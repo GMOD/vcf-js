@@ -134,25 +134,6 @@ Object {
       tmp = new VCF({ header: '##this=badHeader\n' })
     }).toThrow('VCF does not have a header line')
   })
-
-  it('can decode percent-encoded INFO and FORMAT fields', () => {
-    let variant = VCFParser.parseLine(
-      '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;TEST=2+2%3D4;DB;H2\tGT:GQ:DP:HQ:TEST\t0|0:48:1:51,51:2+2%3D4\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
-    )
-    expect(variant).toMatchSnapshot()
-    expect(variant.SAMPLES).toMatchSnapshot()
-    // Multiple percent-encoded characters in the same string
-    variant = VCFParser.parseLine(
-      '20\t14370\trs6054257\tG\tA\t29\tPASS\tTEST=2+2%3D4%3B2+2%3D4;DB;H2\tGT:GQ:DP:HQ:TEST\t0|0:48:1:51,51:2+2%3D4\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
-    )
-    expect(variant).toMatchSnapshot()
-    expect(variant.SAMPLES).toMatchSnapshot()
-    expect(() => {
-      variant = VCFParser.parseLine(
-        '20\t14370\trs6054257\tG\tA\t29\tPASS\tTEST=2+2%3C4;DB;H2\tGT:GQ:DP:HQ:TEST\t0|0:48:1:51,51:2+2%3D4\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
-      )
-    }).toThrow(/Invalid percent-encoded character/)
-  })
 })
 
 describe('VCF parser for structural variants', () => {
