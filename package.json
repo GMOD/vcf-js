@@ -54,7 +54,7 @@
     "npm-watch": "^0.5.0",
     "prettier": "^1.14.2",
     "regenerator-runtime": "^0.13.1",
-    "rimraf": "^2.6.2",
+    "rimraf": "^3.0.2",
     "standard-changelog": "^1.0.0"
   },
   "dependencies": {
