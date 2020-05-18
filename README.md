@@ -215,7 +215,7 @@ The C\[2:321682\[ also is given "MateDirection": "right" because the square brac
 The spec never has the square brackets pointing in different directions. Instead, the different types of joins
 can be imagined as follows
 
-For the above vcf line where chr2:123456->C\[2:321682\[ then we have this
+For the above vcf line where chr13:123456->C\[2:321682\[ then we have this
 
         chr13:123456
       -------------C\
@@ -229,7 +229,7 @@ For the above vcf line where chr2:123456->C\[2:321682\[ then we have this
                             \--------------
                              chr2:321682
 
-If the alt was instead \[2:321682\[C then the the "Join" would be "left" since the "BND" is before "C" and then
+If the alt was instead chr13:123456->\[2:321682\[C then the the "Join" would be "left" since the "BND" is before "C" and then
 the breakend structure looks like this
 
           chr13:123456
