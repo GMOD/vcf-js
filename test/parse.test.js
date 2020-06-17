@@ -364,3 +364,12 @@ test('vcf 4.3 single breakends', () => {
   expect(VCFParser._parseBreakend(']13:123456]AGTNNNNNCAT')).toMatchSnapshot()
   expect(VCFParser._parseBreakend('G.')).toMatchSnapshot()
 })
+
+test('gwasvcf', () => {
+  const { header, lines } = readVcf(require.resolve('./data/gwasvcf.vcf'))
+
+  const VCFParser = new VCF({ header })
+  const variants = lines.map(line => VCFParser.parseLine(line)).filter(x => x)
+  console.log(variants[0].SAMPLES)
+  //console.log(variants)
+})
