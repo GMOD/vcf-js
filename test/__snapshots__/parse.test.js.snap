@@ -276,8 +276,12 @@ Object {
       "Number": 1,
       "Type": "Integer",
     },
+    "TEST": Object {
+      "Description": "Used for testing",
+      "Number": 1,
+      "Type": "String",
+    },
   },
-  "FORMAT<": "ID=TEST,Number=1,Type=String,Description=\\"Used for testing\\">",
   "INFO": Object {
     "1000G": Object {
       "Description": "1000 Genomes membership",
@@ -490,13 +494,17 @@ Object {
       "Number": 1,
       "Type": "String",
     },
+    "TEST": Object {
+      "Description": "Used for testing",
+      "Number": 1,
+      "Type": "String",
+    },
     "VALIDATED": Object {
       "Description": "Validated by follow-up experiment",
       "Number": 0,
       "Type": "Flag",
     },
   },
-  "INFO<": "ID=TEST,Number=1,Type=String,Description=\\"Used for testing\\">",
   "contig": Object {
     "20": Object {
       "assembly": "B36",
@@ -724,6 +732,11 @@ Object {
   },
   "SVTYPE": Object {
     "Description": "Type of structural variant",
+    "Number": 1,
+    "Type": "String",
+  },
+  "TEST": Object {
+    "Description": "Used for testing",
     "Number": 1,
     "Type": "String",
   },

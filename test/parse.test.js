@@ -29,7 +29,7 @@ describe('VCF parser', () => {
 ##INFO=<ID=AA,Number=1,Type=String,Description="Ancestral Allele">
 ##INFO=<ID=DB,Number=0,Type=Flag,Description="dbSNP membership, build 129">
 ##INFO=<ID=H2,Number=0,Type=Flag,Description="HapMap2 membership">
-##INFO<=ID=TEST,Number=1,Type=String,Description="Used for testing">
+##INFO=<ID=TEST,Number=1,Type=String,Description="Used for testing">
 ##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant">
 ##FILTER=<ID=q10,Description="Quality below 10">
 ##FILTER=<ID=s50,Description="Less than 50% of samples have data">
@@ -38,7 +38,7 @@ describe('VCF parser', () => {
 ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
 ##FORMAT=<ID=HQ,Number=2,Type=Integer,Description="Haplotype Quality">
 ##FORMAT=<ID=PL,Number=G,Type=Integer,Description="List of Phred-scaled genotype likelihoods">
-##FORMAT<=ID=TEST,Number=1,Type=String,Description="Used for testing">
+##FORMAT=<ID=TEST,Number=1,Type=String,Description="Used for testing">
 #CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tNA00001\tNA00002\tNA00003
 `,
     })
@@ -51,18 +51,21 @@ describe('VCF parser', () => {
     expect(VCFParser.getMetadata('fileDate')).toBe('20090805')
     expect(VCFParser.getMetadata('INFO')).toMatchSnapshot()
     expect(VCFParser.getMetadata('INFO', 'nonexistant')).toBe(undefined)
-    expect(VCFParser.getMetadata('INFO', 'AA')).toMatchInlineSnapshot(`
-Object {
-  "Description": "Ancestral Allele",
-  "Number": 1,
-  "Type": "String",
-}
-`)
+    expect(VCFParser.getMetadata('INFO', 'AA')).toEqual({
+      Description: 'Ancestral Allele',
+      Number: 1,
+      Type: 'String',
+    })
     expect(VCFParser.getMetadata('INFO', 'AA', 'nonexistant')).toBe(undefined)
     expect(VCFParser.getMetadata('INFO', 'AA', 'Type')).toBe('String')
     expect(VCFParser.getMetadata('INFO', 'AA', 'Type', 'nonexistant')).toBe(
       undefined,
     )
+    expect(VCFParser.getMetadata('INFO', 'TEST')).toEqual({
+      Description: 'Used for testing',
+      Number: 1,
+      Type: 'String',
+    })
   })
 
   it('can get default metadata not in the header', () => {
