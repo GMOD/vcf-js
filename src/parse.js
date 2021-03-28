@@ -30,12 +30,14 @@ class VCF {
     // allow access to the Breakend class in case anybody wants to use it for checking
     this.Breakend = Breakend
     this.strict = args.strict !== undefined ? args.strict : true // true by default
-    this.metadata = {
-      INFO: vcfReserved.InfoFields,
-      FORMAT: vcfReserved.GenotypeFields,
-      ALT: vcfReserved.AltTypes,
-      FILTER: vcfReserved.FilterTypes,
-    }
+    this.metadata = JSON.parse(
+      JSON.stringify({
+        INFO: vcfReserved.InfoFields,
+        FORMAT: vcfReserved.GenotypeFields,
+        ALT: vcfReserved.AltTypes,
+        FILTER: vcfReserved.FilterTypes,
+      }),
+    )
     headerLines.forEach(line => {
       if (!line.startsWith('#')) {
         throw new Error(`Bad line in header:\n${line}`)
