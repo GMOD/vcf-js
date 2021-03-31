@@ -87,8 +87,8 @@ an array unless `Type=Flag` is specified, in which case it will be `true`. If no
 metadata can be found for the entry, it will assume `Number=1` and
 `Type=String`.
 
-*NOTE: the vcf specification allows percent-encoded characters. this library
-does not decode them, an end-use library can call url-decode methods*
+_NOTE: the vcf specification allows percent-encoded characters. this library
+does not decode them, an end-use library can call url-decode methods_
 
 Some fields are pre-defined by the
 [VCF spec](https://samtools.github.io/hts-specs/VCFv4.3.pdf), which is why in
@@ -265,7 +265,7 @@ the breakend structure looks like this
     -   [\_parseKeyValue](#_parsekeyvalue)
         -   [Parameters](#parameters-4)
     -   [parseLine](#parseline)
-        -   [Parameters](#parameters-6)
+        -   [Parameters](#parameters-5)
 
 ### VCF
 

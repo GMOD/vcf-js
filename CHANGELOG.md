@@ -1,3 +1,9 @@
+- Include github automated fixes in release from before 4.0.2
+
+<a name="4.0.2"></a>
+
+## [4.0.2](https://github.com/GMOD/vcf-js/compare/v4.0.1...v4.0.2) (2021-03-31)
+
 - Avoid modifying built-in exports with parseMetadata, fixes issue with using
   parseMetadata from jest tests (#63)
 
