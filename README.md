@@ -14,19 +14,19 @@ This module is best used when combined with some easy way of retrieving the
 header and individual lines from a VCF, like the `@gmod/tabix` module.
 
 ```javascript
-const { TabixIndexedFile } = require('@gmod/tabix')
-const VCF = require('@gmod/vcf')
+const { TabixIndexedFile } = require("@gmod/tabix");
+const VCF = require("@gmod/vcf");
 
-const tbiIndexed = new TabixIndexedFile({ path: '/path/to/my.vcf.gz' })
+const tbiIndexed = new TabixIndexedFile({ path: "/path/to/my.vcf.gz" });
 
 async function doStuff() {
-  const headerText = await tbiIndexed.getHeader()
-  const tbiVCFParser = new VCF({ header: headerText })
-  const variants = []
-  await tbiIndexed.getLines('ctgA', 200, 300, line =>
-    variants.push(tbiVCFParser.parseLine(line)),
-  )
-  console.log(variants)
+  const headerText = await tbiIndexed.getHeader();
+  const tbiVCFParser = new VCF({ header: headerText });
+  const variants = [];
+  await tbiIndexed.getLines("ctgA", 200, 300, line =>
+    variants.push(tbiVCFParser.parseLine(line))
+  );
+  console.log(variants);
 }
 ```
 
@@ -164,53 +164,17 @@ A list of sample names is also available in the `samples` attribute of the parse
 
 ## Breakends
 
-If a variant line has `SVTYPE=BND`, the `ALT` field will be examined for breakend
-specifications, and those will be parsed as objects.  For example:
+We offer a helper function to parse breakend strings. We used to parse these
+automatically but it is now a helper function
 
-```text
-13	123456	bnd_U	C	C[2:321682[,C[17:198983[	6	PASS	SVTYPE=BND;MATEID=bnd V,bnd Z
+import {parseBreakend} from '@gmod/vcf' and call e.g.
+
 ```
-
-will be parsed as
-
-```json
-{
-  "CHROM": "13",
-  "POS": 123456,
-  "ID": [
-    "bnd_U"
-  ],
-  "REF": "C",
-  "ALT": [
-    {
-      "MateDirection": "right",
-      "Replacement": "C",
-      "MatePosition": "2:321682",
-      "Join": "right"
-    },
-    {
-      "MateDirection": "right",
-      "Replacement": "C",
-      "MatePosition": "17:198983",
-      "Join": "right"
-    }
-  ],
-  "QUAL": 6,
-  "FILTER": "PASS",
-  "INFO": {
-    "SVTYPE": [
-      "BND"
-    ],
-    "MATEID": [
-      "bnd V",
-      "bnd Z"
-    ]
-  }
-}
+parseBreakend('C[2:321682[')
 ```
 
 The C\[2:321682\[ parses as "Join": "right" because the BND is after the C base
-The C\[2:321682\[ also is given "MateDirection": "right" because the square brackets point to the right. 
+The C\[2:321682\[ also is given "MateDirection": "right" because the square brackets point to the right.
 The spec never has the square brackets pointing in different directions. Instead, the different types of joins
 can be imagined as follows
 
@@ -253,18 +217,18 @@ the breakend structure looks like this
 
 #### Table of Contents
 
--   [VCF](#vcf)
-    -   [Parameters](#parameters)
-    -   [\_parseMetadata](#_parsemetadata)
-        -   [Parameters](#parameters-1)
-    -   [\_parseStructuredMetaVal](#_parsestructuredmetaval)
-        -   [Parameters](#parameters-2)
-    -   [getMetadata](#getmetadata)
-        -   [Parameters](#parameters-3)
-    -   [\_parseKeyValue](#_parsekeyvalue)
-        -   [Parameters](#parameters-4)
-    -   [parseLine](#parseline)
-        -   [Parameters](#parameters-5)
+- [VCF](#vcf)
+  - [Parameters](#parameters)
+  - [\_parseMetadata](#_parsemetadata)
+    - [Parameters](#parameters-1)
+  - [\_parseStructuredMetaVal](#_parsestructuredmetaval)
+    - [Parameters](#parameters-2)
+  - [getMetadata](#getmetadata)
+    - [Parameters](#parameters-3)
+  - [\_parseKeyValue](#_parsekeyvalue)
+    - [Parameters](#parameters-4)
+  - [parseLine](#parseline)
+    - [Parameters](#parameters-5)
 
 ### VCF
 
@@ -272,10 +236,10 @@ Class representing a VCF parser, instantiated with the VCF header.
 
 #### Parameters
 
--   `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-    -   `args.header` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF header. Supports both LF and CRLF
-        newlines.
-    -   `args.strict` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether to parse in strict mode or not (default true)
+- `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**
+  - `args.header` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF header. Supports both LF and CRLF
+    newlines.
+  - `args.strict` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether to parse in strict mode or not (default true)
 
 #### \_parseMetadata
 
@@ -284,8 +248,8 @@ properties to the object.
 
 ##### Parameters
 
--   `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A line from the VCF. Supports both LF and CRLF
-    newlines.
+- `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A line from the VCF. Supports both LF and CRLF
+  newlines.
 
 #### \_parseStructuredMetaVal
 
@@ -294,7 +258,7 @@ with "&lt;ID=...")
 
 ##### Parameters
 
--   `metaVal` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF metadata value
+- `metaVal` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF metadata value
 
 Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array with two entries, 1) a string of the metadata ID
 and 2) an object with the other key-value pairs in the metadata
@@ -307,7 +271,7 @@ Get metadata filtered by the elements in args. For example, can pass
 
 ##### Parameters
 
--   `args` **...[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** List of metadata filter strings.
+- `args` **...[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** List of metadata filter strings.
 
 Returns **any** An object, string, or number, depending on the filtering
 
@@ -323,9 +287,9 @@ separator). Above line would be parsed to:
 
 ##### Parameters
 
--   `str` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Key-value pairs in a string
--   `pairSeparator` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** A string that separates sets of key-value
-    pairs (optional, default `';'`)
+- `str` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Key-value pairs in a string
+- `pairSeparator` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** A string that separates sets of key-value
+  pairs (optional, default `';'`)
 
 Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing the key-value pairs
 
@@ -336,5 +300,5 @@ INFO } with SAMPLES optionally included if present in the VCF
 
 ##### Parameters
 
--   `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string of a line from a VCF. Supports both LF and
-    CRLF newlines.
+- `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string of a line from a VCF. Supports both LF and
+  CRLF newlines.
