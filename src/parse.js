@@ -1,15 +1,5 @@
 import vcfReserved from './vcfReserved'
 
-class Breakend {
-  toString() {
-    const char = this.MateDirection === 'left' ? ']' : '['
-    if (this.Join === 'left') {
-      return `${char}${this.MatePosition}${char}${this.Replacement}`
-    }
-    return `${this.Replacement}${char}${this.MatePosition}${char}`
-  }
-}
-
 /**
  * Class representing a VCF parser, instantiated with the VCF header.
  * @param {object} args
@@ -17,7 +7,7 @@ class Breakend {
  * newlines.
  * @param {boolean} args.strict - Whether to parse in strict mode or not (default true)
  */
-class VCF {
+export default class VCF {
   constructor(args) {
     if (!args || !args.header || !args.header.length) {
       throw new Error('empty header received')
@@ -27,8 +17,6 @@ class VCF {
       throw new Error('no non-empty header lines specified')
     }
 
-    // allow access to the Breakend class in case anybody wants to use it for checking
-    this.Breakend = Breakend
     this.strict = args.strict !== undefined ? args.strict : true // true by default
     this.metadata = JSON.parse(
       JSON.stringify({
@@ -258,11 +246,6 @@ class VCF {
     })
     variant.INFO = info
 
-    // if this has SVTYPE=BND, parse ALTS for breakend descriptions
-    if (variant.ALT && info && info.SVTYPE && info.SVTYPE[0] === 'BND') {
-      variant.ALT = variant.ALT.map(this._parseBreakend.bind(this))
-    }
-
     // This creates a closure that allows us to attach "SAMPLES" as a lazy
     // attribute
 
@@ -285,31 +268,6 @@ class VCF {
     })
 
     return new Variant(variant)
-  }
-
-  _parseBreakend(breakendString) {
-    const tokens = breakendString.split(/[[\]]/)
-    if (tokens.length > 1) {
-      const parsed = new Breakend()
-      parsed.MateDirection = breakendString.includes('[') ? 'right' : 'left'
-      for (let i = 0; i < tokens.length; i += 1) {
-        const tok = tokens[i]
-        if (tok) {
-          if (tok.includes(':')) {
-            // this is the remote location
-            parsed.MatePosition = tok
-            parsed.Join = parsed.Replacement ? 'right' : 'left'
-          } else {
-            // this is the local alteration
-            parsed.Replacement = tok
-          }
-        }
-      }
-      return parsed
-    }
-    // if there is not more than one token, there are no [ or ] characters,
-    // so just return it unmodified
-    return breakendString
   }
 
   _parseGenotypes(formatKeys, rest) {
@@ -353,5 +311,3 @@ class VCF {
     return genotypes
   }
 }
-
-module.exports = VCF

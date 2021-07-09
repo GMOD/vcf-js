@@ -1,5 +1,5 @@
-const fs = require('fs')
-const VCF = require('../src')
+import fs from 'fs'
+import VCF, { parseBreakend } from '../src'
 
 const readVcf = file => {
   const f = fs.readFileSync(file, 'utf8')
@@ -100,7 +100,6 @@ describe('VCF parser', () => {
     )
     expect(variant.ALT.length).toBe(1)
     expect(variant.INFO.SVTYPE).toEqual(['BND'])
-    expect(variant.ALT[0] instanceof VCFParser.Breakend).toBe(true)
     expect(variant).toMatchSnapshot()
   })
 
@@ -110,14 +109,10 @@ describe('VCF parser', () => {
     )
     expect(variant.ALT.length).toBe(3)
     expect(variant.INFO.SVTYPE).toEqual(['BND'])
-    expect(variant.ALT[0] instanceof VCFParser.Breakend).toBe(false)
-    expect(variant.ALT[1] instanceof VCFParser.Breakend).toBe(true)
-    expect(variant.ALT[2] instanceof VCFParser.Breakend).toBe(true)
-    // console.log(JSON.stringify(variant, null, '  '));
     expect(variant).toMatchSnapshot()
   })
 
-  let tmp // eslint-disable-line
+  let tmp; // eslint-disable-line
   it('throws errors with bad header lines', () => {
     expect(() => {
       tmp = new VCF({ header: 'notARealHeader' })
@@ -131,7 +126,9 @@ describe('VCF parser', () => {
       })
     }).toThrow('VCF header has FORMAT but no samples')
     expect(() => {
-      tmp = new VCF({ header: '#CHROM\tPS\tID\tRF\tALT\tQUAL\tFILTER\tINFO\n' })
+      tmp = new VCF({
+        header: '#CHROM\tPS\tID\tRF\tALT\tQUAL\tFILTER\tINFO\n',
+      })
     }).toThrow('VCF column headers not correct')
     expect(() => {
       tmp = new VCF({ header: '##this=badHeader\n' })
@@ -342,12 +339,6 @@ test('shortcut parsing with vcf 4.3 bnd example', () => {
 
   const VCFParser = new VCF({ header })
   const variants = lines.map(line => VCFParser.parseLine(line)).filter(x => x)
-  // console.log(variants)
-  expect(variants[0].ALT[0].Join).toBe('right') // join being on the right indicates the "foot" actually goes to left (e.g. the "join" is after the sequence, so the foot points towards that sequence)
-  expect(variants[0].ALT[0].MateDirection).toBe('left') // the mates "foot" actually goes to left
-
-  expect(variants[1].ALT[0].Join).toBe('left') // the foot goes to the "right" in this case, since the join is before the sequence
-  expect(variants[1].ALT[0].MateDirection).toBe('left') // the foot goes to the "right" in this case, since the join is before the sequence
   expect(variants.map(m => m.ALT[0].toString())).toEqual(
     lines.map(line => line.split('\t')[4]),
   )
@@ -356,14 +347,11 @@ test('shortcut parsing with vcf 4.3 bnd example', () => {
 })
 
 test('vcf 4.3 single breakends', () => {
-  const header =
-    '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tNA00001\tNA00002\tNA00003'
-  const VCFParser = new VCF({ header })
   // inserted contig
-  expect(VCFParser._parseBreakend('C[<ctg1>:1[')).toMatchSnapshot()
+  expect(parseBreakend('C[<ctg1>:1[')).toMatchSnapshot()
   // single breakend
-  expect(VCFParser._parseBreakend('.[13:123457')).toMatchSnapshot()
+  expect(parseBreakend('.[13:123457')).toMatchSnapshot()
   // large insertion
-  expect(VCFParser._parseBreakend(']13:123456]AGTNNNNNCAT')).toMatchSnapshot()
-  expect(VCFParser._parseBreakend('G.')).toMatchSnapshot()
+  expect(parseBreakend(']13:123456]AGTNNNNNCAT')).toMatchSnapshot()
+  expect(parseBreakend('G.')).toMatchSnapshot()
 })
