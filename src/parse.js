@@ -45,7 +45,7 @@ class VCF {
       if (line.startsWith('##')) {
         this._parseMetadata(line)
       } else if (line) {
-        const fields = line.split('\t')
+        const fields = line.trim().split('\t')
         const thisHeader = fields.slice(0, 8)
         const correctHeader = [
           '#CHROM',
