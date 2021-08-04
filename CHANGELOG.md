@@ -1,3 +1,8 @@
+<a name="4.0.4"></a>
+## [4.0.4](https://github.com/GMOD/vcf-js/compare/v4.0.1...v4.0.4) (2021-08-04)
+
+
+
 - Fix issue when there is extra whitespace on the header line
 
 <a name="4.0.3"></a>
