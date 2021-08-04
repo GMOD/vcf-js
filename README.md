@@ -167,16 +167,25 @@ A list of sample names is also available in the `samples` attribute of the parse
 We offer a helper function to parse breakend strings. We used to parse these
 automatically but it is now a helper function
 
-import {parseBreakend} from '@gmod/vcf' and call e.g.
-
+```js
+import { parseBreakend } from "@gmod/vcf";
+parseBreakend("C[2:321682[");
+// output
+//
+//     {
+//       "MateDirection": "right",
+//       "Replacement": "C",
+//       "MatePosition": "2:321682",
+//       "Join": "right"
+//     }
 ```
-parseBreakend('C[2:321682[')
-```
 
-The C\[2:321682\[ parses as "Join": "right" because the BND is after the C base
-The C\[2:321682\[ also is given "MateDirection": "right" because the square brackets point to the right.
-The spec never has the square brackets pointing in different directions. Instead, the different types of joins
-can be imagined as follows
+- The C\[2:321682\[ parses as "Join": "right" because the BND is after the C
+  base
+- The C\[2:321682\[ also is given "MateDirection": "right" because the square
+  brackets point to the right.
+- The spec never has the square brackets pointing in different directions.
+  Instead, the different types of joins can be imagined as follows
 
 For the above vcf line where chr13:123456->C\[2:321682\[ then we have this
 
@@ -192,8 +201,9 @@ For the above vcf line where chr13:123456->C\[2:321682\[ then we have this
                             \--------------
                              chr2:321682
 
-If the alt was instead chr13:123456->\[2:321682\[C then the the "Join" would be "left" since the "BND" is before "C" and then
-the breakend structure looks like this
+If the alt was instead chr13:123456->\[2:321682\[C then the the "Join" would be
+"left" since the "BND" is before "C" and then the breakend structure looks like
+this
 
           chr13:123456
 
