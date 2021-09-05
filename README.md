@@ -14,19 +14,17 @@ This module is best used when combined with some easy way of retrieving the
 header and individual lines from a VCF, like the `@gmod/tabix` module.
 
 ```javascript
-const { TabixIndexedFile } = require("@gmod/tabix");
-const VCF = require("@gmod/vcf");
+const { TabixIndexedFile } = require('@gmod/tabix')
+const VCF = require('@gmod/vcf')
 
-const tbiIndexed = new TabixIndexedFile({ path: "/path/to/my.vcf.gz" });
+const tbiIndexed = new TabixIndexedFile({ path: '/path/to/my.vcf.gz' })
 
 async function doStuff() {
-  const headerText = await tbiIndexed.getHeader();
-  const tbiVCFParser = new VCF({ header: headerText });
-  const variants = [];
-  await tbiIndexed.getLines("ctgA", 200, 300, line =>
-    variants.push(tbiVCFParser.parseLine(line))
-  );
-  console.log(variants);
+  const headerText = await tbiIndexed.getHeader()
+  const tbiVCFParser = new VCF({ header: headerText })
+  const variants = []
+  await tbiIndexed.getLines('ctgA', 200, 300, line => variants.push(tbiVCFParser.parseLine(line)))
+  console.log(variants)
 }
 ```
 
@@ -168,8 +166,8 @@ We offer a helper function to parse breakend strings. We used to parse these
 automatically but it is now a helper function
 
 ```js
-import { parseBreakend } from "@gmod/vcf";
-parseBreakend("C[2:321682[");
+import { parseBreakend } from '@gmod/vcf'
+parseBreakend('C[2:321682[')
 // output
 //
 //     {

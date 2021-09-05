@@ -20,9 +20,7 @@ export function parseBreakend(breakendString) {
     }
     return parsed
   }
-  // if there is not more than one token, there are no [ or ] characters,
-  // so just return it unmodified
-  return breakendString
+  return undefined
 }
 
 export default VCF

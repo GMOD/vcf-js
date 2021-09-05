@@ -1933,4 +1933,4 @@ Object {
 }
 `;
 
-exports[`vcf 4.3 single breakends 4`] = `"G."`;
+exports[`vcf 4.3 single breakends 4`] = `undefined`;
