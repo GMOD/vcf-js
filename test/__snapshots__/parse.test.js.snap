@@ -1170,12 +1170,7 @@ Object {
 exports[`VCF parser parses a line with a breakend ALT 1`] = `
 Variant {
   "ALT": Array [
-    Breakend {
-      "Join": "right",
-      "MateDirection": "left",
-      "MatePosition": "17:198982",
-      "Replacement": "G",
-    },
+    "G]17:198982]",
   ],
   "CHROM": "2",
   "FILTER": "PASS",
@@ -1197,18 +1192,8 @@ exports[`VCF parser parses a line with mix of multiple breakends and non breaken
 Variant {
   "ALT": Array [
     "CTATGTCG",
-    Breakend {
-      "Join": "right",
-      "MateDirection": "right",
-      "MatePosition": "2 : 321682",
-      "Replacement": "C",
-    },
-    Breakend {
-      "Join": "right",
-      "MateDirection": "right",
-      "MatePosition": "17 : 198983",
-      "Replacement": "C",
-    },
+    "C[2 : 321682[",
+    "C[17 : 198983[",
   ],
   "CHROM": "13",
   "FILTER": "PASS",
@@ -1234,12 +1219,7 @@ exports[`can parse breakends 1`] = `
 Array [
   Variant {
     "ALT": Array [
-      Breakend {
-        "Join": "right",
-        "MateDirection": "left",
-        "MatePosition": "8:107653520",
-        "Replacement": "G",
-      },
+      "G]8:107653520]",
     ],
     "CHROM": "11",
     "FILTER": "PASS",
@@ -1309,12 +1289,7 @@ Array [
   },
   Variant {
     "ALT": Array [
-      Breakend {
-        "Join": "right",
-        "MateDirection": "right",
-        "MatePosition": "8:107653411",
-        "Replacement": "T",
-      },
+      "T[8:107653411[",
     ],
     "CHROM": "11",
     "FILTER": "PASS",
@@ -1473,12 +1448,7 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
 Array [
   Variant {
     "ALT": Array [
-      Breakend {
-        "Join": "right",
-        "MateDirection": "left",
-        "MatePosition": "17:198982",
-        "Replacement": "G",
-      },
+      "G]17:198982]",
     ],
     "CHROM": "2",
     "FILTER": "PASS",
@@ -1496,12 +1466,7 @@ Array [
   },
   Variant {
     "ALT": Array [
-      Breakend {
-        "Join": "left",
-        "MateDirection": "left",
-        "MatePosition": "13:123456",
-        "Replacement": "T",
-      },
+      "]13:123456]T",
     ],
     "CHROM": "2",
     "FILTER": "PASS",
@@ -1519,12 +1484,7 @@ Array [
   },
   Variant {
     "ALT": Array [
-      Breakend {
-        "Join": "right",
-        "MateDirection": "right",
-        "MatePosition": "2:321682",
-        "Replacement": "C",
-      },
+      "C[2:321682[",
     ],
     "CHROM": "13",
     "FILTER": "PASS",
@@ -1542,12 +1502,7 @@ Array [
   },
   Variant {
     "ALT": Array [
-      Breakend {
-        "Join": "left",
-        "MateDirection": "right",
-        "MatePosition": "17:198983",
-        "Replacement": "A",
-      },
+      "[17:198983[A",
     ],
     "CHROM": "13",
     "FILTER": "PASS",
@@ -1565,12 +1520,7 @@ Array [
   },
   Variant {
     "ALT": Array [
-      Breakend {
-        "Join": "right",
-        "MateDirection": "left",
-        "MatePosition": "2:321681",
-        "Replacement": "A",
-      },
+      "A]2:321681]",
     ],
     "CHROM": "17",
     "FILTER": "PASS",
@@ -1588,12 +1538,7 @@ Array [
   },
   Variant {
     "ALT": Array [
-      Breakend {
-        "Join": "left",
-        "MateDirection": "right",
-        "MatePosition": "13:123457",
-        "Replacement": "C",
-      },
+      "[13:123457[C",
     ],
     "CHROM": "17",
     "FILTER": "PASS",
@@ -1962,7 +1907,7 @@ Array [
 `;
 
 exports[`vcf 4.3 single breakends 1`] = `
-Breakend {
+Object {
   "Join": "right",
   "MateDirection": "right",
   "MatePosition": "<ctg1>:1",
@@ -1971,7 +1916,7 @@ Breakend {
 `;
 
 exports[`vcf 4.3 single breakends 2`] = `
-Breakend {
+Object {
   "Join": "right",
   "MateDirection": "right",
   "MatePosition": "13:123457",
@@ -1980,7 +1925,7 @@ Breakend {
 `;
 
 exports[`vcf 4.3 single breakends 3`] = `
-Breakend {
+Object {
   "Join": "left",
   "MateDirection": "left",
   "MatePosition": "13:123456",
@@ -1988,4 +1933,4 @@ Breakend {
 }
 `;
 
-exports[`vcf 4.3 single breakends 4`] = `"G."`;
+exports[`vcf 4.3 single breakends 4`] = `undefined`;
