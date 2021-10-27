@@ -226,9 +226,9 @@ export default class VCF {
         items = info[key]
           .split(',')
           .map(val => (val === '.' ? null : val))
-          .map(f => decodeURIComponent(f))
+          .map(f => (f ? decodeURIComponent(f) : f))
       } else {
-        items = decodeURIComponent(info[key])
+        items = info[key] ? decodeURIComponent(info[key]) : info[key]
       }
       const itemType = this.getMetadata('INFO', key, 'Type')
       if (itemType) {
