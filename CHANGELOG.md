@@ -1,7 +1,8 @@
+- Add URI decoding to INFO field
+
 <a name="5.0.0"></a>
+
 # [5.0.0](https://github.com/GMOD/vcf-js/compare/v4.0.4...v5.0.0) (2021-09-06)
-
-
 
 - Make parseBreakends an optional helper function, all ALTs are plain strings
   now instead of string|Breakend. This is a breaking change so a major version

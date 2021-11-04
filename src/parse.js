@@ -1,5 +1,14 @@
 import vcfReserved from './vcfReserved'
 
+function decodeURIComponentNoThrow(uri) {
+  try {
+    return decodeURIComponent(uri)
+  } catch (e) {
+    // avoid throwing exception on a failure to decode URI component
+    return uri
+  }
+}
+
 /**
  * Class representing a VCF parser, instantiated with the VCF header.
  * @param {object} args
@@ -226,7 +235,7 @@ export default class VCF {
         items = info[key]
           .split(',')
           .map(val => (val === '.' ? null : val))
-          .map(f => (f ? decodeURIComponent(f) : f))
+          .map(f => (f ? decodeURIComponentNoThrow(f) : f))
       } else {
         // it will be falsy so just assign whatever is there
         items = info[key]
