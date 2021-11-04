@@ -223,9 +223,14 @@ export default class VCF {
     Object.keys(info).forEach(key => {
       let items
       if (info[key]) {
-        items = info[key].split(',')
-        items = items.map(val => (val === '.' ? null : val))
-      } else items = info[key]
+        items = info[key]
+          .split(',')
+          .map(val => (val === '.' ? null : val))
+          .map(f => (f ? decodeURIComponent(f) : f))
+      } else {
+        // it will be falsy so just assign whatever is there
+        items = info[key]
+      }
       const itemType = this.getMetadata('INFO', key, 'Type')
       if (itemType) {
         if (itemType === 'Integer' || itemType === 'Float') {
