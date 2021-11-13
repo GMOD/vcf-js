@@ -1,7 +1,8 @@
+- Update package description to refer to variant call format
+
 <a name="5.0.1"></a>
+
 ## [5.0.1](https://github.com/GMOD/vcf-js/compare/v5.0.0...v5.0.1) (2021-11-04)
-
-
 
 - Add URI decoding to INFO field
 
