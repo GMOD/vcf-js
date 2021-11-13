@@ -1,7 +1,7 @@
 {
   "name": "@gmod/vcf",
   "version": "5.0.1",
-  "description": "High performance streaming VCF parser in pure JavaScript",
+  "description": "High performance streaming Variant Call Format (VCF) parser in pure JavaScript",
   "main": "dist/index.js",
   "repository": "github:GMOD/vcf-js",
   "author": {
