@@ -1,3 +1,8 @@
+<a name="5.0.2"></a>
+## [5.0.2](https://github.com/GMOD/vcf-js/compare/v5.0.1...v5.0.2) (2021-11-13)
+
+
+
 - Update package description to refer to variant call format
 
 <a name="5.0.1"></a>
