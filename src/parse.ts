@@ -10,9 +10,6 @@ function decodeURIComponentNoThrow(uri: string) {
 }
 
 class Variant {
-  // This creates a closure that allows us to attach "SAMPLES" as a lazy
-  // attribute
-  //
   fields: string[]
   parser: VCF
   rest: string
@@ -23,7 +20,8 @@ class Variant {
   REF: string
   ALT: string[] | null
   QUAL: number | null
-  FILTER: null | string[]
+  FILTER: string[]|null
+  INFO:unknown[]
 
   constructor(line: string, parser: VCF) {
     this.parser = parser
@@ -94,13 +92,42 @@ class Variant {
     })
     this.fields = fields
     this.rest = rest
+    this.INFO=info
     this.parser = parser
   }
 
-  that = this
+  _parseGenotypes(keys: string, other: string) {
+    const rest = other.split('\t')
+    const genotypes = {} as any
+    const formatKeys = keys.split(':')
+    this.parser.samples.forEach((sample, index) => {
+      genotypes[sample] = {}
+      formatKeys.forEach(key => {
+        genotypes[sample][key] = null
+      })
+      rest[index].split(':').forEach((val, index) => {
+        let thisValue: unknown
+        if (val === '' || val === '.' || val === undefined) {
+          thisValue = null
+        } else {
+          const entries = val.split(',').map(ent => (ent === '.' ? null : ent))
+          const valueType = this.parser.getMetadata(
+            'FORMAT',
+            formatKeys[index],
+            'Type',
+          )
+          if ((valueType === 'Integer' || valueType === 'Float') && thisValue) {
+            thisValue = entries.map(val => (val ? +val : val))
+          }
+        }
+        genotypes[sample][formatKeys[index]] = thisValue
+      }, {})
+    })
+    return genotypes
+  }
 
   get SAMPLES() {
-    const samples = this.parser._parseGenotypes(this.fields[8], this.rest)
+    const samples = this._parseGenotypes(this.fields[8], this.rest)
 
     Object.defineProperty(this, 'SAMPLES', {
       value: samples,
@@ -153,7 +180,7 @@ export default class VCF {
         throw new Error(`Bad line in header:\n${line}`)
       } else if (line.startsWith('##')) {
         this._parseMetadata(line)
-      } else if (line) {
+      } else {
         lastLine = line
       }
     })
@@ -193,20 +220,21 @@ export default class VCF {
    * newlines.
    */
   _parseMetadata(line: string) {
-    const res = line.trim().match(/^##(.+?)=(.*)/)
-    if (res) {
-      const [metaKey, metaVal] = res.slice(1, 3)
-      if (metaVal.startsWith('<')) {
-        if (!(metaKey in this.metadata)) {
-          this.metadata[metaKey] = {}
-        }
-        const [id, keyVals] = this._parseStructuredMetaVal(metaVal)
-        this.metadata[metaKey][id] = keyVals
-      } else {
-        this.metadata[metaKey] = metaVal
+    //@ts-ignore
+    const [metaKey, metaVal] = line
+      .trim()
+      .match(/^##(.+?)=(.*)/)
+      .slice(1, 3)
+
+    if (metaVal.startsWith('<')) {
+      if (!(metaKey in this.metadata)) {
+        this.metadata[metaKey] = {}
       }
+      const [id, keyVals] = this._parseStructuredMetaVal(metaVal)
+      console.log({id,keyVals,metaKey,metaVal});
+      this.metadata[metaKey][id] = keyVals
     } else {
-      throw new Error('Failed to parse metadata line')
+      this.metadata[metaKey] = metaVal
     }
   }
 
@@ -220,9 +248,14 @@ export default class VCF {
    */
   _parseStructuredMetaVal(metaVal: string) {
     const keyVals = this._parseKeyValue(metaVal.replace(/^<|>$/g, ''), ',')
-    const { ID, ...rest } = keyVals.ID
-    const val = +keyVals.Number
-    return [ID, { ...rest, Number: !Number.isNaN(val) ? val : undefined }]
+    const id = keyVals.ID
+    delete keyVals.ID
+    if ('Number' in keyVals) {
+      if (!Number.isNaN(Number(keyVals.Number))) {
+        keyVals.Number = Number(keyVals.Number)
+      }
+    }
+    return [id, keyVals]
   }
 
   /**
@@ -235,6 +268,7 @@ export default class VCF {
    */
   getMetadata(...args: string[]) {
     let filteredMetadata: any = this.metadata
+      if(args[1]==='TEST')console.log(args,this.metadata.INFO.TEST);
     for (let i = 0; i < args.length; i += 1) {
       filteredMetadata = filteredMetadata[args[i]]
       if (!filteredMetadata) {
@@ -298,35 +332,6 @@ export default class VCF {
     return data
   }
 
-  _parseGenotypes(keys: string, other: string) {
-    const rest = other.split('\t')
-    const genotypes = {} as any
-    const formatKeys = keys.split(':')
-    this.samples.forEach((sample, index) => {
-      genotypes[sample] = {}
-      formatKeys.forEach(key => {
-        genotypes[sample][key] = null
-      })
-      rest[index].split(':').forEach((val, index) => {
-        let thisValue: unknown
-        if (val === '' || val === '.' || val === undefined) {
-          thisValue = null
-        } else {
-          const entries = val.split(',').map(ent => (ent === '.' ? null : ent))
-          const valueType = this.getMetadata(
-            'FORMAT',
-            formatKeys[index],
-            'Type',
-          )
-          if ((valueType === 'Integer' || valueType === 'Float') && thisValue) {
-            thisValue = entries.map(val => (val ? +val : val))
-          }
-        }
-        genotypes[sample][formatKeys[index]] = thisValue
-      }, {})
-    })
-    return genotypes
-  }
 
   /**
    * Parse a VCF line into an object like { CHROM POS ID REF ALT QUAL FILTER

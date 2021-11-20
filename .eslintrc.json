@@ -1,6 +1,5 @@
 {
-  "extends": ["airbnb-typescript/base", "prettier"],
-  "plugins": ["prettier"],
+  "extends": ["prettier"],
   "env": {
     "shared-node-browser": true,
     "jest": true
