@@ -16,6 +16,7 @@
   },
   "rules": {
     "strict": "off",
+    "curly": "error",
     "no-underscore-dangle": "off",
     "no-bitwise": "off",
     "no-await-in-loop": "warn",

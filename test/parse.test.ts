@@ -1,3 +1,4 @@
+// @ts-nocheck
 import fs from 'fs'
 import VCF, { parseBreakend } from '../src'
 
@@ -112,27 +113,28 @@ describe('VCF parser', () => {
     expect(variant).toMatchSnapshot()
   })
 
-  let tmp; // eslint-disable-line
   it('throws errors with bad header lines', () => {
     expect(() => {
-      tmp = new VCF({ header: 'notARealHeader' })
+      const tmp = new VCF({ header: 'notARealHeader' })
     }).toThrow('Bad line in header')
     expect(() => {
-      tmp = new VCF({ header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\n' })
+      const tmp = new VCF({
+        header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\n',
+      })
     }).toThrow('VCF header missing columns')
     expect(() => {
-      tmp = new VCF({
+      const tmp = new VCF({
         header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\n',
       })
     }).toThrow('VCF header has FORMAT but no samples')
     expect(() => {
-      tmp = new VCF({
+      const tmp = new VCF({
         header: '#CHROM\tPS\tID\tRF\tALT\tQUAL\tFILTER\tINFO\n',
       })
     }).toThrow('VCF column headers not correct')
     expect(() => {
-      tmp = new VCF({ header: '##this=badHeader\n' })
-    }).toThrow('VCF does not have a header line')
+      const tmp = new VCF({ header: '##this=badHeader\n' })
+    }).toThrow(/No format line/)
   })
 })
 
@@ -312,10 +314,6 @@ test('empty header', () => {
 
 test('empty header lines', () => {
   expect(() => new VCF({ header: '\n' })).toThrow(/no non-empty/)
-})
-
-test('empty header lines', () => {
-  expect(() => new VCF()).toThrow(/empty/)
 })
 
 test('shortcut parsing with 1000 genomes', () => {

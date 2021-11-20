@@ -33,25 +33,20 @@
     "postversion": "git push --follow-tags"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.3",
-    "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.3.1",
-    "babel-jest": "^24.5.0",
+    "@types/jest": "^27.0.3",
     "documentation": "^11.0.0",
     "eslint": "^5.5.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^5.0.0",
     "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-prettier": "^3.0.1",
-    "jest": "^24.5.0",
+    "jest": "^27.3.1",
     "prettier": "^1.14.2",
     "regenerator-runtime": "^0.13.1",
     "rimraf": "^2.6.2",
-    "standard-changelog": "^1.0.0"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.3.1"
+    "standard-changelog": "^1.0.0",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.5.2"
   },
   "keywords": [
     "vcf",
