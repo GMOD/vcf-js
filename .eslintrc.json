@@ -1,33 +1,14 @@
 {
-  "extends": ["prettier"],
-  "env": {
-    "shared-node-browser": true,
-    "jest": true
-  },
-  "globals": {
-    "window": true,
-    "__webpack_require__": true
-  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
   "rules": {
-    "strict": "off",
     "curly": "error",
-    "no-underscore-dangle": "off",
-    "no-bitwise": "off",
-    "no-await-in-loop": "warn",
-    "no-param-reassign": "warn",
-    "no-loop-func": "warn",
-    "prefer-arrow-callback": "warn",
-    "prefer-destructuring": "warn",
-    "prefer-const": "warn",
-    "no-restricted-syntax": "warn",
-    "class-methods-use-this": "off",
-    "prettier/prettier": [
-      "error",
-      {
-        "singleQuote": true,
-        "semi": false,
-        "trailingComma": "all"
-      }
-    ]
+    "@typescript-eslint/ban-ts-comment": "off"
   }
 }

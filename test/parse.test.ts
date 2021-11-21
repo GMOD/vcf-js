@@ -8,8 +8,8 @@ const readVcf = file => {
   const header = []
   const rest = []
   lines.forEach(line => {
-    if (line.startsWith('#')) header.push(line)
-    else if (line) rest.push(line)
+    if (line.startsWith('#')) {header.push(line)}
+    else if (line) {rest.push(line)}
   })
   return { header: header.join('\n'), lines: rest }
 }
@@ -115,25 +115,25 @@ describe('VCF parser', () => {
 
   it('throws errors with bad header lines', () => {
     expect(() => {
-      const tmp = new VCF({ header: 'notARealHeader' })
+      new VCF({ header: 'notARealHeader' })
     }).toThrow('Bad line in header')
     expect(() => {
-      const tmp = new VCF({
+      new VCF({
         header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\n',
       })
     }).toThrow('VCF header missing columns')
     expect(() => {
-      const tmp = new VCF({
+      new VCF({
         header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\n',
       })
     }).toThrow('VCF header has FORMAT but no samples')
     expect(() => {
-      const tmp = new VCF({
+      new VCF({
         header: '#CHROM\tPS\tID\tRF\tALT\tQUAL\tFILTER\tINFO\n',
       })
     }).toThrow('VCF column headers not correct')
     expect(() => {
-      const tmp = new VCF({ header: '##this=badHeader\n' })
+      new VCF({ header: '##this=badHeader\n' })
     }).toThrow(/No format line/)
   })
 })

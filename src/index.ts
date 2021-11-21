@@ -3,7 +3,7 @@ import VCF from './parse'
 export function parseBreakend(breakendString: string) {
   const tokens = breakendString.split(/[[\]]/)
   if (tokens.length > 1) {
-    let MateDirection = breakendString.includes('[') ? 'right' : 'left'
+    const MateDirection = breakendString.includes('[') ? 'right' : 'left'
     let Join
     let Replacement
     let MatePosition

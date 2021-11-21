@@ -38,12 +38,13 @@ class Variant {
     }
     const fields = line.substr(0, currChar).split('\t')
     const rest = line.substr(currChar + 1)
-    this.CHROM = fields[0]
-    this.POS = Number(fields[1])
-    this.ID = fields[2] === '.' ? null : fields[2].split(';')
-    this.REF = fields[3]
-    this.ALT = fields[4] === '.' ? null : fields[4].split(',')
-    this.QUAL = fields[5] === '.' ? null : parseFloat(fields[5])
+    const [CHROM,POS,ID,REF,ALT,QUAL]=fields
+    this.CHROM = CHROM
+    this.POS = +POS
+    this.ID = ID === '.' ? null : ID.split(';')
+    this.REF = REF
+    this.ALT = ALT === '.' ? null : ALT.split(',')
+    this.QUAL = QUAL === '.' ? null : +QUAL
 
     if (fields[6] === '.') {
       this.FILTER = null
@@ -76,16 +77,16 @@ class Variant {
       if (itemType) {
         if (itemType === 'Integer' || itemType === 'Float') {
           items = items.map((val: string) => {
-            if (val === null) return null
+            if (val === null) {return null}
             return Number(val)
           })
         } else if (itemType === 'Flag') {
           if (info[key])
             // eslint-disable-next-line no-console
-            console.warn(
+            {console.warn(
               `Info field ${key} is a Flag and should not have a value (got value ${info[key]})`,
-            )
-          else items = true
+            )}
+          else {items = true}
         }
       }
       info[key] = items
@@ -268,7 +269,7 @@ export default class VCF {
    */
   getMetadata(...args: string[]) {
     let filteredMetadata: any = this.metadata
-      if(args[1]==='TEST')console.log(args,this.metadata.INFO.TEST);
+      if(args[1]==='TEST'){console.log(args,this.metadata.INFO.TEST);}
     for (let i = 0; i < args.length; i += 1) {
       filteredMetadata = filteredMetadata[args[i]]
       if (!filteredMetadata) {
@@ -317,11 +318,11 @@ export default class VCF {
           state = 1
         } else if (str[i] === '"') {
           state = 3
-        } else currValue += str[i]
+        } else {currValue += str[i]}
       } else if (state === 3) {
         // read value to quote
-        if (str[i] !== '"') currValue += str[i]
-        else state = 2
+        if (str[i] !== '"') {currValue += str[i]}
+        else {state = 2}
       }
     }
     if (state === 2 || state === 3) {
