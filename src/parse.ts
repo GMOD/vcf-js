@@ -20,8 +20,8 @@ class Variant {
   REF: string
   ALT: string[] | null
   QUAL: number | null
-  FILTER: string[]|null
-  INFO:unknown[]
+  FILTER: string[] | null
+  INFO: unknown[]
 
   constructor(line: string, parser: VCF) {
     this.parser = parser
@@ -38,19 +38,14 @@ class Variant {
     }
     const fields = line.substr(0, currChar).split('\t')
     const rest = line.substr(currChar + 1)
-    const [CHROM,POS,ID,REF,ALT,QUAL]=fields
+    const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
     this.CHROM = CHROM
     this.POS = +POS
     this.ID = ID === '.' ? null : ID.split(';')
     this.REF = REF
     this.ALT = ALT === '.' ? null : ALT.split(',')
     this.QUAL = QUAL === '.' ? null : +QUAL
-
-    if (fields[6] === '.') {
-      this.FILTER = null
-    } else {
-      this.FILTER = fields[6].split(';')
-    }
+    this.FILTER = FILTER === '.' ? null : FILTER.split(';')
 
     if (this.parser.strict && fields[7] === undefined) {
       throw new Error(
@@ -77,23 +72,27 @@ class Variant {
       if (itemType) {
         if (itemType === 'Integer' || itemType === 'Float') {
           items = items.map((val: string) => {
-            if (val === null) {return null}
+            if (val === null) {
+              return null
+            }
             return Number(val)
           })
         } else if (itemType === 'Flag') {
-          if (info[key])
+          if (info[key]) {
             // eslint-disable-next-line no-console
-            {console.warn(
+            console.warn(
               `Info field ${key} is a Flag and should not have a value (got value ${info[key]})`,
-            )}
-          else {items = true}
+            )
+          } else {
+            items = true
+          }
         }
       }
       info[key] = items
     })
     this.fields = fields
     this.rest = rest
-    this.INFO=info
+    this.INFO = info
     this.parser = parser
   }
 
@@ -157,7 +156,7 @@ export default class VCF {
     header: string
     strict: boolean
   }) {
-    if (!header?.length) {
+    if (!header || !header.length) {
       throw new Error('empty header received')
     }
     const headerLines = header.split(/[\r\n]+/).filter(line => line)
@@ -232,7 +231,6 @@ export default class VCF {
         this.metadata[metaKey] = {}
       }
       const [id, keyVals] = this._parseStructuredMetaVal(metaVal)
-      console.log({id,keyVals,metaKey,metaVal});
       this.metadata[metaKey][id] = keyVals
     } else {
       this.metadata[metaKey] = metaVal
@@ -269,7 +267,6 @@ export default class VCF {
    */
   getMetadata(...args: string[]) {
     let filteredMetadata: any = this.metadata
-      if(args[1]==='TEST'){console.log(args,this.metadata.INFO.TEST);}
     for (let i = 0; i < args.length; i += 1) {
       filteredMetadata = filteredMetadata[args[i]]
       if (!filteredMetadata) {
@@ -318,11 +315,16 @@ export default class VCF {
           state = 1
         } else if (str[i] === '"') {
           state = 3
-        } else {currValue += str[i]}
+        } else {
+          currValue += str[i]
+        }
       } else if (state === 3) {
         // read value to quote
-        if (str[i] !== '"') {currValue += str[i]}
-        else {state = 2}
+        if (str[i] !== '"') {
+          currValue += str[i]
+        } else {
+          state = 2
+        }
       }
     }
     if (state === 2 || state === 3) {
@@ -333,7 +335,6 @@ export default class VCF {
     return data
   }
 
-
   /**
    * Parse a VCF line into an object like { CHROM POS ID REF ALT QUAL FILTER
    * INFO } with SAMPLES optionally included if present in the VCF
@@ -341,7 +342,7 @@ export default class VCF {
    * CRLF newlines.
    */
   parseLine(line: string) {
-    const l=line.trim()
-    return l?new Variant(l, this):undefined
+    const l = line.trim()
+    return l ? new Variant(l, this) : undefined
   }
 }

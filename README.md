@@ -180,12 +180,12 @@ parseBreakend('C[2:321682[')
 //     }
 ```
 
-- The C\[2:321682\[ parses as "Join": "right" because the BND is after the C
-  base
-- The C\[2:321682\[ also is given "MateDirection": "right" because the square
-  brackets point to the right.
-- The spec never has the square brackets pointing in different directions.
-  Instead, the different types of joins can be imagined as follows
+-   The C\[2:321682\[ parses as "Join": "right" because the BND is after the C
+    base
+-   The C\[2:321682\[ also is given "MateDirection": "right" because the square
+    brackets point to the right.
+-   The spec never has the square brackets pointing in different directions.
+    Instead, the different types of joins can be imagined as follows
 
 For the above vcf line where chr13:123456->C\[2:321682\[ then we have this
 
@@ -227,18 +227,18 @@ this
 
 #### Table of Contents
 
-- [VCF](#vcf)
-  - [Parameters](#parameters)
-  - [\_parseMetadata](#_parsemetadata)
-    - [Parameters](#parameters-1)
-  - [\_parseStructuredMetaVal](#_parsestructuredmetaval)
-    - [Parameters](#parameters-2)
-  - [getMetadata](#getmetadata)
-    - [Parameters](#parameters-3)
-  - [\_parseKeyValue](#_parsekeyvalue)
-    - [Parameters](#parameters-4)
-  - [parseLine](#parseline)
-    - [Parameters](#parameters-5)
+-   [VCF](#vcf)
+    -   [Parameters](#parameters)
+    -   [\_parseMetadata](#_parsemetadata)
+        -   [Parameters](#parameters-1)
+    -   [\_parseStructuredMetaVal](#_parsestructuredmetaval)
+        -   [Parameters](#parameters-2)
+    -   [getMetadata](#getmetadata)
+        -   [Parameters](#parameters-3)
+    -   [\_parseKeyValue](#_parsekeyvalue)
+        -   [Parameters](#parameters-4)
+    -   [parseLine](#parseline)
+        -   [Parameters](#parameters-5)
 
 ### VCF
 
@@ -246,10 +246,10 @@ Class representing a VCF parser, instantiated with the VCF header.
 
 #### Parameters
 
-- `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**
-  - `args.header` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF header. Supports both LF and CRLF
-    newlines.
-  - `args.strict` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether to parse in strict mode or not (default true)
+-   `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+    -   `args.header` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF header. Supports both LF and CRLF
+        newlines. (optional, default `''`)
+    -   `args.strict` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether to parse in strict mode or not (default true) (optional, default `true`)
 
 #### \_parseMetadata
 
@@ -258,8 +258,8 @@ properties to the object.
 
 ##### Parameters
 
-- `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A line from the VCF. Supports both LF and CRLF
-  newlines.
+-   `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A line from the VCF. Supports both LF and CRLF
+    newlines.
 
 #### \_parseStructuredMetaVal
 
@@ -268,7 +268,7 @@ with "&lt;ID=...")
 
 ##### Parameters
 
-- `metaVal` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF metadata value
+-   `metaVal` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF metadata value
 
 Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array with two entries, 1) a string of the metadata ID
 and 2) an object with the other key-value pairs in the metadata
@@ -281,7 +281,7 @@ Get metadata filtered by the elements in args. For example, can pass
 
 ##### Parameters
 
-- `args` **...[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** List of metadata filter strings.
+-   `args` **...[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** List of metadata filter strings.
 
 Returns **any** An object, string, or number, depending on the filtering
 
@@ -297,9 +297,9 @@ separator). Above line would be parsed to:
 
 ##### Parameters
 
-- `str` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Key-value pairs in a string
-- `pairSeparator` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** A string that separates sets of key-value
-  pairs (optional, default `';'`)
+-   `str` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Key-value pairs in a string
+-   `pairSeparator` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** A string that separates sets of key-value
+    pairs (optional, default `';'`)
 
 Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing the key-value pairs
 
@@ -310,5 +310,5 @@ INFO } with SAMPLES optionally included if present in the VCF
 
 ##### Parameters
 
-- `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string of a line from a VCF. Supports both LF and
-  CRLF newlines.
+-   `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string of a line from a VCF. Supports both LF and
+    CRLF newlines.

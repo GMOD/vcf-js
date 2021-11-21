@@ -3,6 +3,7 @@
   "version": "5.0.2",
   "description": "High performance streaming Variant Call Format (VCF) parser in pure JavaScript",
   "main": "dist/index.js",
+  "module": "esm/index.js",
   "repository": "github:GMOD/vcf-js",
   "author": {
     "name": "Garrett Stevens",
@@ -15,7 +16,8 @@
     "url": "https://github.com/GMOD/vcf-js/issues"
   },
   "files": [
-    "dist"
+    "dist",
+    "esm"
   ],
   "engines": {
     "node": ">=6"
@@ -23,9 +25,10 @@
   "scripts": {
     "test": "jest",
     "coverage": "npm test -- --coverage",
-    "docs": "documentation readme src/parse.js --section API",
+    "docs": "documentation readme src/parse.ts --section API --parse-extension ts",
     "lint": "eslint . --ext .ts,.js",
     "clean": "rimraf dist",
+    "build": "tsc --target es2018 --outDir esm && tsc --target es5 --outDir dist",
     "prebuild": "npm run docs && npm run clean && npm run lint",
     "preversion": "npm run lint && npm test && npm run build",
     "version": "standard-changelog && git add CHANGELOG.md",
@@ -39,6 +42,7 @@
     "documentation": "^11.0.0",
     "eslint": "^8.2.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.3.1",
     "prettier": "^1.14.2",
     "rimraf": "^2.6.2",

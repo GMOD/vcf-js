@@ -8,8 +8,11 @@ const readVcf = file => {
   const header = []
   const rest = []
   lines.forEach(line => {
-    if (line.startsWith('#')) {header.push(line)}
-    else if (line) {rest.push(line)}
+    if (line.startsWith('#')) {
+      header.push(line)
+    } else if (line) {
+      rest.push(line)
+    }
   })
   return { header: header.join('\n'), lines: rest }
 }

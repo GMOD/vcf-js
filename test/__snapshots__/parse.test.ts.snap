@@ -2943,11 +2943,11 @@ Variant {
         "PASS": Object {
           "Description": "Passed all filters",
         },
-        "undefined": Object {
-          "0": "s",
-          "1": "5",
-          "2": "0",
-          "Number": undefined,
+        "q10": Object {
+          "Description": "Quality below 10",
+        },
+        "s50": Object {
+          "Description": "Less than 50% of samples have data",
         },
       },
       "FORMAT": Object {
@@ -2967,7 +2967,7 @@ Variant {
           "Type": "Integer",
         },
         "DP": Object {
-          "Description": "Read depth",
+          "Description": "Read Depth",
           "Number": 1,
           "Type": "Integer",
         },
@@ -2992,7 +2992,7 @@ Variant {
           "Type": "Float",
         },
         "GQ": Object {
-          "Description": "Conditional genotype quality",
+          "Description": "Genotype Quality",
           "Number": 1,
           "Type": "Integer",
         },
@@ -3002,7 +3002,7 @@ Variant {
           "Type": "String",
         },
         "HQ": Object {
-          "Description": "Haplotype quality",
+          "Description": "Haplotype Quality",
           "Number": 2,
           "Type": "Integer",
         },
@@ -3012,7 +3012,7 @@ Variant {
           "Type": "Integer",
         },
         "PL": Object {
-          "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+          "Description": "List of Phred-scaled genotype likelihoods",
           "Number": "G",
           "Type": "Integer",
         },
@@ -3026,12 +3026,10 @@ Variant {
           "Number": 1,
           "Type": "Integer",
         },
-        "undefined": Object {
-          "0": "T",
-          "1": "E",
-          "2": "S",
-          "3": "T",
+        "TEST": Object {
+          "Description": "Used for testing",
           "Number": 1,
+          "Type": "String",
         },
       },
       "INFO": Object {
@@ -3041,7 +3039,7 @@ Variant {
           "Type": "Flag",
         },
         "AA": Object {
-          "Description": "Ancestral allele",
+          "Description": "Ancestral Allele",
           "Number": 1,
           "Type": "String",
         },
@@ -3066,7 +3064,7 @@ Variant {
           "Type": "Integer",
         },
         "AF": Object {
-          "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+          "Description": "Allele Frequency",
           "Number": "A",
           "Type": "Float",
         },
@@ -3125,7 +3123,7 @@ Variant {
           "Type": "Integer",
         },
         "DB": Object {
-          "Description": "dbSNP membership",
+          "Description": "dbSNP membership, build 129",
           "Number": 0,
           "Type": "Flag",
         },
@@ -3145,7 +3143,7 @@ Variant {
           "Type": "String",
         },
         "DP": Object {
-          "Description": "combined depth across samples",
+          "Description": "Total Depth",
           "Number": 1,
           "Type": "Integer",
         },
@@ -3217,7 +3215,7 @@ Variant {
           "Type": "Flag",
         },
         "NS": Object {
-          "Description": "Number of samples with data",
+          "Description": "Number of Samples With Data",
           "Number": 1,
           "Type": "Integer",
         },
@@ -3246,26 +3244,24 @@ Variant {
           "Number": 1,
           "Type": "String",
         },
+        "TEST": Object {
+          "Description": "Used for testing",
+          "Number": 1,
+          "Type": "String",
+        },
         "VALIDATED": Object {
           "Description": "Validated by follow-up experiment",
           "Number": 0,
           "Type": "Flag",
         },
-        "undefined": Object {
-          "0": "S",
-          "1": "V",
-          "2": "T",
-          "3": "Y",
-          "4": "P",
-          "5": "E",
-          "Number": 1,
-        },
       },
       "contig": Object {
-        "undefined": Object {
-          "0": "2",
-          "1": "0",
-          "Number": undefined,
+        "20": Object {
+          "assembly": "B36",
+          "length": "62435964",
+          "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+          "species": "Homo sapiens",
+          "taxonomy": "x",
         },
       },
       "fileDate": "20090805",
@@ -3369,11 +3365,11 @@ Variant {
         "PASS": Object {
           "Description": "Passed all filters",
         },
-        "undefined": Object {
-          "0": "s",
-          "1": "5",
-          "2": "0",
-          "Number": undefined,
+        "q10": Object {
+          "Description": "Quality below 10",
+        },
+        "s50": Object {
+          "Description": "Less than 50% of samples have data",
         },
       },
       "FORMAT": Object {
@@ -3393,7 +3389,7 @@ Variant {
           "Type": "Integer",
         },
         "DP": Object {
-          "Description": "Read depth",
+          "Description": "Read Depth",
           "Number": 1,
           "Type": "Integer",
         },
@@ -3418,7 +3414,7 @@ Variant {
           "Type": "Float",
         },
         "GQ": Object {
-          "Description": "Conditional genotype quality",
+          "Description": "Genotype Quality",
           "Number": 1,
           "Type": "Integer",
         },
@@ -3428,7 +3424,7 @@ Variant {
           "Type": "String",
         },
         "HQ": Object {
-          "Description": "Haplotype quality",
+          "Description": "Haplotype Quality",
           "Number": 2,
           "Type": "Integer",
         },
@@ -3438,7 +3434,7 @@ Variant {
           "Type": "Integer",
         },
         "PL": Object {
-          "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+          "Description": "List of Phred-scaled genotype likelihoods",
           "Number": "G",
           "Type": "Integer",
         },
@@ -3452,12 +3448,10 @@ Variant {
           "Number": 1,
           "Type": "Integer",
         },
-        "undefined": Object {
-          "0": "T",
-          "1": "E",
-          "2": "S",
-          "3": "T",
+        "TEST": Object {
+          "Description": "Used for testing",
           "Number": 1,
+          "Type": "String",
         },
       },
       "INFO": Object {
@@ -3467,7 +3461,7 @@ Variant {
           "Type": "Flag",
         },
         "AA": Object {
-          "Description": "Ancestral allele",
+          "Description": "Ancestral Allele",
           "Number": 1,
           "Type": "String",
         },
@@ -3492,7 +3486,7 @@ Variant {
           "Type": "Integer",
         },
         "AF": Object {
-          "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+          "Description": "Allele Frequency",
           "Number": "A",
           "Type": "Float",
         },
@@ -3551,7 +3545,7 @@ Variant {
           "Type": "Integer",
         },
         "DB": Object {
-          "Description": "dbSNP membership",
+          "Description": "dbSNP membership, build 129",
           "Number": 0,
           "Type": "Flag",
         },
@@ -3571,7 +3565,7 @@ Variant {
           "Type": "String",
         },
         "DP": Object {
-          "Description": "combined depth across samples",
+          "Description": "Total Depth",
           "Number": 1,
           "Type": "Integer",
         },
@@ -3643,7 +3637,7 @@ Variant {
           "Type": "Flag",
         },
         "NS": Object {
-          "Description": "Number of samples with data",
+          "Description": "Number of Samples With Data",
           "Number": 1,
           "Type": "Integer",
         },
@@ -3672,26 +3666,24 @@ Variant {
           "Number": 1,
           "Type": "String",
         },
+        "TEST": Object {
+          "Description": "Used for testing",
+          "Number": 1,
+          "Type": "String",
+        },
         "VALIDATED": Object {
           "Description": "Validated by follow-up experiment",
           "Number": 0,
           "Type": "Flag",
         },
-        "undefined": Object {
-          "0": "S",
-          "1": "V",
-          "2": "T",
-          "3": "Y",
-          "4": "P",
-          "5": "E",
-          "Number": 1,
-        },
       },
       "contig": Object {
-        "undefined": Object {
-          "0": "2",
-          "1": "0",
-          "Number": undefined,
+        "20": Object {
+          "assembly": "B36",
+          "length": "62435964",
+          "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+          "species": "Homo sapiens",
+          "taxonomy": "x",
         },
       },
       "fileDate": "20090805",
@@ -3754,29 +3746,29 @@ Variant {
       0.000817661,
     ],
     "AFR_AF": Array [
-      "0",
+      0,
     ],
     "AMR_AF": Array [
-      "0",
+      0,
     ],
     "AN": Array [
       1223,
     ],
     "EAS_AF": Array [
-      "0",
+      0,
     ],
     "END": Array [
       15232198,
     ],
     "EUR_AF": Array [
-      "0.0042",
+      0.0042,
     ],
-    "EX_TARGET": null,
+    "EX_TARGET": true,
     "NS": Array [
       1233,
     ],
     "SAS_AF": Array [
-      "0",
+      0,
     ],
     "SVTYPE": Array [
       "CNV",
@@ -3806,7 +3798,7 @@ Variant {
           "Description": "Represents any possible alternative allele at this location",
         },
         "CNV": Object {
-          "Description": "Copy number variable region (may be both deletion and duplication)",
+          "Description": "Copy number polymorphism",
         },
         "DEL": Object {
           "Description": "Deletion relative to the reference",
@@ -3832,29 +3824,28 @@ Variant {
         "NON_REF": Object {
           "Description": "Represents any possible alternative allele at this location",
         },
-        "undefined": Object {
-          "0": "C",
-          "1": "N",
-          "2": "V",
-          "Number": undefined,
-        },
       },
       "FILTER": Object {
-        "PASS": Object {
-          "Description": "Passed all filters",
+        "ALIGNLENGTH": Object {
+          "Description": "GSELENGTH < 200",
         },
-        "undefined": Object {
-          "0": "N",
-          "1": "O",
-          "2": "N",
-          "3": "V",
-          "4": "A",
-          "5": "R",
-          "6": "I",
-          "7": "A",
-          "8": "N",
-          "9": "T",
-          "Number": undefined,
+        "CLUSTERSEP": Object {
+          "Description": "GSCLUSTERSEP == NA || GSCLUSTERSEP <= 2.0",
+        },
+        "DUPLICATE": Object {
+          "Description": "GSDUPLICATESCORE != NA && GSDUPLICATEOVERLAP >= 0.5 && GSDUPLICATESCORE >= 0.0",
+        },
+        "GTDEPTH": Object {
+          "Description": "GSM1 == NA || GSM1 <= 0.5 || GSM1 >= 2.0",
+        },
+        "INBREEDINGCOEFF": Object {
+          "Description": "GLINBREEDINGCOEFF != NA && GLINBREEDINGCOEFF < -0.15",
+        },
+        "NONVARIANT": Object {
+          "Description": "GSNONVARSCORE != NA && GSNONVARSCORE >= 13.0",
+        },
+        "PASS": Object {
+          "Description": "All filters passed",
         },
       },
       "FORMAT": Object {
@@ -3873,6 +3864,26 @@ Variant {
           "Number": "R",
           "Type": "Integer",
         },
+        "CN": Object {
+          "Description": "Copy number genotype for imprecise events",
+          "Number": 1,
+          "Type": "Integer",
+        },
+        "CNL": Object {
+          "Description": "Copy number likelihoods with no frequency prior",
+          "Number": ".",
+          "Type": "Float",
+        },
+        "CNP": Object {
+          "Description": "Copy number likelihoods",
+          "Number": ".",
+          "Type": "Float",
+        },
+        "CNQ": Object {
+          "Description": "Copy number genotype quality for imprecise events",
+          "Number": 1,
+          "Type": "Float",
+        },
         "DP": Object {
           "Description": "Read depth",
           "Number": 1,
@@ -3884,7 +3895,7 @@ Variant {
           "Type": "Integer",
         },
         "FT": Object {
-          "Description": "Filter indicating if this genotype was \\"called\\"",
+          "Description": "Per-sample genotype filter",
           "Number": 1,
           "Type": "String",
         },
@@ -3894,12 +3905,12 @@ Variant {
           "Type": "Float",
         },
         "GP": Object {
-          "Description": "Genotype posterior probabilities",
+          "Description": "Genotype likelihoods",
           "Number": "G",
           "Type": "Float",
         },
         "GQ": Object {
-          "Description": "Conditional genotype quality",
+          "Description": "Genotype Quality",
           "Number": 1,
           "Type": "Integer",
         },
@@ -3919,7 +3930,7 @@ Variant {
           "Type": "Integer",
         },
         "PL": Object {
-          "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+          "Description": "Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification",
           "Number": "G",
           "Type": "Integer",
         },
@@ -3932,11 +3943,6 @@ Variant {
           "Description": "Phase set",
           "Number": 1,
           "Type": "Integer",
-        },
-        "undefined": Object {
-          "0": "P",
-          "1": "L",
-          "Number": undefined,
         },
       },
       "INFO": Object {
@@ -3951,7 +3957,7 @@ Variant {
           "Type": "String",
         },
         "AC": Object {
-          "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
+          "Description": "Total number of alternate alleles in called genotypes",
           "Number": "A",
           "Type": "Integer",
         },
@@ -3971,7 +3977,17 @@ Variant {
           "Type": "Integer",
         },
         "AF": Object {
-          "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+          "Description": "Estimated allele frequency in the range (0,1]",
+          "Number": "A",
+          "Type": "Float",
+        },
+        "AFR_AF": Object {
+          "Description": "Allele frequency in the AFR populations calculated from AC and AN, in the range (0,1)",
+          "Number": "A",
+          "Type": "Float",
+        },
+        "AMR_AF": Object {
+          "Description": "Allele frequency in the AMR populations calculated from AC and AN, in the range (0,1)",
           "Number": "A",
           "Type": "Float",
         },
@@ -4050,7 +4066,7 @@ Variant {
           "Type": "String",
         },
         "DP": Object {
-          "Description": "combined depth across samples",
+          "Description": "Total read depth at the locus",
           "Number": 1,
           "Type": "Integer",
         },
@@ -4058,15 +4074,30 @@ Variant {
           "Description": "Read Depth of adjacency",
           "Type": "Integer",
         },
+        "EAS_AF": Object {
+          "Description": "Allele frequency in the EAS populations calculated from AC and AN, in the range (0,1)",
+          "Number": "A",
+          "Type": "Float",
+        },
         "END": Object {
-          "Description": "End position (for use with symbolic alleles)",
+          "Description": "End coordinate of this variant",
           "Number": 1,
           "Type": "Integer",
+        },
+        "EUR_AF": Object {
+          "Description": "Allele frequency in the EUR populations calculated from AC and AN, in the range (0,1)",
+          "Number": "A",
+          "Type": "Float",
         },
         "EVENT": Object {
           "Description": "ID of event associated to breakend",
           "Number": 1,
           "Type": "String",
+        },
+        "EX_TARGET": Object {
+          "Description": "indicates whether a variant is within the exon pull down target boundaries",
+          "Number": 0,
+          "Type": "Flag",
         },
         "H2": Object {
           "Description": "HapMap2 membership",
@@ -4116,6 +4147,11 @@ Variant {
           "Number": 1,
           "Type": "Integer",
         },
+        "MULTI_ALLELIC": Object {
+          "Description": "indicates whether a site is multi-allelic",
+          "Number": 0,
+          "Type": "Flag",
+        },
         "NOVEL": Object {
           "Description": "Indicates a novel structural variation",
           "Number": 0,
@@ -4130,6 +4166,11 @@ Variant {
           "Description": "ID of partner breakend",
           "Number": 1,
           "Type": "String",
+        },
+        "SAS_AF": Object {
+          "Description": "Allele frequency in the SAS populations calculated from AC and AN, in the range (0,1)",
+          "Number": "A",
+          "Type": "Float",
         },
         "SB": Object {
           "Description": "Strand bias",
@@ -4156,27 +4197,16 @@ Variant {
           "Number": 0,
           "Type": "Flag",
         },
-        "undefined": Object {
-          "0": "M",
-          "1": "U",
-          "10": "L",
-          "11": "I",
-          "12": "C",
-          "2": "L",
-          "3": "T",
-          "4": "I",
-          "5": "_",
-          "6": "A",
-          "7": "L",
-          "8": "L",
-          "9": "E",
-          "Number": 0,
+        "VT": Object {
+          "Description": "indicates what type of variant the line represents",
+          "Number": ".",
+          "Type": "String",
         },
       },
       "contig": Object {
-        "undefined": Object {
-          "0": "Y",
-          "Number": undefined,
+        "Y": Object {
+          "assembly": "b37",
+          "length": "59373566",
         },
       },
       "fileDate": "20150218",
@@ -4264,10 +4294,10 @@ Variant {
       0.0178427,
     ],
     "AFR_AF": Array [
-      "0",
+      0,
     ],
     "AMR_AF": Array [
-      "0",
+      0,
     ],
     "AN": Array [
       1233,
@@ -4276,17 +4306,17 @@ Variant {
       84761,
     ],
     "EAS_AF": Array [
-      "0.0902",
+      0.0902,
     ],
     "EUR_AF": Array [
-      "0",
+      0,
     ],
-    "EX_TARGET": null,
+    "EX_TARGET": true,
     "NS": Array [
       1233,
     ],
     "SAS_AF": Array [
-      "0",
+      0,
     ],
     "VT": Array [
       "SNP",
@@ -4313,7 +4343,7 @@ Variant {
           "Description": "Represents any possible alternative allele at this location",
         },
         "CNV": Object {
-          "Description": "Copy number variable region (may be both deletion and duplication)",
+          "Description": "Copy number polymorphism",
         },
         "DEL": Object {
           "Description": "Deletion relative to the reference",
@@ -4339,29 +4369,28 @@ Variant {
         "NON_REF": Object {
           "Description": "Represents any possible alternative allele at this location",
         },
-        "undefined": Object {
-          "0": "C",
-          "1": "N",
-          "2": "V",
-          "Number": undefined,
-        },
       },
       "FILTER": Object {
-        "PASS": Object {
-          "Description": "Passed all filters",
+        "ALIGNLENGTH": Object {
+          "Description": "GSELENGTH < 200",
         },
-        "undefined": Object {
-          "0": "N",
-          "1": "O",
-          "2": "N",
-          "3": "V",
-          "4": "A",
-          "5": "R",
-          "6": "I",
-          "7": "A",
-          "8": "N",
-          "9": "T",
-          "Number": undefined,
+        "CLUSTERSEP": Object {
+          "Description": "GSCLUSTERSEP == NA || GSCLUSTERSEP <= 2.0",
+        },
+        "DUPLICATE": Object {
+          "Description": "GSDUPLICATESCORE != NA && GSDUPLICATEOVERLAP >= 0.5 && GSDUPLICATESCORE >= 0.0",
+        },
+        "GTDEPTH": Object {
+          "Description": "GSM1 == NA || GSM1 <= 0.5 || GSM1 >= 2.0",
+        },
+        "INBREEDINGCOEFF": Object {
+          "Description": "GLINBREEDINGCOEFF != NA && GLINBREEDINGCOEFF < -0.15",
+        },
+        "NONVARIANT": Object {
+          "Description": "GSNONVARSCORE != NA && GSNONVARSCORE >= 13.0",
+        },
+        "PASS": Object {
+          "Description": "All filters passed",
         },
       },
       "FORMAT": Object {
@@ -4380,6 +4409,26 @@ Variant {
           "Number": "R",
           "Type": "Integer",
         },
+        "CN": Object {
+          "Description": "Copy number genotype for imprecise events",
+          "Number": 1,
+          "Type": "Integer",
+        },
+        "CNL": Object {
+          "Description": "Copy number likelihoods with no frequency prior",
+          "Number": ".",
+          "Type": "Float",
+        },
+        "CNP": Object {
+          "Description": "Copy number likelihoods",
+          "Number": ".",
+          "Type": "Float",
+        },
+        "CNQ": Object {
+          "Description": "Copy number genotype quality for imprecise events",
+          "Number": 1,
+          "Type": "Float",
+        },
         "DP": Object {
           "Description": "Read depth",
           "Number": 1,
@@ -4391,7 +4440,7 @@ Variant {
           "Type": "Integer",
         },
         "FT": Object {
-          "Description": "Filter indicating if this genotype was \\"called\\"",
+          "Description": "Per-sample genotype filter",
           "Number": 1,
           "Type": "String",
         },
@@ -4401,12 +4450,12 @@ Variant {
           "Type": "Float",
         },
         "GP": Object {
-          "Description": "Genotype posterior probabilities",
+          "Description": "Genotype likelihoods",
           "Number": "G",
           "Type": "Float",
         },
         "GQ": Object {
-          "Description": "Conditional genotype quality",
+          "Description": "Genotype Quality",
           "Number": 1,
           "Type": "Integer",
         },
@@ -4426,7 +4475,7 @@ Variant {
           "Type": "Integer",
         },
         "PL": Object {
-          "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+          "Description": "Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification",
           "Number": "G",
           "Type": "Integer",
         },
@@ -4439,11 +4488,6 @@ Variant {
           "Description": "Phase set",
           "Number": 1,
           "Type": "Integer",
-        },
-        "undefined": Object {
-          "0": "P",
-          "1": "L",
-          "Number": undefined,
         },
       },
       "INFO": Object {
@@ -4458,7 +4502,7 @@ Variant {
           "Type": "String",
         },
         "AC": Object {
-          "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
+          "Description": "Total number of alternate alleles in called genotypes",
           "Number": "A",
           "Type": "Integer",
         },
@@ -4478,7 +4522,17 @@ Variant {
           "Type": "Integer",
         },
         "AF": Object {
-          "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+          "Description": "Estimated allele frequency in the range (0,1]",
+          "Number": "A",
+          "Type": "Float",
+        },
+        "AFR_AF": Object {
+          "Description": "Allele frequency in the AFR populations calculated from AC and AN, in the range (0,1)",
+          "Number": "A",
+          "Type": "Float",
+        },
+        "AMR_AF": Object {
+          "Description": "Allele frequency in the AMR populations calculated from AC and AN, in the range (0,1)",
           "Number": "A",
           "Type": "Float",
         },
@@ -4557,7 +4611,7 @@ Variant {
           "Type": "String",
         },
         "DP": Object {
-          "Description": "combined depth across samples",
+          "Description": "Total read depth at the locus",
           "Number": 1,
           "Type": "Integer",
         },
@@ -4565,15 +4619,30 @@ Variant {
           "Description": "Read Depth of adjacency",
           "Type": "Integer",
         },
+        "EAS_AF": Object {
+          "Description": "Allele frequency in the EAS populations calculated from AC and AN, in the range (0,1)",
+          "Number": "A",
+          "Type": "Float",
+        },
         "END": Object {
-          "Description": "End position (for use with symbolic alleles)",
+          "Description": "End coordinate of this variant",
           "Number": 1,
           "Type": "Integer",
+        },
+        "EUR_AF": Object {
+          "Description": "Allele frequency in the EUR populations calculated from AC and AN, in the range (0,1)",
+          "Number": "A",
+          "Type": "Float",
         },
         "EVENT": Object {
           "Description": "ID of event associated to breakend",
           "Number": 1,
           "Type": "String",
+        },
+        "EX_TARGET": Object {
+          "Description": "indicates whether a variant is within the exon pull down target boundaries",
+          "Number": 0,
+          "Type": "Flag",
         },
         "H2": Object {
           "Description": "HapMap2 membership",
@@ -4623,6 +4692,11 @@ Variant {
           "Number": 1,
           "Type": "Integer",
         },
+        "MULTI_ALLELIC": Object {
+          "Description": "indicates whether a site is multi-allelic",
+          "Number": 0,
+          "Type": "Flag",
+        },
         "NOVEL": Object {
           "Description": "Indicates a novel structural variation",
           "Number": 0,
@@ -4637,6 +4711,11 @@ Variant {
           "Description": "ID of partner breakend",
           "Number": 1,
           "Type": "String",
+        },
+        "SAS_AF": Object {
+          "Description": "Allele frequency in the SAS populations calculated from AC and AN, in the range (0,1)",
+          "Number": "A",
+          "Type": "Float",
         },
         "SB": Object {
           "Description": "Strand bias",
@@ -4663,27 +4742,16 @@ Variant {
           "Number": 0,
           "Type": "Flag",
         },
-        "undefined": Object {
-          "0": "M",
-          "1": "U",
-          "10": "L",
-          "11": "I",
-          "12": "C",
-          "2": "L",
-          "3": "T",
-          "4": "I",
-          "5": "_",
-          "6": "A",
-          "7": "L",
-          "8": "L",
-          "9": "E",
-          "Number": 0,
+        "VT": Object {
+          "Description": "indicates what type of variant the line represents",
+          "Number": ".",
+          "Type": "String",
         },
       },
       "contig": Object {
-        "undefined": Object {
-          "0": "Y",
-          "Number": undefined,
+        "Y": Object {
+          "assembly": "b37",
+          "length": "59373566",
         },
       },
       "fileDate": "20150218",
@@ -4748,9 +4816,9 @@ Variant {
     "Kurtosis_quant_stop": Array [
       "3.925926",
     ],
-    "PRECISE": null,
+    "PRECISE": true,
     "RE": Array [
-      "34",
+      34,
     ],
     "STD_quant_start": Array [
       "0.000000",
@@ -4804,34 +4872,34 @@ Variant {
           "Description": "Copy number variable region (may be both deletion and duplication)",
         },
         "DEL": Object {
-          "Description": "Deletion relative to the reference",
+          "Description": "Deletion",
         },
         "DEL:ME": Object {
           "Description": "Deletion of mobile element relative to the reference",
         },
         "DUP": Object {
-          "Description": "Region of elevated copy number relative to the reference",
+          "Description": "Duplication",
         },
         "DUP:TANDEM": Object {
           "Description": "Tandem duplication",
         },
         "INS": Object {
-          "Description": "Insertion of novel sequence relative to the reference",
+          "Description": "Insertion",
         },
         "INS:ME": Object {
           "Description": "Insertion of a mobile element relative to the reference",
         },
         "INV": Object {
-          "Description": "Inversion of reference sequence",
+          "Description": "Inversion",
+        },
+        "INVDUP": Object {
+          "Description": "InvertedDUP with unknown boundaries",
         },
         "NON_REF": Object {
           "Description": "Represents any possible alternative allele at this location",
         },
-        "undefined": Object {
-          "0": "I",
-          "1": "N",
-          "2": "S",
-          "Number": undefined,
+        "TRA": Object {
+          "Description": "Translocation",
         },
       },
       "FILTER": Object {
@@ -4857,6 +4925,16 @@ Variant {
         },
         "DP": Object {
           "Description": "Read depth",
+          "Number": 1,
+          "Type": "Integer",
+        },
+        "DR": Object {
+          "Description": "# high-quality reference reads",
+          "Number": 1,
+          "Type": "Integer",
+        },
+        "DV": Object {
+          "Description": "# high-quality variant reads",
           "Number": 1,
           "Type": "Integer",
         },
@@ -4915,11 +4993,6 @@ Variant {
           "Number": 1,
           "Type": "Integer",
         },
-        "undefined": Object {
-          "0": "D",
-          "1": "V",
-          "Number": 1,
-        },
       },
       "INFO": Object {
         "1000G": Object {
@@ -4970,6 +5043,11 @@ Variant {
           "Description": "RMS base quality",
           "Number": 1,
           "Type": "Float",
+        },
+        "CHR2": Object {
+          "Description": "Chromosome for END coordinate in case of a translocation",
+          "Number": 1,
+          "Type": "String",
         },
         "CICN": Object {
           "Description": "Confidence interval around copy number for the segment",
@@ -5041,7 +5119,7 @@ Variant {
           "Type": "Integer",
         },
         "END": Object {
-          "Description": "End position (for use with symbolic alleles)",
+          "Description": "End position of the structural variant",
           "Number": 1,
           "Type": "Integer",
         },
@@ -5072,6 +5150,11 @@ Variant {
           "Description": "Imprecise structural variation",
           "Number": 0,
           "Type": "Flag",
+        },
+        "MAPQ": Object {
+          "Description": "Median mapping quality of paired-ends",
+          "Number": 1,
+          "Type": "Integer",
         },
         "MATEID": Object {
           "Description": "ID of mate breakends",
@@ -5113,6 +5196,16 @@ Variant {
           "Number": 1,
           "Type": "String",
         },
+        "PRECISE": Object {
+          "Description": "Precise structural variation",
+          "Number": 0,
+          "Type": "Flag",
+        },
+        "RE": Object {
+          "Description": "read support",
+          "Number": 1,
+          "Type": "Integer",
+        },
         "SB": Object {
           "Description": "Strand bias",
           "Number": 4,
@@ -5124,9 +5217,14 @@ Variant {
           "Type": "Flag",
         },
         "SVLEN": Object {
-          "Description": "Difference in length between REF and ALT alleles",
-          "Number": null,
+          "Description": "Length of the SV",
+          "Number": 1,
           "Type": "Integer",
+        },
+        "SVMETHOD": Object {
+          "Description": "Type of approach used to detect SV",
+          "Number": 1,
+          "Type": "String",
         },
         "SVTYPE": Object {
           "Description": "Type of structural variant",
@@ -5137,15 +5235,6 @@ Variant {
           "Description": "Validated by follow-up experiment",
           "Number": 0,
           "Type": "Flag",
-        },
-        "undefined": Object {
-          "0": "S",
-          "1": "V",
-          "2": "T",
-          "3": "Y",
-          "4": "P",
-          "5": "E",
-          "Number": 1,
         },
       },
       "fileDate": "20170420",
@@ -5239,11 +5328,11 @@ Variant {
         "PASS": Object {
           "Description": "Passed all filters",
         },
-        "undefined": Object {
-          "0": "s",
-          "1": "5",
-          "2": "0",
-          "Number": undefined,
+        "q10": Object {
+          "Description": "Quality below 10",
+        },
+        "s50": Object {
+          "Description": "Less than 50% of samples have data",
         },
       },
       "FORMAT": Object {
@@ -5263,7 +5352,7 @@ Variant {
           "Type": "Integer",
         },
         "DP": Object {
-          "Description": "Read depth",
+          "Description": "Read Depth",
           "Number": 1,
           "Type": "Integer",
         },
@@ -5288,7 +5377,7 @@ Variant {
           "Type": "Float",
         },
         "GQ": Object {
-          "Description": "Conditional genotype quality",
+          "Description": "Genotype Quality",
           "Number": 1,
           "Type": "Integer",
         },
@@ -5298,7 +5387,7 @@ Variant {
           "Type": "String",
         },
         "HQ": Object {
-          "Description": "Haplotype quality",
+          "Description": "Haplotype Quality",
           "Number": 2,
           "Type": "Integer",
         },
@@ -5308,7 +5397,7 @@ Variant {
           "Type": "Integer",
         },
         "PL": Object {
-          "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+          "Description": "List of Phred-scaled genotype likelihoods",
           "Number": "G",
           "Type": "Integer",
         },
@@ -5322,12 +5411,10 @@ Variant {
           "Number": 1,
           "Type": "Integer",
         },
-        "undefined": Object {
-          "0": "T",
-          "1": "E",
-          "2": "S",
-          "3": "T",
+        "TEST": Object {
+          "Description": "Used for testing",
           "Number": 1,
+          "Type": "String",
         },
       },
       "INFO": Object {
@@ -5337,7 +5424,7 @@ Variant {
           "Type": "Flag",
         },
         "AA": Object {
-          "Description": "Ancestral allele",
+          "Description": "Ancestral Allele",
           "Number": 1,
           "Type": "String",
         },
@@ -5362,7 +5449,7 @@ Variant {
           "Type": "Integer",
         },
         "AF": Object {
-          "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+          "Description": "Allele Frequency",
           "Number": "A",
           "Type": "Float",
         },
@@ -5421,7 +5508,7 @@ Variant {
           "Type": "Integer",
         },
         "DB": Object {
-          "Description": "dbSNP membership",
+          "Description": "dbSNP membership, build 129",
           "Number": 0,
           "Type": "Flag",
         },
@@ -5441,7 +5528,7 @@ Variant {
           "Type": "String",
         },
         "DP": Object {
-          "Description": "combined depth across samples",
+          "Description": "Total Depth",
           "Number": 1,
           "Type": "Integer",
         },
@@ -5513,7 +5600,7 @@ Variant {
           "Type": "Flag",
         },
         "NS": Object {
-          "Description": "Number of samples with data",
+          "Description": "Number of Samples With Data",
           "Number": 1,
           "Type": "Integer",
         },
@@ -5542,26 +5629,24 @@ Variant {
           "Number": 1,
           "Type": "String",
         },
+        "TEST": Object {
+          "Description": "Used for testing",
+          "Number": 1,
+          "Type": "String",
+        },
         "VALIDATED": Object {
           "Description": "Validated by follow-up experiment",
           "Number": 0,
           "Type": "Flag",
         },
-        "undefined": Object {
-          "0": "S",
-          "1": "V",
-          "2": "T",
-          "3": "Y",
-          "4": "P",
-          "5": "E",
-          "Number": 1,
-        },
       },
       "contig": Object {
-        "undefined": Object {
-          "0": "2",
-          "1": "0",
-          "Number": undefined,
+        "20": Object {
+          "assembly": "B36",
+          "length": "62435964",
+          "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+          "species": "Homo sapiens",
+          "taxonomy": "x",
         },
       },
       "fileDate": "20090805",
@@ -5655,11 +5740,11 @@ Variant {
         "PASS": Object {
           "Description": "Passed all filters",
         },
-        "undefined": Object {
-          "0": "s",
-          "1": "5",
-          "2": "0",
-          "Number": undefined,
+        "q10": Object {
+          "Description": "Quality below 10",
+        },
+        "s50": Object {
+          "Description": "Less than 50% of samples have data",
         },
       },
       "FORMAT": Object {
@@ -5679,7 +5764,7 @@ Variant {
           "Type": "Integer",
         },
         "DP": Object {
-          "Description": "Read depth",
+          "Description": "Read Depth",
           "Number": 1,
           "Type": "Integer",
         },
@@ -5704,7 +5789,7 @@ Variant {
           "Type": "Float",
         },
         "GQ": Object {
-          "Description": "Conditional genotype quality",
+          "Description": "Genotype Quality",
           "Number": 1,
           "Type": "Integer",
         },
@@ -5714,7 +5799,7 @@ Variant {
           "Type": "String",
         },
         "HQ": Object {
-          "Description": "Haplotype quality",
+          "Description": "Haplotype Quality",
           "Number": 2,
           "Type": "Integer",
         },
@@ -5724,7 +5809,7 @@ Variant {
           "Type": "Integer",
         },
         "PL": Object {
-          "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+          "Description": "List of Phred-scaled genotype likelihoods",
           "Number": "G",
           "Type": "Integer",
         },
@@ -5738,12 +5823,10 @@ Variant {
           "Number": 1,
           "Type": "Integer",
         },
-        "undefined": Object {
-          "0": "T",
-          "1": "E",
-          "2": "S",
-          "3": "T",
+        "TEST": Object {
+          "Description": "Used for testing",
           "Number": 1,
+          "Type": "String",
         },
       },
       "INFO": Object {
@@ -5753,7 +5836,7 @@ Variant {
           "Type": "Flag",
         },
         "AA": Object {
-          "Description": "Ancestral allele",
+          "Description": "Ancestral Allele",
           "Number": 1,
           "Type": "String",
         },
@@ -5778,7 +5861,7 @@ Variant {
           "Type": "Integer",
         },
         "AF": Object {
-          "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+          "Description": "Allele Frequency",
           "Number": "A",
           "Type": "Float",
         },
@@ -5837,7 +5920,7 @@ Variant {
           "Type": "Integer",
         },
         "DB": Object {
-          "Description": "dbSNP membership",
+          "Description": "dbSNP membership, build 129",
           "Number": 0,
           "Type": "Flag",
         },
@@ -5857,7 +5940,7 @@ Variant {
           "Type": "String",
         },
         "DP": Object {
-          "Description": "combined depth across samples",
+          "Description": "Total Depth",
           "Number": 1,
           "Type": "Integer",
         },
@@ -5929,7 +6012,7 @@ Variant {
           "Type": "Flag",
         },
         "NS": Object {
-          "Description": "Number of samples with data",
+          "Description": "Number of Samples With Data",
           "Number": 1,
           "Type": "Integer",
         },
@@ -5958,26 +6041,24 @@ Variant {
           "Number": 1,
           "Type": "String",
         },
+        "TEST": Object {
+          "Description": "Used for testing",
+          "Number": 1,
+          "Type": "String",
+        },
         "VALIDATED": Object {
           "Description": "Validated by follow-up experiment",
           "Number": 0,
           "Type": "Flag",
         },
-        "undefined": Object {
-          "0": "S",
-          "1": "V",
-          "2": "T",
-          "3": "Y",
-          "4": "P",
-          "5": "E",
-          "Number": 1,
-        },
       },
       "contig": Object {
-        "undefined": Object {
-          "0": "2",
-          "1": "0",
-          "Number": undefined,
+        "20": Object {
+          "assembly": "B36",
+          "length": "62435964",
+          "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+          "species": "Homo sapiens",
+          "taxonomy": "x",
         },
       },
       "fileDate": "20090805",
@@ -7205,10 +7286,10 @@ Array [
         0.0178427,
       ],
       "AFR_AF": Array [
-        "0",
+        0,
       ],
       "AMR_AF": Array [
-        "0",
+        0,
       ],
       "AN": Array [
         1233,
@@ -7217,17 +7298,17 @@ Array [
         84761,
       ],
       "EAS_AF": Array [
-        "0.0902",
+        0.0902,
       ],
       "EUR_AF": Array [
-        "0",
+        0,
       ],
-      "EX_TARGET": null,
+      "EX_TARGET": true,
       "NS": Array [
         1233,
       ],
       "SAS_AF": Array [
-        "0",
+        0,
       ],
       "VT": Array [
         "SNP",
@@ -7254,7 +7335,7 @@ Array [
             "Description": "Represents any possible alternative allele at this location",
           },
           "CNV": Object {
-            "Description": "Copy number variable region (may be both deletion and duplication)",
+            "Description": "Copy number polymorphism",
           },
           "DEL": Object {
             "Description": "Deletion relative to the reference",
@@ -7280,29 +7361,28 @@ Array [
           "NON_REF": Object {
             "Description": "Represents any possible alternative allele at this location",
           },
-          "undefined": Object {
-            "0": "C",
-            "1": "N",
-            "2": "V",
-            "Number": undefined,
-          },
         },
         "FILTER": Object {
-          "PASS": Object {
-            "Description": "Passed all filters",
+          "ALIGNLENGTH": Object {
+            "Description": "GSELENGTH < 200",
           },
-          "undefined": Object {
-            "0": "N",
-            "1": "O",
-            "2": "N",
-            "3": "V",
-            "4": "A",
-            "5": "R",
-            "6": "I",
-            "7": "A",
-            "8": "N",
-            "9": "T",
-            "Number": undefined,
+          "CLUSTERSEP": Object {
+            "Description": "GSCLUSTERSEP == NA || GSCLUSTERSEP <= 2.0",
+          },
+          "DUPLICATE": Object {
+            "Description": "GSDUPLICATESCORE != NA && GSDUPLICATEOVERLAP >= 0.5 && GSDUPLICATESCORE >= 0.0",
+          },
+          "GTDEPTH": Object {
+            "Description": "GSM1 == NA || GSM1 <= 0.5 || GSM1 >= 2.0",
+          },
+          "INBREEDINGCOEFF": Object {
+            "Description": "GLINBREEDINGCOEFF != NA && GLINBREEDINGCOEFF < -0.15",
+          },
+          "NONVARIANT": Object {
+            "Description": "GSNONVARSCORE != NA && GSNONVARSCORE >= 13.0",
+          },
+          "PASS": Object {
+            "Description": "All filters passed",
           },
         },
         "FORMAT": Object {
@@ -7321,6 +7401,26 @@ Array [
             "Number": "R",
             "Type": "Integer",
           },
+          "CN": Object {
+            "Description": "Copy number genotype for imprecise events",
+            "Number": 1,
+            "Type": "Integer",
+          },
+          "CNL": Object {
+            "Description": "Copy number likelihoods with no frequency prior",
+            "Number": ".",
+            "Type": "Float",
+          },
+          "CNP": Object {
+            "Description": "Copy number likelihoods",
+            "Number": ".",
+            "Type": "Float",
+          },
+          "CNQ": Object {
+            "Description": "Copy number genotype quality for imprecise events",
+            "Number": 1,
+            "Type": "Float",
+          },
           "DP": Object {
             "Description": "Read depth",
             "Number": 1,
@@ -7332,7 +7432,7 @@ Array [
             "Type": "Integer",
           },
           "FT": Object {
-            "Description": "Filter indicating if this genotype was \\"called\\"",
+            "Description": "Per-sample genotype filter",
             "Number": 1,
             "Type": "String",
           },
@@ -7342,12 +7442,12 @@ Array [
             "Type": "Float",
           },
           "GP": Object {
-            "Description": "Genotype posterior probabilities",
+            "Description": "Genotype likelihoods",
             "Number": "G",
             "Type": "Float",
           },
           "GQ": Object {
-            "Description": "Conditional genotype quality",
+            "Description": "Genotype Quality",
             "Number": 1,
             "Type": "Integer",
           },
@@ -7367,7 +7467,7 @@ Array [
             "Type": "Integer",
           },
           "PL": Object {
-            "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+            "Description": "Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification",
             "Number": "G",
             "Type": "Integer",
           },
@@ -7380,11 +7480,6 @@ Array [
             "Description": "Phase set",
             "Number": 1,
             "Type": "Integer",
-          },
-          "undefined": Object {
-            "0": "P",
-            "1": "L",
-            "Number": undefined,
           },
         },
         "INFO": Object {
@@ -7399,7 +7494,7 @@ Array [
             "Type": "String",
           },
           "AC": Object {
-            "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
+            "Description": "Total number of alternate alleles in called genotypes",
             "Number": "A",
             "Type": "Integer",
           },
@@ -7419,7 +7514,17 @@ Array [
             "Type": "Integer",
           },
           "AF": Object {
-            "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+            "Description": "Estimated allele frequency in the range (0,1]",
+            "Number": "A",
+            "Type": "Float",
+          },
+          "AFR_AF": Object {
+            "Description": "Allele frequency in the AFR populations calculated from AC and AN, in the range (0,1)",
+            "Number": "A",
+            "Type": "Float",
+          },
+          "AMR_AF": Object {
+            "Description": "Allele frequency in the AMR populations calculated from AC and AN, in the range (0,1)",
             "Number": "A",
             "Type": "Float",
           },
@@ -7498,7 +7603,7 @@ Array [
             "Type": "String",
           },
           "DP": Object {
-            "Description": "combined depth across samples",
+            "Description": "Total read depth at the locus",
             "Number": 1,
             "Type": "Integer",
           },
@@ -7506,15 +7611,30 @@ Array [
             "Description": "Read Depth of adjacency",
             "Type": "Integer",
           },
+          "EAS_AF": Object {
+            "Description": "Allele frequency in the EAS populations calculated from AC and AN, in the range (0,1)",
+            "Number": "A",
+            "Type": "Float",
+          },
           "END": Object {
-            "Description": "End position (for use with symbolic alleles)",
+            "Description": "End coordinate of this variant",
             "Number": 1,
             "Type": "Integer",
+          },
+          "EUR_AF": Object {
+            "Description": "Allele frequency in the EUR populations calculated from AC and AN, in the range (0,1)",
+            "Number": "A",
+            "Type": "Float",
           },
           "EVENT": Object {
             "Description": "ID of event associated to breakend",
             "Number": 1,
             "Type": "String",
+          },
+          "EX_TARGET": Object {
+            "Description": "indicates whether a variant is within the exon pull down target boundaries",
+            "Number": 0,
+            "Type": "Flag",
           },
           "H2": Object {
             "Description": "HapMap2 membership",
@@ -7564,6 +7684,11 @@ Array [
             "Number": 1,
             "Type": "Integer",
           },
+          "MULTI_ALLELIC": Object {
+            "Description": "indicates whether a site is multi-allelic",
+            "Number": 0,
+            "Type": "Flag",
+          },
           "NOVEL": Object {
             "Description": "Indicates a novel structural variation",
             "Number": 0,
@@ -7578,6 +7703,11 @@ Array [
             "Description": "ID of partner breakend",
             "Number": 1,
             "Type": "String",
+          },
+          "SAS_AF": Object {
+            "Description": "Allele frequency in the SAS populations calculated from AC and AN, in the range (0,1)",
+            "Number": "A",
+            "Type": "Float",
           },
           "SB": Object {
             "Description": "Strand bias",
@@ -7604,27 +7734,16 @@ Array [
             "Number": 0,
             "Type": "Flag",
           },
-          "undefined": Object {
-            "0": "M",
-            "1": "U",
-            "10": "L",
-            "11": "I",
-            "12": "C",
-            "2": "L",
-            "3": "T",
-            "4": "I",
-            "5": "_",
-            "6": "A",
-            "7": "L",
-            "8": "L",
-            "9": "E",
-            "Number": 0,
+          "VT": Object {
+            "Description": "indicates what type of variant the line represents",
+            "Number": ".",
+            "Type": "String",
           },
         },
         "contig": Object {
-          "undefined": Object {
-            "0": "Y",
-            "Number": undefined,
+          "Y": Object {
+            "assembly": "b37",
+            "length": "59373566",
           },
         },
         "fileDate": "20150218",
@@ -8891,10 +9010,10 @@ Array [
         0.00405515,
       ],
       "AFR_AF": Array [
-        "0",
+        0,
       ],
       "AMR_AF": Array [
-        "0",
+        0,
       ],
       "AN": Array [
         1233,
@@ -8903,17 +9022,17 @@ Array [
         72067,
       ],
       "EAS_AF": Array [
-        "0.0205",
+        0.0205,
       ],
       "EUR_AF": Array [
-        "0",
+        0,
       ],
-      "EX_TARGET": null,
+      "EX_TARGET": true,
       "NS": Array [
         1233,
       ],
       "SAS_AF": Array [
-        "0",
+        0,
       ],
       "VT": Array [
         "SNP",
@@ -8940,7 +9059,7 @@ Array [
             "Description": "Represents any possible alternative allele at this location",
           },
           "CNV": Object {
-            "Description": "Copy number variable region (may be both deletion and duplication)",
+            "Description": "Copy number polymorphism",
           },
           "DEL": Object {
             "Description": "Deletion relative to the reference",
@@ -8966,29 +9085,28 @@ Array [
           "NON_REF": Object {
             "Description": "Represents any possible alternative allele at this location",
           },
-          "undefined": Object {
-            "0": "C",
-            "1": "N",
-            "2": "V",
-            "Number": undefined,
-          },
         },
         "FILTER": Object {
-          "PASS": Object {
-            "Description": "Passed all filters",
+          "ALIGNLENGTH": Object {
+            "Description": "GSELENGTH < 200",
           },
-          "undefined": Object {
-            "0": "N",
-            "1": "O",
-            "2": "N",
-            "3": "V",
-            "4": "A",
-            "5": "R",
-            "6": "I",
-            "7": "A",
-            "8": "N",
-            "9": "T",
-            "Number": undefined,
+          "CLUSTERSEP": Object {
+            "Description": "GSCLUSTERSEP == NA || GSCLUSTERSEP <= 2.0",
+          },
+          "DUPLICATE": Object {
+            "Description": "GSDUPLICATESCORE != NA && GSDUPLICATEOVERLAP >= 0.5 && GSDUPLICATESCORE >= 0.0",
+          },
+          "GTDEPTH": Object {
+            "Description": "GSM1 == NA || GSM1 <= 0.5 || GSM1 >= 2.0",
+          },
+          "INBREEDINGCOEFF": Object {
+            "Description": "GLINBREEDINGCOEFF != NA && GLINBREEDINGCOEFF < -0.15",
+          },
+          "NONVARIANT": Object {
+            "Description": "GSNONVARSCORE != NA && GSNONVARSCORE >= 13.0",
+          },
+          "PASS": Object {
+            "Description": "All filters passed",
           },
         },
         "FORMAT": Object {
@@ -9007,6 +9125,26 @@ Array [
             "Number": "R",
             "Type": "Integer",
           },
+          "CN": Object {
+            "Description": "Copy number genotype for imprecise events",
+            "Number": 1,
+            "Type": "Integer",
+          },
+          "CNL": Object {
+            "Description": "Copy number likelihoods with no frequency prior",
+            "Number": ".",
+            "Type": "Float",
+          },
+          "CNP": Object {
+            "Description": "Copy number likelihoods",
+            "Number": ".",
+            "Type": "Float",
+          },
+          "CNQ": Object {
+            "Description": "Copy number genotype quality for imprecise events",
+            "Number": 1,
+            "Type": "Float",
+          },
           "DP": Object {
             "Description": "Read depth",
             "Number": 1,
@@ -9018,7 +9156,7 @@ Array [
             "Type": "Integer",
           },
           "FT": Object {
-            "Description": "Filter indicating if this genotype was \\"called\\"",
+            "Description": "Per-sample genotype filter",
             "Number": 1,
             "Type": "String",
           },
@@ -9028,12 +9166,12 @@ Array [
             "Type": "Float",
           },
           "GP": Object {
-            "Description": "Genotype posterior probabilities",
+            "Description": "Genotype likelihoods",
             "Number": "G",
             "Type": "Float",
           },
           "GQ": Object {
-            "Description": "Conditional genotype quality",
+            "Description": "Genotype Quality",
             "Number": 1,
             "Type": "Integer",
           },
@@ -9053,7 +9191,7 @@ Array [
             "Type": "Integer",
           },
           "PL": Object {
-            "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+            "Description": "Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification",
             "Number": "G",
             "Type": "Integer",
           },
@@ -9066,11 +9204,6 @@ Array [
             "Description": "Phase set",
             "Number": 1,
             "Type": "Integer",
-          },
-          "undefined": Object {
-            "0": "P",
-            "1": "L",
-            "Number": undefined,
           },
         },
         "INFO": Object {
@@ -9085,7 +9218,7 @@ Array [
             "Type": "String",
           },
           "AC": Object {
-            "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
+            "Description": "Total number of alternate alleles in called genotypes",
             "Number": "A",
             "Type": "Integer",
           },
@@ -9105,7 +9238,17 @@ Array [
             "Type": "Integer",
           },
           "AF": Object {
-            "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+            "Description": "Estimated allele frequency in the range (0,1]",
+            "Number": "A",
+            "Type": "Float",
+          },
+          "AFR_AF": Object {
+            "Description": "Allele frequency in the AFR populations calculated from AC and AN, in the range (0,1)",
+            "Number": "A",
+            "Type": "Float",
+          },
+          "AMR_AF": Object {
+            "Description": "Allele frequency in the AMR populations calculated from AC and AN, in the range (0,1)",
             "Number": "A",
             "Type": "Float",
           },
@@ -9184,7 +9327,7 @@ Array [
             "Type": "String",
           },
           "DP": Object {
-            "Description": "combined depth across samples",
+            "Description": "Total read depth at the locus",
             "Number": 1,
             "Type": "Integer",
           },
@@ -9192,15 +9335,30 @@ Array [
             "Description": "Read Depth of adjacency",
             "Type": "Integer",
           },
+          "EAS_AF": Object {
+            "Description": "Allele frequency in the EAS populations calculated from AC and AN, in the range (0,1)",
+            "Number": "A",
+            "Type": "Float",
+          },
           "END": Object {
-            "Description": "End position (for use with symbolic alleles)",
+            "Description": "End coordinate of this variant",
             "Number": 1,
             "Type": "Integer",
+          },
+          "EUR_AF": Object {
+            "Description": "Allele frequency in the EUR populations calculated from AC and AN, in the range (0,1)",
+            "Number": "A",
+            "Type": "Float",
           },
           "EVENT": Object {
             "Description": "ID of event associated to breakend",
             "Number": 1,
             "Type": "String",
+          },
+          "EX_TARGET": Object {
+            "Description": "indicates whether a variant is within the exon pull down target boundaries",
+            "Number": 0,
+            "Type": "Flag",
           },
           "H2": Object {
             "Description": "HapMap2 membership",
@@ -9250,6 +9408,11 @@ Array [
             "Number": 1,
             "Type": "Integer",
           },
+          "MULTI_ALLELIC": Object {
+            "Description": "indicates whether a site is multi-allelic",
+            "Number": 0,
+            "Type": "Flag",
+          },
           "NOVEL": Object {
             "Description": "Indicates a novel structural variation",
             "Number": 0,
@@ -9264,6 +9427,11 @@ Array [
             "Description": "ID of partner breakend",
             "Number": 1,
             "Type": "String",
+          },
+          "SAS_AF": Object {
+            "Description": "Allele frequency in the SAS populations calculated from AC and AN, in the range (0,1)",
+            "Number": "A",
+            "Type": "Float",
           },
           "SB": Object {
             "Description": "Strand bias",
@@ -9290,27 +9458,16 @@ Array [
             "Number": 0,
             "Type": "Flag",
           },
-          "undefined": Object {
-            "0": "M",
-            "1": "U",
-            "10": "L",
-            "11": "I",
-            "12": "C",
-            "2": "L",
-            "3": "T",
-            "4": "I",
-            "5": "_",
-            "6": "A",
-            "7": "L",
-            "8": "L",
-            "9": "E",
-            "Number": 0,
+          "VT": Object {
+            "Description": "indicates what type of variant the line represents",
+            "Number": ".",
+            "Type": "String",
           },
         },
         "contig": Object {
-          "undefined": Object {
-            "0": "Y",
-            "Number": undefined,
+          "Y": Object {
+            "assembly": "b37",
+            "length": "59373566",
           },
         },
         "fileDate": "20150218",
@@ -12857,11 +13014,11 @@ Array [
           "PASS": Object {
             "Description": "Passed all filters",
           },
-          "undefined": Object {
-            "0": "s",
-            "1": "5",
-            "2": "0",
-            "Number": undefined,
+          "q10": Object {
+            "Description": "Quality below 10",
+          },
+          "s50": Object {
+            "Description": "Less than 50% of samples have data",
           },
         },
         "FORMAT": Object {
@@ -12881,7 +13038,7 @@ Array [
             "Type": "Integer",
           },
           "DP": Object {
-            "Description": "Read depth",
+            "Description": "Read Depth",
             "Number": 1,
             "Type": "Integer",
           },
@@ -12906,7 +13063,7 @@ Array [
             "Type": "Float",
           },
           "GQ": Object {
-            "Description": "Conditional genotype quality",
+            "Description": "Genotype Quality",
             "Number": 1,
             "Type": "Integer",
           },
@@ -12916,7 +13073,7 @@ Array [
             "Type": "String",
           },
           "HQ": Object {
-            "Description": "Haplotype quality",
+            "Description": "Haplotype Quality",
             "Number": 2,
             "Type": "Integer",
           },
@@ -12940,11 +13097,6 @@ Array [
             "Number": 1,
             "Type": "Integer",
           },
-          "undefined": Object {
-            "0": "H",
-            "1": "Q",
-            "Number": 2,
-          },
         },
         "INFO": Object {
           "1000G": Object {
@@ -12953,7 +13105,7 @@ Array [
             "Type": "Flag",
           },
           "AA": Object {
-            "Description": "Ancestral allele",
+            "Description": "Ancestral Allele",
             "Number": 1,
             "Type": "String",
           },
@@ -12978,7 +13130,7 @@ Array [
             "Type": "Integer",
           },
           "AF": Object {
-            "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+            "Description": "Allele Frequency",
             "Number": "A",
             "Type": "Float",
           },
@@ -13037,7 +13189,7 @@ Array [
             "Type": "Integer",
           },
           "DB": Object {
-            "Description": "dbSNP membership",
+            "Description": "dbSNP membership, build 129",
             "Number": 0,
             "Type": "Flag",
           },
@@ -13057,7 +13209,7 @@ Array [
             "Type": "String",
           },
           "DP": Object {
-            "Description": "combined depth across samples",
+            "Description": "Total Depth",
             "Number": 1,
             "Type": "Integer",
           },
@@ -13129,7 +13281,7 @@ Array [
             "Type": "Flag",
           },
           "NS": Object {
-            "Description": "Number of samples with data",
+            "Description": "Number of Samples With Data",
             "Number": 1,
             "Type": "Integer",
           },
@@ -13163,17 +13315,14 @@ Array [
             "Number": 0,
             "Type": "Flag",
           },
-          "undefined": Object {
-            "0": "H",
-            "1": "2",
-            "Number": 0,
-          },
         },
         "contig": Object {
-          "undefined": Object {
-            "0": "2",
-            "1": "0",
-            "Number": undefined,
+          "20": Object {
+            "assembly": "B36",
+            "length": "62435964",
+            "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+            "species": "Homo sapiens",
+            "taxonomy": "x",
           },
         },
         "fileDate": "20090805",
@@ -13263,11 +13412,11 @@ Array [
           "PASS": Object {
             "Description": "Passed all filters",
           },
-          "undefined": Object {
-            "0": "s",
-            "1": "5",
-            "2": "0",
-            "Number": undefined,
+          "q10": Object {
+            "Description": "Quality below 10",
+          },
+          "s50": Object {
+            "Description": "Less than 50% of samples have data",
           },
         },
         "FORMAT": Object {
@@ -13287,7 +13436,7 @@ Array [
             "Type": "Integer",
           },
           "DP": Object {
-            "Description": "Read depth",
+            "Description": "Read Depth",
             "Number": 1,
             "Type": "Integer",
           },
@@ -13312,7 +13461,7 @@ Array [
             "Type": "Float",
           },
           "GQ": Object {
-            "Description": "Conditional genotype quality",
+            "Description": "Genotype Quality",
             "Number": 1,
             "Type": "Integer",
           },
@@ -13322,7 +13471,7 @@ Array [
             "Type": "String",
           },
           "HQ": Object {
-            "Description": "Haplotype quality",
+            "Description": "Haplotype Quality",
             "Number": 2,
             "Type": "Integer",
           },
@@ -13346,11 +13495,6 @@ Array [
             "Number": 1,
             "Type": "Integer",
           },
-          "undefined": Object {
-            "0": "H",
-            "1": "Q",
-            "Number": 2,
-          },
         },
         "INFO": Object {
           "1000G": Object {
@@ -13359,7 +13503,7 @@ Array [
             "Type": "Flag",
           },
           "AA": Object {
-            "Description": "Ancestral allele",
+            "Description": "Ancestral Allele",
             "Number": 1,
             "Type": "String",
           },
@@ -13384,7 +13528,7 @@ Array [
             "Type": "Integer",
           },
           "AF": Object {
-            "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+            "Description": "Allele Frequency",
             "Number": "A",
             "Type": "Float",
           },
@@ -13443,7 +13587,7 @@ Array [
             "Type": "Integer",
           },
           "DB": Object {
-            "Description": "dbSNP membership",
+            "Description": "dbSNP membership, build 129",
             "Number": 0,
             "Type": "Flag",
           },
@@ -13463,7 +13607,7 @@ Array [
             "Type": "String",
           },
           "DP": Object {
-            "Description": "combined depth across samples",
+            "Description": "Total Depth",
             "Number": 1,
             "Type": "Integer",
           },
@@ -13535,7 +13679,7 @@ Array [
             "Type": "Flag",
           },
           "NS": Object {
-            "Description": "Number of samples with data",
+            "Description": "Number of Samples With Data",
             "Number": 1,
             "Type": "Integer",
           },
@@ -13569,17 +13713,14 @@ Array [
             "Number": 0,
             "Type": "Flag",
           },
-          "undefined": Object {
-            "0": "H",
-            "1": "2",
-            "Number": 0,
-          },
         },
         "contig": Object {
-          "undefined": Object {
-            "0": "2",
-            "1": "0",
-            "Number": undefined,
+          "20": Object {
+            "assembly": "B36",
+            "length": "62435964",
+            "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+            "species": "Homo sapiens",
+            "taxonomy": "x",
           },
         },
         "fileDate": "20090805",
@@ -13677,11 +13818,11 @@ Array [
           "PASS": Object {
             "Description": "Passed all filters",
           },
-          "undefined": Object {
-            "0": "s",
-            "1": "5",
-            "2": "0",
-            "Number": undefined,
+          "q10": Object {
+            "Description": "Quality below 10",
+          },
+          "s50": Object {
+            "Description": "Less than 50% of samples have data",
           },
         },
         "FORMAT": Object {
@@ -13701,7 +13842,7 @@ Array [
             "Type": "Integer",
           },
           "DP": Object {
-            "Description": "Read depth",
+            "Description": "Read Depth",
             "Number": 1,
             "Type": "Integer",
           },
@@ -13726,7 +13867,7 @@ Array [
             "Type": "Float",
           },
           "GQ": Object {
-            "Description": "Conditional genotype quality",
+            "Description": "Genotype Quality",
             "Number": 1,
             "Type": "Integer",
           },
@@ -13736,7 +13877,7 @@ Array [
             "Type": "String",
           },
           "HQ": Object {
-            "Description": "Haplotype quality",
+            "Description": "Haplotype Quality",
             "Number": 2,
             "Type": "Integer",
           },
@@ -13760,11 +13901,6 @@ Array [
             "Number": 1,
             "Type": "Integer",
           },
-          "undefined": Object {
-            "0": "H",
-            "1": "Q",
-            "Number": 2,
-          },
         },
         "INFO": Object {
           "1000G": Object {
@@ -13773,7 +13909,7 @@ Array [
             "Type": "Flag",
           },
           "AA": Object {
-            "Description": "Ancestral allele",
+            "Description": "Ancestral Allele",
             "Number": 1,
             "Type": "String",
           },
@@ -13798,7 +13934,7 @@ Array [
             "Type": "Integer",
           },
           "AF": Object {
-            "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+            "Description": "Allele Frequency",
             "Number": "A",
             "Type": "Float",
           },
@@ -13857,7 +13993,7 @@ Array [
             "Type": "Integer",
           },
           "DB": Object {
-            "Description": "dbSNP membership",
+            "Description": "dbSNP membership, build 129",
             "Number": 0,
             "Type": "Flag",
           },
@@ -13877,7 +14013,7 @@ Array [
             "Type": "String",
           },
           "DP": Object {
-            "Description": "combined depth across samples",
+            "Description": "Total Depth",
             "Number": 1,
             "Type": "Integer",
           },
@@ -13949,7 +14085,7 @@ Array [
             "Type": "Flag",
           },
           "NS": Object {
-            "Description": "Number of samples with data",
+            "Description": "Number of Samples With Data",
             "Number": 1,
             "Type": "Integer",
           },
@@ -13983,17 +14119,14 @@ Array [
             "Number": 0,
             "Type": "Flag",
           },
-          "undefined": Object {
-            "0": "H",
-            "1": "2",
-            "Number": 0,
-          },
         },
         "contig": Object {
-          "undefined": Object {
-            "0": "2",
-            "1": "0",
-            "Number": undefined,
+          "20": Object {
+            "assembly": "B36",
+            "length": "62435964",
+            "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+            "species": "Homo sapiens",
+            "taxonomy": "x",
           },
         },
         "fileDate": "20090805",
@@ -14081,11 +14214,11 @@ Array [
           "PASS": Object {
             "Description": "Passed all filters",
           },
-          "undefined": Object {
-            "0": "s",
-            "1": "5",
-            "2": "0",
-            "Number": undefined,
+          "q10": Object {
+            "Description": "Quality below 10",
+          },
+          "s50": Object {
+            "Description": "Less than 50% of samples have data",
           },
         },
         "FORMAT": Object {
@@ -14105,7 +14238,7 @@ Array [
             "Type": "Integer",
           },
           "DP": Object {
-            "Description": "Read depth",
+            "Description": "Read Depth",
             "Number": 1,
             "Type": "Integer",
           },
@@ -14130,7 +14263,7 @@ Array [
             "Type": "Float",
           },
           "GQ": Object {
-            "Description": "Conditional genotype quality",
+            "Description": "Genotype Quality",
             "Number": 1,
             "Type": "Integer",
           },
@@ -14140,7 +14273,7 @@ Array [
             "Type": "String",
           },
           "HQ": Object {
-            "Description": "Haplotype quality",
+            "Description": "Haplotype Quality",
             "Number": 2,
             "Type": "Integer",
           },
@@ -14164,11 +14297,6 @@ Array [
             "Number": 1,
             "Type": "Integer",
           },
-          "undefined": Object {
-            "0": "H",
-            "1": "Q",
-            "Number": 2,
-          },
         },
         "INFO": Object {
           "1000G": Object {
@@ -14177,7 +14305,7 @@ Array [
             "Type": "Flag",
           },
           "AA": Object {
-            "Description": "Ancestral allele",
+            "Description": "Ancestral Allele",
             "Number": 1,
             "Type": "String",
           },
@@ -14202,7 +14330,7 @@ Array [
             "Type": "Integer",
           },
           "AF": Object {
-            "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+            "Description": "Allele Frequency",
             "Number": "A",
             "Type": "Float",
           },
@@ -14261,7 +14389,7 @@ Array [
             "Type": "Integer",
           },
           "DB": Object {
-            "Description": "dbSNP membership",
+            "Description": "dbSNP membership, build 129",
             "Number": 0,
             "Type": "Flag",
           },
@@ -14281,7 +14409,7 @@ Array [
             "Type": "String",
           },
           "DP": Object {
-            "Description": "combined depth across samples",
+            "Description": "Total Depth",
             "Number": 1,
             "Type": "Integer",
           },
@@ -14353,7 +14481,7 @@ Array [
             "Type": "Flag",
           },
           "NS": Object {
-            "Description": "Number of samples with data",
+            "Description": "Number of Samples With Data",
             "Number": 1,
             "Type": "Integer",
           },
@@ -14387,17 +14515,14 @@ Array [
             "Number": 0,
             "Type": "Flag",
           },
-          "undefined": Object {
-            "0": "H",
-            "1": "2",
-            "Number": 0,
-          },
         },
         "contig": Object {
-          "undefined": Object {
-            "0": "2",
-            "1": "0",
-            "Number": undefined,
+          "20": Object {
+            "assembly": "B36",
+            "length": "62435964",
+            "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+            "species": "Homo sapiens",
+            "taxonomy": "x",
           },
         },
         "fileDate": "20090805",
@@ -14490,11 +14615,11 @@ Array [
           "PASS": Object {
             "Description": "Passed all filters",
           },
-          "undefined": Object {
-            "0": "s",
-            "1": "5",
-            "2": "0",
-            "Number": undefined,
+          "q10": Object {
+            "Description": "Quality below 10",
+          },
+          "s50": Object {
+            "Description": "Less than 50% of samples have data",
           },
         },
         "FORMAT": Object {
@@ -14514,7 +14639,7 @@ Array [
             "Type": "Integer",
           },
           "DP": Object {
-            "Description": "Read depth",
+            "Description": "Read Depth",
             "Number": 1,
             "Type": "Integer",
           },
@@ -14539,7 +14664,7 @@ Array [
             "Type": "Float",
           },
           "GQ": Object {
-            "Description": "Conditional genotype quality",
+            "Description": "Genotype Quality",
             "Number": 1,
             "Type": "Integer",
           },
@@ -14549,7 +14674,7 @@ Array [
             "Type": "String",
           },
           "HQ": Object {
-            "Description": "Haplotype quality",
+            "Description": "Haplotype Quality",
             "Number": 2,
             "Type": "Integer",
           },
@@ -14573,11 +14698,6 @@ Array [
             "Number": 1,
             "Type": "Integer",
           },
-          "undefined": Object {
-            "0": "H",
-            "1": "Q",
-            "Number": 2,
-          },
         },
         "INFO": Object {
           "1000G": Object {
@@ -14586,7 +14706,7 @@ Array [
             "Type": "Flag",
           },
           "AA": Object {
-            "Description": "Ancestral allele",
+            "Description": "Ancestral Allele",
             "Number": 1,
             "Type": "String",
           },
@@ -14611,7 +14731,7 @@ Array [
             "Type": "Integer",
           },
           "AF": Object {
-            "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+            "Description": "Allele Frequency",
             "Number": "A",
             "Type": "Float",
           },
@@ -14670,7 +14790,7 @@ Array [
             "Type": "Integer",
           },
           "DB": Object {
-            "Description": "dbSNP membership",
+            "Description": "dbSNP membership, build 129",
             "Number": 0,
             "Type": "Flag",
           },
@@ -14690,7 +14810,7 @@ Array [
             "Type": "String",
           },
           "DP": Object {
-            "Description": "combined depth across samples",
+            "Description": "Total Depth",
             "Number": 1,
             "Type": "Integer",
           },
@@ -14762,7 +14882,7 @@ Array [
             "Type": "Flag",
           },
           "NS": Object {
-            "Description": "Number of samples with data",
+            "Description": "Number of Samples With Data",
             "Number": 1,
             "Type": "Integer",
           },
@@ -14796,17 +14916,14 @@ Array [
             "Number": 0,
             "Type": "Flag",
           },
-          "undefined": Object {
-            "0": "H",
-            "1": "2",
-            "Number": 0,
-          },
         },
         "contig": Object {
-          "undefined": Object {
-            "0": "2",
-            "1": "0",
-            "Number": undefined,
+          "20": Object {
+            "assembly": "B36",
+            "length": "62435964",
+            "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+            "species": "Homo sapiens",
+            "taxonomy": "x",
           },
         },
         "fileDate": "20090805",
