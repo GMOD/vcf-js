@@ -90,10 +90,11 @@ class Variant {
       }
       info[key] = items
     })
+
+    this.INFO = info
+
     this.fields = fields
     this.rest = rest
-    this.INFO = info
-    this.parser = parser
   }
 
   _parseGenotypes(keys: string, other: string) {
@@ -127,13 +128,22 @@ class Variant {
   }
 
   get SAMPLES() {
-    const samples = this._parseGenotypes(this.fields[8], this.rest)
+    return this._parseGenotypes(this.fields[8], this.rest)
+  }
 
-    Object.defineProperty(this, 'SAMPLES', {
-      value: samples,
-    })
-
-    return samples
+  toJSON() {
+    const { CHROM, ID, POS, REF, ALT, INFO, QUAL, FILTER, SAMPLES } = this
+    return {
+      CHROM,
+      ID,
+      POS,
+      REF,
+      ALT,
+      INFO,
+      QUAL,
+      FILTER,
+      SAMPLES,
+    }
   }
 }
 

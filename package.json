@@ -27,7 +27,7 @@
     "coverage": "npm test -- --coverage",
     "docs": "documentation readme src/parse.ts --section API --parse-extension ts",
     "lint": "eslint . --ext .ts,.js",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist esm",
     "build": "tsc --target es2018 --outDir esm && tsc --target es5 --outDir dist",
     "prebuild": "npm run docs && npm run clean && npm run lint",
     "preversion": "npm run lint && npm test && npm run build",
