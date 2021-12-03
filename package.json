@@ -25,11 +25,10 @@
   "scripts": {
     "test": "jest",
     "coverage": "npm test -- --coverage",
-    "docs": "documentation readme src/parse.ts --section API --parse-extension ts",
     "lint": "eslint . --ext .ts,.js",
     "clean": "rimraf dist esm",
     "build": "tsc --target es2018 --outDir esm && tsc --target es5 --outDir dist",
-    "prebuild": "npm run docs && npm run clean && npm run lint",
+    "prebuild": "npm run clean && npm run lint",
     "preversion": "npm run lint && npm test && npm run build",
     "version": "standard-changelog && git add CHANGELOG.md",
     "postversion": "git push --follow-tags"
@@ -39,7 +38,6 @@
     "@types/jest": "^27.0.3",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
-    "documentation": "^11.0.0",
     "eslint": "^8.2.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
