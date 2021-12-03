@@ -27,7 +27,7 @@
     "coverage": "npm test -- --coverage",
     "lint": "eslint . --ext .ts,.js",
     "clean": "rimraf dist esm",
-    "build": "tsc --target es2018 --outDir esm && tsc --target es5 --outDir dist",
+    "build": "tsc --target es2018 --outDir esm && tsc --target es2015 --outDir dist",
     "prebuild": "npm run clean && npm run lint",
     "preversion": "npm run lint && npm test && npm run build",
     "version": "standard-changelog && git add CHANGELOG.md",
