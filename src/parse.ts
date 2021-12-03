@@ -10,9 +10,9 @@ function decodeURIComponentNoThrow(uri: string) {
 }
 
 class Variant {
-  fields: string[]
-  parser: VCF
-  rest: string
+  #fields: string[]
+  #parser: VCF
+  #rest: string
 
   CHROM: string
   POS: number
@@ -24,7 +24,7 @@ class Variant {
   INFO: unknown[]
 
   constructor(line: string, parser: VCF) {
-    this.parser = parser
+    this.#parser = parser
 
     let currChar = 0
     for (let currField = 0; currChar < line.length; currChar += 1) {
@@ -46,8 +46,12 @@ class Variant {
     this.ALT = ALT === '.' ? null : ALT.split(',')
     this.QUAL = QUAL === '.' ? null : +QUAL
     this.FILTER = FILTER === '.' ? null : FILTER.split(';')
+    if (this.FILTER && this.FILTER.length === 1 && this.FILTER[0] === 'PASS') {
+      //@ts-ignore
+      this.FILTER = 'PASS'
+    }
 
-    if (this.parser.strict && fields[7] === undefined) {
+    if (this.#parser.strict && fields[7] === undefined) {
       throw new Error(
         "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
       )
@@ -93,42 +97,50 @@ class Variant {
 
     this.INFO = info
 
-    this.fields = fields
-    this.rest = rest
+    this.#fields = fields
+    this.#rest = rest
   }
 
-  _parseGenotypes(keys: string, other: string) {
-    const rest = other.split('\t')
+  _parseGenotypes() {
+    const rest = this.#rest.split('\t')
     const genotypes = {} as any
-    const formatKeys = keys.split(':')
-    this.parser.samples.forEach((sample, index) => {
+    const formatKeys = this.#fields[8]?.split(':')
+    this.#parser.samples.forEach((sample, index) => {
       genotypes[sample] = {}
-      formatKeys.forEach(key => {
+      formatKeys?.forEach(key => {
         genotypes[sample][key] = null
       })
-      rest[index].split(':').forEach((val, index) => {
-        let thisValue: unknown
-        if (val === '' || val === '.' || val === undefined) {
-          thisValue = null
-        } else {
-          const entries = val.split(',').map(ent => (ent === '.' ? null : ent))
-          const valueType = this.parser.getMetadata(
-            'FORMAT',
-            formatKeys[index],
-            'Type',
-          )
-          if ((valueType === 'Integer' || valueType === 'Float') && thisValue) {
-            thisValue = entries.map(val => (val ? +val : val))
+      rest[index]
+        ?.split(':')
+        .filter(f => f)
+        .forEach((val, index) => {
+          let thisValue: unknown
+          if (val === '' || val === '.' || val === undefined) {
+            thisValue = null
+          } else {
+            const entries = val
+              .split(',')
+              .map(ent => (ent === '.' ? null : ent))
+            const valueType = this.#parser.getMetadata(
+              'FORMAT',
+              formatKeys?.[index],
+              'Type',
+            )
+            if (
+              (valueType === 'Integer' || valueType === 'Float') &&
+              thisValue
+            ) {
+              thisValue = entries.map(val => (val ? +val : val))
+            }
           }
-        }
-        genotypes[sample][formatKeys[index]] = thisValue
-      }, {})
+          genotypes[sample][formatKeys[index]] = thisValue
+        }, {})
     })
     return genotypes
   }
 
   get SAMPLES() {
-    return this._parseGenotypes(this.fields[8], this.rest)
+    return this._parseGenotypes()
   }
 
   toJSON() {
