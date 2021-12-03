@@ -2,7 +2,7 @@
 
 exports[`Obscure VCF vcf lines with weird info field and missing format/genotypes 1`] = `
 Array [
-  Object {
+  Variant {
     "ALT": Array [
       "A",
     ],
@@ -26,9 +26,8 @@ Array [
     "POS": 80465,
     "QUAL": 29,
     "REF": "R",
-    "SAMPLES": Object {},
   },
-  Object {
+  Variant {
     "ALT": Array [
       "G",
     ],
@@ -52,9 +51,8 @@ Array [
     "POS": 84818,
     "QUAL": 29,
     "REF": "R",
-    "SAMPLES": Object {},
   },
-  Object {
+  Variant {
     "ALT": Array [
       "T",
     ],
@@ -78,9 +76,8 @@ Array [
     "POS": 95414,
     "QUAL": 29,
     "REF": "W",
-    "SAMPLES": Object {},
   },
-  Object {
+  Variant {
     "ALT": Array [
       "A",
     ],
@@ -104,9 +101,8 @@ Array [
     "POS": 231384,
     "QUAL": 29,
     "REF": "R",
-    "SAMPLES": Object {},
   },
-  Object {
+  Variant {
     "ALT": Array [
       "G",
     ],
@@ -130,9 +126,8 @@ Array [
     "POS": 236429,
     "QUAL": 29,
     "REF": "R",
-    "SAMPLES": Object {},
   },
-  Object {
+  Variant {
     "ALT": Array [
       "G",
     ],
@@ -156,7 +151,6 @@ Array [
     "POS": 245378,
     "QUAL": 29,
     "REF": "R",
-    "SAMPLES": Object {},
   },
 ]
 `;
@@ -755,7 +749,7 @@ Object {
 `;
 
 exports[`VCF parser can parse a line from the VCF spec 1`] = `
-Object {
+Variant {
   "ALT": Array [
     "A",
   ],
@@ -780,58 +774,61 @@ Object {
   "POS": 14370,
   "QUAL": 29,
   "REF": "G",
-  "SAMPLES": Object {
-    "NA00001": Object {
-      "DP": Array [
-        1,
-      ],
-      "GQ": Array [
-        48,
-      ],
-      "GT": Array [
-        "0|0",
-      ],
-      "HQ": Array [
-        51,
-        51,
-      ],
-    },
-    "NA00002": Object {
-      "DP": Array [
-        8,
-      ],
-      "GQ": Array [
-        48,
-      ],
-      "GT": Array [
-        "1|0",
-      ],
-      "HQ": Array [
-        51,
-        51,
-      ],
-    },
-    "NA00003": Object {
-      "DP": Array [
-        5,
-      ],
-      "GQ": Array [
-        43,
-      ],
-      "GT": Array [
-        "1/1",
-      ],
-      "HQ": Array [
-        null,
-        null,
-      ],
-    },
+}
+`;
+
+exports[`VCF parser can parse a line from the VCF spec 2`] = `
+Object {
+  "NA00001": Object {
+    "DP": Array [
+      1,
+    ],
+    "GQ": Array [
+      48,
+    ],
+    "GT": Array [
+      "0|0",
+    ],
+    "HQ": Array [
+      51,
+      51,
+    ],
+  },
+  "NA00002": Object {
+    "DP": Array [
+      8,
+    ],
+    "GQ": Array [
+      48,
+    ],
+    "GT": Array [
+      "1|0",
+    ],
+    "HQ": Array [
+      51,
+      51,
+    ],
+  },
+  "NA00003": Object {
+    "DP": Array [
+      5,
+    ],
+    "GQ": Array [
+      43,
+    ],
+    "GT": Array [
+      "1/1",
+    ],
+    "HQ": Array [
+      null,
+      null,
+    ],
   },
 }
 `;
 
 exports[`VCF parser can parse a line with minimal entries 1`] = `
-Object {
+Variant {
   "ALT": Array [
     "A",
   ],
@@ -842,31 +839,34 @@ Object {
   "POS": 14370,
   "QUAL": null,
   "REF": "G",
-  "SAMPLES": Object {
-    "NA00001": Object {
-      "DP": null,
-      "GQ": null,
-      "GT": null,
-      "HQ": null,
-    },
-    "NA00002": Object {
-      "DP": null,
-      "GQ": null,
-      "GT": null,
-      "HQ": null,
-    },
-    "NA00003": Object {
-      "DP": null,
-      "GQ": null,
-      "GT": null,
-      "HQ": null,
-    },
+}
+`;
+
+exports[`VCF parser can parse a line with minimal entries 2`] = `
+Object {
+  "NA00001": Object {
+    "DP": null,
+    "GQ": null,
+    "GT": null,
+    "HQ": null,
+  },
+  "NA00002": Object {
+    "DP": null,
+    "GQ": null,
+    "GT": null,
+    "HQ": null,
+  },
+  "NA00003": Object {
+    "DP": null,
+    "GQ": null,
+    "GT": null,
+    "HQ": null,
   },
 }
 `;
 
 exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 1`] = `
-Object {
+Variant {
   "ALT": Array [
     "<CN0>",
   ],
@@ -917,97 +917,100 @@ Object {
   "POS": 14483990,
   "QUAL": 100,
   "REF": "C",
-  "SAMPLES": Object {
-    "HG00096": Object {
-      "CN": Array [
-        1,
-      ],
-      "CNL": Array [
-        -1000,
-        0,
-        -119.08,
-      ],
-      "CNP": Array [
-        -1000,
-        0,
-        -218.16,
-      ],
-      "CNQ": Array [
-        99,
-      ],
-      "GP": Array [
-        0,
-        -1000,
-      ],
-      "GQ": Array [
-        99,
-      ],
-      "GT": Array [
-        "0",
-      ],
-      "PL": Array [
-        0,
-        10000,
-      ],
-    },
-    "HG00101": Object {
-      "CN": Array [
-        1,
-      ],
-      "CNL": Array [
-        -1000,
-        0,
-        -43.56,
-      ],
-      "CNP": Array [
-        -1000,
-        0,
-        -142.64,
-      ],
-      "CNQ": Array [
-        99,
-      ],
-      "GP": Array [
-        0,
-        -1000,
-      ],
-      "GQ": Array [
-        99,
-      ],
-      "GT": Array [
-        "0",
-      ],
-      "PL": Array [
-        0,
-        10000,
-      ],
-    },
-    "HG00103": Object {
-      "CN": null,
-      "CNL": null,
-      "CNP": null,
-      "CNQ": null,
-      "GP": null,
-      "GQ": null,
-      "GT": null,
-      "PL": null,
-    },
-    "HG001055": Object {
-      "CN": null,
-      "CNL": null,
-      "CNP": null,
-      "CNQ": null,
-      "GP": null,
-      "GQ": null,
-      "GT": null,
-      "PL": null,
-    },
-  },
 }
 `;
 
 exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 2`] = `
 Object {
+  "HG00096": Object {
+    "CN": Array [
+      1,
+    ],
+    "CNL": Array [
+      -1000,
+      0,
+      -119.08,
+    ],
+    "CNP": Array [
+      -1000,
+      0,
+      -218.16,
+    ],
+    "CNQ": Array [
+      99,
+    ],
+    "GP": Array [
+      0,
+      -1000,
+    ],
+    "GQ": Array [
+      99,
+    ],
+    "GT": Array [
+      "0",
+    ],
+    "PL": Array [
+      0,
+      10000,
+    ],
+  },
+  "HG00101": Object {
+    "CN": Array [
+      1,
+    ],
+    "CNL": Array [
+      -1000,
+      0,
+      -43.56,
+    ],
+    "CNP": Array [
+      -1000,
+      0,
+      -142.64,
+    ],
+    "CNQ": Array [
+      99,
+    ],
+    "GP": Array [
+      0,
+      -1000,
+    ],
+    "GQ": Array [
+      99,
+    ],
+    "GT": Array [
+      "0",
+    ],
+    "PL": Array [
+      0,
+      10000,
+    ],
+  },
+  "HG00103": Object {
+    "CN": null,
+    "CNL": null,
+    "CNP": null,
+    "CNQ": null,
+    "GP": null,
+    "GQ": null,
+    "GT": null,
+    "PL": null,
+  },
+  "HG001055": Object {
+    "CN": null,
+    "CNL": null,
+    "CNP": null,
+    "CNQ": null,
+    "GP": null,
+    "GQ": null,
+    "GT": null,
+    "PL": null,
+  },
+}
+`;
+
+exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 3`] = `
+Variant {
   "ALT": Array [
     "A",
   ],
@@ -1058,31 +1061,34 @@ Object {
   "POS": 2655180,
   "QUAL": 100,
   "REF": "G",
-  "SAMPLES": Object {
-    "HG00096": Object {
-      "GT": Array [
-        "0",
-      ],
-    },
-    "HG00101": Object {
-      "GT": Array [
-        "0",
-      ],
-    },
-    "HG00103": Object {
-      "GT": Array [
-        "0",
-      ],
-    },
-    "HG001055": Object {
-      "GT": null,
-    },
+}
+`;
+
+exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 4`] = `
+Object {
+  "HG00096": Object {
+    "GT": Array [
+      "0",
+    ],
+  },
+  "HG00101": Object {
+    "GT": Array [
+      "0",
+    ],
+  },
+  "HG00103": Object {
+    "GT": Array [
+      "0",
+    ],
+  },
+  "HG001055": Object {
+    "GT": null,
   },
 }
 `;
 
 exports[`VCF parser for structural variants can parse a line from the VCF spec 1`] = `
-Object {
+Variant {
   "ALT": Array [
     "<DEL>",
   ],
@@ -1142,24 +1148,27 @@ Object {
   "POS": 17709115,
   "QUAL": null,
   "REF": "N",
-  "SAMPLES": Object {
-    "/seq/schatz/fritz/sv-paper/real/Nanopore_NA12878/mapped/ngm_Nanopore_human_ngmlr-0.2.3_mapped.bam": Object {
-      "DR": Array [
-        1,
-      ],
-      "DV": Array [
-        34,
-      ],
-      "GT": Array [
-        "1/1",
-      ],
-    },
+}
+`;
+
+exports[`VCF parser for structural variants can parse a line from the VCF spec 2`] = `
+Object {
+  "/seq/schatz/fritz/sv-paper/real/Nanopore_NA12878/mapped/ngm_Nanopore_human_ngmlr-0.2.3_mapped.bam": Object {
+    "DR": Array [
+      1,
+    ],
+    "DV": Array [
+      34,
+    ],
+    "GT": Array [
+      "1/1",
+    ],
   },
 }
 `;
 
 exports[`VCF parser parses a line with a breakend ALT 1`] = `
-Object {
+Variant {
   "ALT": Array [
     "G]17:198982]",
   ],
@@ -1176,12 +1185,11 @@ Object {
   "POS": 321681,
   "QUAL": 6,
   "REF": "G",
-  "SAMPLES": Object {},
 }
 `;
 
 exports[`VCF parser parses a line with mix of multiple breakends and non breakends 1`] = `
-Object {
+Variant {
   "ALT": Array [
     "CTATGTCG",
     "C[2 : 321682[",
@@ -1204,13 +1212,12 @@ Object {
   "POS": 123456,
   "QUAL": 6,
   "REF": "C",
-  "SAMPLES": Object {},
 }
 `;
 
 exports[`can parse breakends 1`] = `
 Array [
-  Object {
+  Variant {
     "ALT": Array [
       "G]8:107653520]",
     ],
@@ -1246,20 +1253,8 @@ Array [
     "POS": 94975747,
     "QUAL": null,
     "REF": "G",
-    "SAMPLES": Object {
-      "BAMs/caudaus.sorted.sam": Object {
-        "PR": Array [
-          "722",
-          "9",
-        ],
-        "SR": Array [
-          "463",
-          "15",
-        ],
-      },
-    },
   },
-  Object {
+  Variant {
     "ALT": Array [
       "<DEL>",
     ],
@@ -1291,16 +1286,8 @@ Array [
     "POS": 94975753,
     "QUAL": null,
     "REF": "T",
-    "SAMPLES": Object {
-      "BAMs/caudaus.sorted.sam": Object {
-        "PR": Array [
-          "161",
-          "13",
-        ],
-      },
-    },
   },
-  Object {
+  Variant {
     "ALT": Array [
       "T[8:107653411[",
     ],
@@ -1326,18 +1313,6 @@ Array [
     "POS": 94987872,
     "QUAL": null,
     "REF": "T",
-    "SAMPLES": Object {
-      "BAMs/caudaus.sorted.sam": Object {
-        "PR": Array [
-          "489",
-          "4",
-        ],
-        "SR": Array [
-          "520",
-          "19",
-        ],
-      },
-    },
   },
 ]
 `;
@@ -1471,7 +1446,7 @@ Array [
 
 exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
 Array [
-  Object {
+  Variant {
     "ALT": Array [
       "G]17:198982]",
     ],
@@ -1488,9 +1463,8 @@ Array [
     "POS": 321681,
     "QUAL": 6,
     "REF": "G",
-    "SAMPLES": Object {},
   },
-  Object {
+  Variant {
     "ALT": Array [
       "]13:123456]T",
     ],
@@ -1507,9 +1481,8 @@ Array [
     "POS": 321682,
     "QUAL": 6,
     "REF": "T",
-    "SAMPLES": Object {},
   },
-  Object {
+  Variant {
     "ALT": Array [
       "C[2:321682[",
     ],
@@ -1526,9 +1499,8 @@ Array [
     "POS": 123456,
     "QUAL": 6,
     "REF": "C",
-    "SAMPLES": Object {},
   },
-  Object {
+  Variant {
     "ALT": Array [
       "[17:198983[A",
     ],
@@ -1545,9 +1517,8 @@ Array [
     "POS": 123457,
     "QUAL": 6,
     "REF": "A",
-    "SAMPLES": Object {},
   },
-  Object {
+  Variant {
     "ALT": Array [
       "A]2:321681]",
     ],
@@ -1564,9 +1535,8 @@ Array [
     "POS": 198982,
     "QUAL": 6,
     "REF": "A",
-    "SAMPLES": Object {},
   },
-  Object {
+  Variant {
     "ALT": Array [
       "[13:123457[C",
     ],
@@ -1583,14 +1553,13 @@ Array [
     "POS": 198983,
     "QUAL": 6,
     "REF": "C",
-    "SAMPLES": Object {},
   },
 ]
 `;
 
 exports[`snippet from VCF 4.3 spec 1`] = `
 Array [
-  Object {
+  Variant {
     "ALT": Array [
       "A",
     ],
@@ -1615,55 +1584,8 @@ Array [
     "POS": 14370,
     "QUAL": 29,
     "REF": "G",
-    "SAMPLES": Object {
-      "NA00001": Object {
-        "DP": Array [
-          1,
-        ],
-        "GQ": Array [
-          48,
-        ],
-        "GT": Array [
-          "0|0",
-        ],
-        "HQ": Array [
-          51,
-          51,
-        ],
-      },
-      "NA00002": Object {
-        "DP": Array [
-          8,
-        ],
-        "GQ": Array [
-          48,
-        ],
-        "GT": Array [
-          "1|0",
-        ],
-        "HQ": Array [
-          51,
-          51,
-        ],
-      },
-      "NA00003": Object {
-        "DP": Array [
-          5,
-        ],
-        "GQ": Array [
-          43,
-        ],
-        "GT": Array [
-          "1/1",
-        ],
-        "HQ": Array [
-          null,
-          null,
-        ],
-      },
-    },
   },
-  Object {
+  Variant {
     "ALT": Array [
       "A",
     ],
@@ -1686,52 +1608,8 @@ Array [
     "POS": 17330,
     "QUAL": 3,
     "REF": "T",
-    "SAMPLES": Object {
-      "NA00001": Object {
-        "DP": Array [
-          3,
-        ],
-        "GQ": Array [
-          49,
-        ],
-        "GT": Array [
-          "0|0",
-        ],
-        "HQ": Array [
-          58,
-          50,
-        ],
-      },
-      "NA00002": Object {
-        "DP": Array [
-          5,
-        ],
-        "GQ": Array [
-          3,
-        ],
-        "GT": Array [
-          "0|1",
-        ],
-        "HQ": Array [
-          65,
-          3,
-        ],
-      },
-      "NA00003": Object {
-        "DP": Array [
-          3,
-        ],
-        "GQ": Array [
-          41,
-        ],
-        "GT": Array [
-          "0/0",
-        ],
-        "HQ": null,
-      },
-    },
   },
-  Object {
+  Variant {
     "ALT": Array [
       "G",
       "T",
@@ -1760,52 +1638,8 @@ Array [
     "POS": 1110696,
     "QUAL": 67,
     "REF": "A",
-    "SAMPLES": Object {
-      "NA00001": Object {
-        "DP": Array [
-          6,
-        ],
-        "GQ": Array [
-          21,
-        ],
-        "GT": Array [
-          "1|2",
-        ],
-        "HQ": Array [
-          23,
-          27,
-        ],
-      },
-      "NA00002": Object {
-        "DP": Array [
-          0,
-        ],
-        "GQ": Array [
-          2,
-        ],
-        "GT": Array [
-          "2|1",
-        ],
-        "HQ": Array [
-          18,
-          2,
-        ],
-      },
-      "NA00003": Object {
-        "DP": Array [
-          4,
-        ],
-        "GQ": Array [
-          35,
-        ],
-        "GT": Array [
-          "2/2",
-        ],
-        "HQ": null,
-      },
-    },
   },
-  Object {
+  Variant {
     "ALT": null,
     "CHROM": "20",
     "FILTER": "PASS",
@@ -1824,52 +1658,8 @@ Array [
     "POS": 1230237,
     "QUAL": 47,
     "REF": "T",
-    "SAMPLES": Object {
-      "NA00001": Object {
-        "DP": Array [
-          7,
-        ],
-        "GQ": Array [
-          54,
-        ],
-        "GT": Array [
-          "0|0",
-        ],
-        "HQ": Array [
-          56,
-          60,
-        ],
-      },
-      "NA00002": Object {
-        "DP": Array [
-          4,
-        ],
-        "GQ": Array [
-          48,
-        ],
-        "GT": Array [
-          "0|0",
-        ],
-        "HQ": Array [
-          51,
-          51,
-        ],
-      },
-      "NA00003": Object {
-        "DP": Array [
-          2,
-        ],
-        "GQ": Array [
-          61,
-        ],
-        "GT": Array [
-          "0/0",
-        ],
-        "HQ": null,
-      },
-    },
   },
-  Object {
+  Variant {
     "ALT": Array [
       "G",
       "GTCT",
@@ -1893,40 +1683,224 @@ Array [
     "POS": 1234567,
     "QUAL": 50,
     "REF": "GTC",
-    "SAMPLES": Object {
-      "NA00001": Object {
-        "DP": Array [
-          4,
-        ],
-        "GQ": Array [
-          35,
-        ],
-        "GT": Array [
-          "0/1",
-        ],
-      },
-      "NA00002": Object {
-        "DP": Array [
-          2,
-        ],
-        "GQ": Array [
-          17,
-        ],
-        "GT": Array [
-          "0/2",
-        ],
-      },
-      "NA00003": Object {
-        "DP": Array [
-          3,
-        ],
-        "GQ": Array [
-          40,
-        ],
-        "GT": Array [
-          "1/1",
-        ],
-      },
+  },
+]
+`;
+
+exports[`snippet from VCF 4.3 spec 2`] = `
+Array [
+  Object {
+    "NA00001": Object {
+      "DP": Array [
+        1,
+      ],
+      "GQ": Array [
+        48,
+      ],
+      "GT": Array [
+        "0|0",
+      ],
+      "HQ": Array [
+        51,
+        51,
+      ],
+    },
+    "NA00002": Object {
+      "DP": Array [
+        8,
+      ],
+      "GQ": Array [
+        48,
+      ],
+      "GT": Array [
+        "1|0",
+      ],
+      "HQ": Array [
+        51,
+        51,
+      ],
+    },
+    "NA00003": Object {
+      "DP": Array [
+        5,
+      ],
+      "GQ": Array [
+        43,
+      ],
+      "GT": Array [
+        "1/1",
+      ],
+      "HQ": Array [
+        null,
+        null,
+      ],
+    },
+  },
+  Object {
+    "NA00001": Object {
+      "DP": Array [
+        3,
+      ],
+      "GQ": Array [
+        49,
+      ],
+      "GT": Array [
+        "0|0",
+      ],
+      "HQ": Array [
+        58,
+        50,
+      ],
+    },
+    "NA00002": Object {
+      "DP": Array [
+        5,
+      ],
+      "GQ": Array [
+        3,
+      ],
+      "GT": Array [
+        "0|1",
+      ],
+      "HQ": Array [
+        65,
+        3,
+      ],
+    },
+    "NA00003": Object {
+      "DP": Array [
+        3,
+      ],
+      "GQ": Array [
+        41,
+      ],
+      "GT": Array [
+        "0/0",
+      ],
+      "HQ": null,
+    },
+  },
+  Object {
+    "NA00001": Object {
+      "DP": Array [
+        6,
+      ],
+      "GQ": Array [
+        21,
+      ],
+      "GT": Array [
+        "1|2",
+      ],
+      "HQ": Array [
+        23,
+        27,
+      ],
+    },
+    "NA00002": Object {
+      "DP": Array [
+        0,
+      ],
+      "GQ": Array [
+        2,
+      ],
+      "GT": Array [
+        "2|1",
+      ],
+      "HQ": Array [
+        18,
+        2,
+      ],
+    },
+    "NA00003": Object {
+      "DP": Array [
+        4,
+      ],
+      "GQ": Array [
+        35,
+      ],
+      "GT": Array [
+        "2/2",
+      ],
+      "HQ": null,
+    },
+  },
+  Object {
+    "NA00001": Object {
+      "DP": Array [
+        7,
+      ],
+      "GQ": Array [
+        54,
+      ],
+      "GT": Array [
+        "0|0",
+      ],
+      "HQ": Array [
+        56,
+        60,
+      ],
+    },
+    "NA00002": Object {
+      "DP": Array [
+        4,
+      ],
+      "GQ": Array [
+        48,
+      ],
+      "GT": Array [
+        "0|0",
+      ],
+      "HQ": Array [
+        51,
+        51,
+      ],
+    },
+    "NA00003": Object {
+      "DP": Array [
+        2,
+      ],
+      "GQ": Array [
+        61,
+      ],
+      "GT": Array [
+        "0/0",
+      ],
+      "HQ": null,
+    },
+  },
+  Object {
+    "NA00001": Object {
+      "DP": Array [
+        4,
+      ],
+      "GQ": Array [
+        35,
+      ],
+      "GT": Array [
+        "0/1",
+      ],
+    },
+    "NA00002": Object {
+      "DP": Array [
+        2,
+      ],
+      "GQ": Array [
+        17,
+      ],
+      "GT": Array [
+        "0/2",
+      ],
+    },
+    "NA00003": Object {
+      "DP": Array [
+        3,
+      ],
+      "GQ": Array [
+        40,
+      ],
+      "GT": Array [
+        "1/1",
+      ],
     },
   },
 ]

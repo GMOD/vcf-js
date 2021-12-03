@@ -145,21 +145,6 @@ class Variant {
   get SAMPLES() {
     return this._parseGenotypes()
   }
-
-  toJSON() {
-    const { CHROM, ID, POS, REF, ALT, INFO, QUAL, FILTER, SAMPLES } = this
-    return {
-      CHROM,
-      ID,
-      POS,
-      REF,
-      ALT,
-      INFO,
-      QUAL,
-      FILTER,
-      SAMPLES,
-    }
-  }
 }
 
 /**
