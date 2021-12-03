@@ -87,7 +87,6 @@ describe('VCF parser', () => {
       '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
     )
     expect(variant).toMatchSnapshot()
-    expect(variant.SAMPLES).toMatchSnapshot()
   })
 
   it('can parse a line with minimal entries', () => {
@@ -95,7 +94,6 @@ describe('VCF parser', () => {
       '20\t14370\t.\tG\tA\t.\t.\t.\tGT:GQ:DP:HQ\t.\t.\t.\n',
     )
     expect(variant).toMatchSnapshot()
-    expect(variant.SAMPLES).toMatchSnapshot()
   })
 
   it('parses a line with a breakend ALT', () => {
@@ -175,7 +173,6 @@ describe('VCF parser for structural variants', () => {
       '8\t17709115\t28329_0\tN\t<DEL>\t.\tPASS\tPRECISE;SVMETHOD=Snifflesv1.0.3;CHR2=8;END=17709148;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=20.524521;Kurtosis_quant_stop=3.925926;SVTYPE=DEL;SUPTYPE=AL;SVLEN=33;STRANDS=+-;STRANDS2=20,14,20,14;RE=34;AF=0.971429\tGT:DR:DV\t1/1:1:34',
     )
     expect(variant).toMatchSnapshot()
-    expect(variant.SAMPLES).toMatchSnapshot()
   })
 })
 
@@ -234,9 +231,7 @@ describe('VCF parser for Y chrom (haploid)', () => {
       'Y\t2655180\trs11575897\tG\tA\t100\tPASS\tAA=G;AC=22;AF=0.0178427;AN=1233;DP=84761;NS=1233;AMR_AF=0;AFR_AF=0;EUR_AF=0;SAS_AF=0;EAS_AF=0.0902;VT=SNP;EX_TARGET\tGT\t0\t0\t0\t.',
     )
     expect(variant).toMatchSnapshot()
-    expect(variant.SAMPLES).toMatchSnapshot()
     expect(variant2).toMatchSnapshot()
-    expect(variant2.SAMPLES).toMatchSnapshot()
   })
 })
 
@@ -249,19 +244,18 @@ test('snippet from VCF 4.3 spec', () => {
   })
   const variants = lines.map(line => VCFParser.parseLine(line)).filter(x => x)
   expect(variants).toMatchSnapshot()
-  const samples = variants.map(variant => variant.SAMPLES)
-  expect(samples).toMatchSnapshot()
 })
 test('can parse breakends', () => {
   const header = `#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tBAMs/caudaus.sorted.sam`
   const VCFParser = new VCF({
     header,
   })
-  const lines = `11	94975747	MantaBND:0:2:3:0:0:0:1	G	G]8:107653520]	.	PASS	SVTYPE=BND;MATEID=MantaBND:0:2:3:0:0:0:0;CIPOS=0,2;HOMLEN=2;HOMSEQ=TT;BND_DEPTH=216;MATE_BND_DEPTH=735	PR:SR	722,9:463,15
+  const lines =
+    `11	94975747	MantaBND:0:2:3:0:0:0:1	G	G]8:107653520]	.	PASS	SVTYPE=BND;MATEID=MantaBND:0:2:3:0:0:0:0;CIPOS=0,2;HOMLEN=2;HOMSEQ=TT;BND_DEPTH=216;MATE_BND_DEPTH=735	PR:SR	722,9:463,15
 11	94975753	MantaDEL:0:1:2:0:0:0	T	<DEL>	.	PASS	END=94987865;SVTYPE=DEL;SVLEN=12112;IMPRECISE;CIPOS=-156,156;CIEND=-150,150	PR	161,13
 11	94987872	MantaBND:0:0:1:0:0:0:0	T	T[8:107653411[	.	PASS	SVTYPE=BND;MATEID=MantaBND:0:0:1:0:0:0:1;BND_DEPTH=171;MATE_BND_DEPTH=830	PR:SR	489,4:520,19`.split(
-    '\n',
-  )
+      '\n',
+    )
 
   const variants = lines.map(line => VCFParser.parseLine(line))
   expect(variants).toMatchSnapshot()
@@ -276,14 +270,15 @@ describe('Obscure VCF', () => {
     })
   })
   it('vcf lines with weird info field and missing format/genotypes', () => {
-    const lines = `lcl|Scaffald_1\t80465\trs118266897\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
+    const lines =
+      `lcl|Scaffald_1\t80465\trs118266897\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t84818\trs118269296\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t95414\trs118218236\tW\tT\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t231384\trs118264755\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t236429\trs118223336\tR\tG\t29\tPASS\tNS=3;0,14;AF=6.5;DB;112;PG2.1
 lcl|Scaffald_1\t245378\trs118217257\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1`.split(
-      '\n',
-    )
+        '\n',
+      )
 
     const variants = lines.map(line => VCFParser.parseLine(line))
     expect(variants).toMatchSnapshot()

@@ -105,37 +105,40 @@ class Variant {
     const rest = this.#rest.split('\t')
     const genotypes = {} as any
     const formatKeys = this.#fields[8]?.split(':')
-    this.#parser.samples.forEach((sample, index) => {
-      genotypes[sample] = {}
-      formatKeys?.forEach(key => {
-        genotypes[sample][key] = null
-      })
-      rest[index]
-        ?.split(':')
-        .filter(f => f)
-        .forEach((val, index) => {
-          let thisValue: unknown
-          if (val === '' || val === '.' || val === undefined) {
-            thisValue = null
-          } else {
-            const entries = val
-              .split(',')
-              .map(ent => (ent === '.' ? null : ent))
-            const valueType = this.#parser.getMetadata(
-              'FORMAT',
-              formatKeys?.[index],
-              'Type',
-            )
-            if (
-              (valueType === 'Integer' || valueType === 'Float') &&
-              thisValue
-            ) {
-              thisValue = entries.map(val => (val ? +val : val))
+    if (formatKeys) {
+      this.#parser.samples.forEach((sample, index) => {
+        genotypes[sample] = {}
+        formatKeys.forEach(key => {
+          genotypes[sample][key] = null
+        })
+        rest[index]
+          .split(':')
+          .filter(f => f)
+          .forEach((val, index) => {
+            let thisValue: unknown
+            if (val === '' || val === '.' || val === undefined) {
+              thisValue = null
+            } else {
+              const entries = val
+                .split(',')
+                .map(ent => (ent === '.' ? null : ent))
+
+              const valueType = this.#parser.getMetadata(
+                'FORMAT',
+                formatKeys[index],
+                'Type',
+              )
+              if (valueType === 'Integer' || valueType === 'Float') {
+                thisValue = entries.map(val => (val ? +val : val))
+              } else {
+                thisValue = entries
+              }
             }
-          }
-          genotypes[sample][formatKeys[index]] = thisValue
-        }, {})
-    })
+
+            genotypes[sample][formatKeys[index]] = thisValue
+          }, {})
+      })
+    }
     return genotypes
   }
 
