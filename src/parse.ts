@@ -20,7 +20,7 @@ class Variant {
   REF: string
   ALT: string[] | null
   QUAL: number | null
-  FILTER: string[] | null
+  FILTER: 'PASS' | string[] | null
   INFO: unknown[]
 
   constructor(line: string, parser: VCF) {
@@ -47,7 +47,6 @@ class Variant {
     this.QUAL = QUAL === '.' ? null : +QUAL
     this.FILTER = FILTER === '.' ? null : FILTER.split(';')
     if (this.FILTER && this.FILTER.length === 1 && this.FILTER[0] === 'PASS') {
-      //@ts-ignore
       this.FILTER = 'PASS'
     }
 
@@ -230,11 +229,11 @@ export default class VCF {
    * newlines.
    */
   _parseMetadata(line: string) {
-    //@ts-ignore
-    const [metaKey, metaVal] = line
-      .trim()
-      .match(/^##(.+?)=(.*)/)
-      .slice(1, 3)
+    const match = line.trim().match(/^##(.+?)=(.*)/)
+    if (!match) {
+      throw new Error(`Line is not a valid metadata line: ${line}`)
+    }
+    const [metaKey, metaVal] = match.slice(1, 3)
 
     if (metaVal.startsWith('<')) {
       if (!(metaKey in this.metadata)) {
