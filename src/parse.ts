@@ -9,143 +9,6 @@ function decodeURIComponentNoThrow(uri: string) {
   }
 }
 
-class Variant {
-  #fields: string[]
-  #parser: VCF
-  #rest: string
-
-  CHROM: string
-  POS: number
-  ID: string[] | null
-  REF: string
-  ALT: string[] | null
-  QUAL: number | null
-  FILTER: 'PASS' | string[] | null
-  INFO: unknown[]
-
-  constructor(line: string, parser: VCF) {
-    this.#parser = parser
-
-    let currChar = 0
-    for (let currField = 0; currChar < line.length; currChar += 1) {
-      if (line[currChar] === '\t') {
-        currField += 1
-      }
-      if (currField === 9) {
-        // reached genotypes, rest of fields are evaluated lazily
-        break
-      }
-    }
-    const fields = line.substr(0, currChar).split('\t')
-    const rest = line.substr(currChar + 1)
-    const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
-    this.CHROM = CHROM
-    this.POS = +POS
-    this.ID = ID === '.' ? null : ID.split(';')
-    this.REF = REF
-    this.ALT = ALT === '.' ? null : ALT.split(',')
-    this.QUAL = QUAL === '.' ? null : +QUAL
-    this.FILTER = FILTER === '.' ? null : FILTER.split(';')
-    if (this.FILTER && this.FILTER.length === 1 && this.FILTER[0] === 'PASS') {
-      this.FILTER = 'PASS'
-    }
-
-    if (this.#parser.strict && fields[7] === undefined) {
-      throw new Error(
-        "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
-      )
-    }
-    const info: any =
-      fields[7] === undefined || fields[7] === '.'
-        ? {}
-        : parser._parseKeyValue(fields[7])
-
-    Object.keys(info).forEach(key => {
-      let items
-      if (info[key]) {
-        items = (info[key] as string)
-          .split(',')
-          .map(val => (val === '.' ? null : val))
-          .map(f => (f ? decodeURIComponentNoThrow(f) : f))
-      } else {
-        // it will be falsy so just assign whatever is there
-        items = info[key]
-      }
-      const itemType = parser.getMetadata('INFO', key, 'Type')
-      if (itemType) {
-        if (itemType === 'Integer' || itemType === 'Float') {
-          items = items.map((val: string) => {
-            if (val === null) {
-              return null
-            }
-            return Number(val)
-          })
-        } else if (itemType === 'Flag') {
-          if (info[key]) {
-            // eslint-disable-next-line no-console
-            console.warn(
-              `Info field ${key} is a Flag and should not have a value (got value ${info[key]})`,
-            )
-          } else {
-            items = true
-          }
-        }
-      }
-      info[key] = items
-    })
-
-    this.INFO = info
-
-    this.#fields = fields
-    this.#rest = rest
-  }
-
-  _parseGenotypes() {
-    const rest = this.#rest.split('\t')
-    const genotypes = {} as any
-    const formatKeys = this.#fields[8]?.split(':')
-    if (formatKeys) {
-      this.#parser.samples.forEach((sample, index) => {
-        genotypes[sample] = {}
-        formatKeys.forEach(key => {
-          genotypes[sample][key] = null
-        })
-        rest[index]
-          .split(':')
-          .filter(f => f)
-          .forEach((val, index) => {
-            let thisValue: unknown
-            if (val === '' || val === '.' || val === undefined) {
-              thisValue = null
-            } else {
-              const entries = val
-                .split(',')
-                .map(ent => (ent === '.' ? null : ent))
-
-              const valueType = this.#parser.getMetadata(
-                'FORMAT',
-                formatKeys[index],
-                'Type',
-              )
-              if (valueType === 'Integer' || valueType === 'Float') {
-                thisValue = entries.map(val => (val ? +val : val))
-              } else {
-                thisValue = entries
-              }
-            }
-
-            genotypes[sample][formatKeys[index]] = thisValue
-          }, {})
-      })
-    }
-    return genotypes
-  }
-
-  get SAMPLES() {
-    return this._parseGenotypes()
-  }
-}
-
 /**
  * Class representing a VCF parser, instantiated with the VCF header.
  * @param {object} args
@@ -220,6 +83,47 @@ export default class VCF {
       throw new Error(`VCF column headers not correct:\n${lastLine}`)
     }
     this.samples = fields.slice(9)
+  }
+
+  _parseGenotypes(format: string | undefined, prerest: string) {
+    const rest = prerest.split('\t')
+    const genotypes = {} as any
+    const formatKeys = format?.split(':')
+    if (formatKeys) {
+      this.samples.forEach((sample, index) => {
+        genotypes[sample] = {}
+        formatKeys.forEach(key => {
+          genotypes[sample][key] = null
+        })
+        rest[index]
+          .split(':')
+          .filter(f => f)
+          .forEach((val, index) => {
+            let thisValue: unknown
+            if (val === '' || val === '.' || val === undefined) {
+              thisValue = null
+            } else {
+              const entries = val
+                .split(',')
+                .map(ent => (ent === '.' ? null : ent))
+
+              const valueType = this.getMetadata(
+                'FORMAT',
+                formatKeys[index],
+                'Type',
+              )
+              if (valueType === 'Integer' || valueType === 'Float') {
+                thisValue = entries.map(val => (val ? +val : val))
+              } else {
+                thisValue = entries
+              }
+            }
+
+            genotypes[sample][formatKeys[index]] = thisValue
+          }, {})
+      })
+    }
+    return genotypes
   }
 
   /**
@@ -351,7 +255,111 @@ export default class VCF {
    * CRLF newlines.
    */
   parseLine(line: string) {
-    const l = line.trim()
-    return l ? new Variant(l, this) : undefined
+    // eslint-disable-next-line no-param-reassign
+    line = line.trim()
+    if (!line.length) {
+      return undefined
+    }
+
+    // This creates a closure that allows us to attach "SAMPLES" as a lazy
+    // attribute
+
+    function Variant(stuff: any) {
+      //@ts-ignore
+      Object.assign(this, stuff)
+    }
+
+    //@ts-ignore
+    const that = this
+
+    Object.defineProperty(Variant.prototype, 'SAMPLES', {
+      get() {
+        const samples = that._parseGenotypes(fields[8], rest)
+
+        Object.defineProperty(this, 'SAMPLES', {
+          value: samples,
+        })
+
+        return samples
+      },
+    })
+
+    let currChar = 0
+    for (let currField = 0; currChar < line.length; currChar += 1) {
+      if (line[currChar] === '\t') {
+        currField += 1
+      }
+      if (currField === 9) {
+        // reached genotypes, rest of fields are evaluated lazily
+        break
+      }
+    }
+    const fields = line.substr(0, currChar).split('\t')
+    const rest = line.substr(currChar + 1)
+    const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
+    const chrom = CHROM
+    const pos = +POS
+    const id = ID === '.' ? null : ID.split(';')
+    const ref = REF
+    const alt = ALT === '.' ? null : ALT.split(',')
+    const qual = QUAL === '.' ? null : +QUAL
+    const filter = FILTER === '.' ? null : FILTER.split(';')
+
+    if (this.strict && fields[7] === undefined) {
+      throw new Error(
+        "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
+      )
+    }
+    const info: any =
+      fields[7] === undefined || fields[7] === '.'
+        ? {}
+        : this._parseKeyValue(fields[7])
+
+    Object.keys(info).forEach(key => {
+      let items
+      if (info[key]) {
+        items = (info[key] as string)
+          .split(',')
+          .map(val => (val === '.' ? null : val))
+          .map(f => (f ? decodeURIComponentNoThrow(f) : f))
+      } else {
+        // it will be falsy so just assign whatever is there
+        items = info[key]
+      }
+      const itemType = this.getMetadata('INFO', key, 'Type')
+      if (itemType) {
+        if (itemType === 'Integer' || itemType === 'Float') {
+          items = items.map((val: string) => {
+            if (val === null) {
+              return null
+            }
+            return Number(val)
+          })
+        } else if (itemType === 'Flag') {
+          if (info[key]) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              `Info field ${key} is a Flag and should not have a value (got value ${info[key]})`,
+            )
+          } else {
+            items = true
+          }
+        }
+      }
+      info[key] = items
+    })
+
+    //@ts-ignore
+    return new Variant({
+      CHROM: chrom,
+      POS: pos,
+      ALT: alt,
+      INFO: info,
+      REF: ref,
+      FILTER:
+        filter && filter.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
+      ID: id,
+      QUAL: qual,
+    })
   }
 }
