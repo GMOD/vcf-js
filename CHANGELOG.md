@@ -1,3 +1,8 @@
+<a name="5.0.3"></a>
+## [5.0.3](https://github.com/GMOD/vcf-js/compare/v5.0.2...v5.0.3) (2021-12-14)
+
+
+
 - Add typescripting and esm module build
 
 
