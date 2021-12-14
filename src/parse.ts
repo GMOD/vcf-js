@@ -1,6 +1,6 @@
 import vcfReserved from './vcfReserved'
 
-function decodeURIComponentNoThrow(uri) {
+function decodeURIComponentNoThrow(uri: string) {
   try {
     return decodeURIComponent(uri)
   } catch (e) {
@@ -17,16 +17,26 @@ function decodeURIComponentNoThrow(uri) {
  * @param {boolean} args.strict - Whether to parse in strict mode or not (default true)
  */
 export default class VCF {
-  constructor(args) {
-    if (!args || !args.header || !args.header.length) {
+  private metadata: Record<string, any>
+  public strict: boolean
+  public samples: string[]
+
+  constructor({
+    header = '',
+    strict = true,
+  }: {
+    header: string
+    strict: boolean
+  }) {
+    if (!header || !header.length) {
       throw new Error('empty header received')
     }
-    const headerLines = args.header.split(/[\r\n]+/).filter(line => line)
+    const headerLines = header.split(/[\r\n]+/).filter(line => line)
     if (!headerLines.length) {
       throw new Error('no non-empty header lines specified')
     }
 
-    this.strict = args.strict !== undefined ? args.strict : true // true by default
+    this.strict = strict
     this.metadata = JSON.parse(
       JSON.stringify({
         INFO: vcfReserved.InfoFields,
@@ -35,39 +45,85 @@ export default class VCF {
         FILTER: vcfReserved.FilterTypes,
       }),
     )
+
+    let lastLine: string | undefined
     headerLines.forEach(line => {
       if (!line.startsWith('#')) {
         throw new Error(`Bad line in header:\n${line}`)
-      }
-      if (line.startsWith('##')) {
+      } else if (line.startsWith('##')) {
         this._parseMetadata(line)
-      } else if (line) {
-        const fields = line.trim().split('\t')
-        const thisHeader = fields.slice(0, 8)
-        const correctHeader = [
-          '#CHROM',
-          'POS',
-          'ID',
-          'REF',
-          'ALT',
-          'QUAL',
-          'FILTER',
-          'INFO',
-        ]
-        if (fields.length < 8) {
-          throw new Error(`VCF header missing columns:\n${line}`)
-        } else if (fields.length === 9) {
-          throw new Error(`VCF header has FORMAT but no samples:\n${line}`)
-        } else if (
-          thisHeader.length !== correctHeader.length ||
-          !thisHeader.every((value, index) => value === correctHeader[index])
-        ) {
-          throw new Error(`VCF column headers not correct:\n${line}`)
-        }
-        this.samples = fields.slice(9)
+      } else {
+        lastLine = line
       }
     })
-    if (!this.samples) throw new Error('VCF does not have a header line')
+
+    if (!lastLine) {
+      throw new Error('No format line found in header')
+    }
+    const fields = lastLine.trim().split('\t')
+    const thisHeader = fields.slice(0, 8)
+    const correctHeader = [
+      '#CHROM',
+      'POS',
+      'ID',
+      'REF',
+      'ALT',
+      'QUAL',
+      'FILTER',
+      'INFO',
+    ]
+    if (fields.length < 8) {
+      throw new Error(`VCF header missing columns:\n${lastLine}`)
+    } else if (fields.length === 9) {
+      throw new Error(`VCF header has FORMAT but no samples:\n${lastLine}`)
+    } else if (
+      thisHeader.length !== correctHeader.length ||
+      !thisHeader.every((value, index) => value === correctHeader[index])
+    ) {
+      throw new Error(`VCF column headers not correct:\n${lastLine}`)
+    }
+    this.samples = fields.slice(9)
+  }
+
+  _parseGenotypes(format: string | undefined, prerest: string) {
+    const rest = prerest.split('\t')
+    const genotypes = {} as any
+    const formatKeys = format?.split(':')
+    if (formatKeys) {
+      this.samples.forEach((sample, index) => {
+        genotypes[sample] = {}
+        formatKeys.forEach(key => {
+          genotypes[sample][key] = null
+        })
+        rest[index]
+          .split(':')
+          .filter(f => f)
+          .forEach((val, index) => {
+            let thisValue: unknown
+            if (val === '' || val === '.' || val === undefined) {
+              thisValue = null
+            } else {
+              const entries = val
+                .split(',')
+                .map(ent => (ent === '.' ? null : ent))
+
+              const valueType = this.getMetadata(
+                'FORMAT',
+                formatKeys[index],
+                'Type',
+              )
+              if (valueType === 'Integer' || valueType === 'Float') {
+                thisValue = entries.map(val => (val ? +val : val))
+              } else {
+                thisValue = entries
+              }
+            }
+
+            genotypes[sample][formatKeys[index]] = thisValue
+          }, {})
+      })
+    }
+    return genotypes
   }
 
   /**
@@ -76,11 +132,13 @@ export default class VCF {
    * @param {string} line - A line from the VCF. Supports both LF and CRLF
    * newlines.
    */
-  _parseMetadata(line) {
-    const [metaKey, metaVal] = line
-      .trim()
-      .match(/^##(.+?)=(.*)/)
-      .slice(1, 3)
+  _parseMetadata(line: string) {
+    const match = line.trim().match(/^##(.+?)=(.*)/)
+    if (!match) {
+      throw new Error(`Line is not a valid metadata line: ${line}`)
+    }
+    const [metaKey, metaVal] = match.slice(1, 3)
+
     if (metaVal.startsWith('<')) {
       if (!(metaKey in this.metadata)) {
         this.metadata[metaKey] = {}
@@ -100,7 +158,7 @@ export default class VCF {
    * @returns {Array} - Array with two entries, 1) a string of the metadata ID
    * and 2) an object with the other key-value pairs in the metadata
    */
-  _parseStructuredMetaVal(metaVal) {
+  _parseStructuredMetaVal(metaVal: string) {
     const keyVals = this._parseKeyValue(metaVal.replace(/^<|>$/g, ''), ',')
     const id = keyVals.ID
     delete keyVals.ID
@@ -120,11 +178,13 @@ export default class VCF {
    *
    * @returns {any} An object, string, or number, depending on the filtering
    */
-  getMetadata(...args) {
-    let filteredMetadata = this.metadata
+  getMetadata(...args: string[]) {
+    let filteredMetadata: any = this.metadata
     for (let i = 0; i < args.length; i += 1) {
       filteredMetadata = filteredMetadata[args[i]]
-      if (!filteredMetadata) return filteredMetadata
+      if (!filteredMetadata) {
+        return filteredMetadata
+      }
     }
     return filteredMetadata
   }
@@ -143,8 +203,8 @@ export default class VCF {
    *
    * @returns {object} An object containing the key-value pairs
    */
-  _parseKeyValue(str, pairSeparator = ';') {
-    const data = {}
+  _parseKeyValue(str: string, pairSeparator = ';') {
+    const data: any = {}
     let currKey = ''
     let currValue = ''
     let state = 1 // states: 1: read key to = or pair sep, 2: read value to sep or quote, 3: read value to quote
@@ -168,11 +228,16 @@ export default class VCF {
           state = 1
         } else if (str[i] === '"') {
           state = 3
-        } else currValue += str[i]
+        } else {
+          currValue += str[i]
+        }
       } else if (state === 3) {
         // read value to quote
-        if (str[i] !== '"') currValue += str[i]
-        else state = 2
+        if (str[i] !== '"') {
+          currValue += str[i]
+        } else {
+          state = 2
+        }
       }
     }
     if (state === 2 || state === 3) {
@@ -189,84 +254,22 @@ export default class VCF {
    * @param {string} line - A string of a line from a VCF. Supports both LF and
    * CRLF newlines.
    */
-  parseLine(line) {
+  parseLine(line: string) {
     // eslint-disable-next-line no-param-reassign
     line = line.trim()
-    if (!line.length) return undefined
-    let currChar = 0
-    for (let currField = 0; currChar < line.length; currChar += 1) {
-      if (line[currChar] === '\t') {
-        currField += 1
-      }
-      if (currField === 9) {
-        // reached genotypes, rest of fields are evaluated lazily
-        break
-      }
+    if (!line.length) {
+      return undefined
     }
-    const fields = line.substr(0, currChar).split('\t')
-    const rest = line.substr(currChar + 1)
-    const variant = {
-      CHROM: fields[0],
-      POS: Number(fields[1]),
-      ID: fields[2] === '.' ? null : fields[2].split(';'),
-      REF: fields[3],
-      ALT: fields[4] === '.' ? null : fields[4].split(','),
-      QUAL: fields[5] === '.' ? null : parseFloat(fields[5]),
-    }
-    if (fields[6] === '.') {
-      variant.FILTER = null
-    } else if (fields[6] === 'PASS') {
-      variant.FILTER = 'PASS'
-    } else {
-      variant.FILTER = fields[6].split(';')
-    }
-    if (this.strict && fields[7] === undefined) {
-      throw new Error(
-        "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
-      )
-    }
-    const info =
-      fields[7] === undefined || fields[7] === '.'
-        ? {}
-        : this._parseKeyValue(fields[7])
-    Object.keys(info).forEach(key => {
-      let items
-      if (info[key]) {
-        items = info[key]
-          .split(',')
-          .map(val => (val === '.' ? null : val))
-          .map(f => (f ? decodeURIComponentNoThrow(f) : f))
-      } else {
-        // it will be falsy so just assign whatever is there
-        items = info[key]
-      }
-      const itemType = this.getMetadata('INFO', key, 'Type')
-      if (itemType) {
-        if (itemType === 'Integer' || itemType === 'Float') {
-          items = items.map(val => {
-            if (val === null) return null
-            return Number(val)
-          })
-        } else if (itemType === 'Flag') {
-          if (info[key])
-            // eslint-disable-next-line no-console
-            console.warn(
-              `Info field ${key} is a Flag and should not have a value (got value ${info[key]})`,
-            )
-          else items = true
-        }
-      }
-      info[key] = items
-    })
-    variant.INFO = info
 
     // This creates a closure that allows us to attach "SAMPLES" as a lazy
     // attribute
 
-    function Variant(stuff) {
+    function Variant(stuff: any) {
+      //@ts-ignore
       Object.assign(this, stuff)
     }
 
+    //@ts-ignore
     const that = this
 
     Object.defineProperty(Variant.prototype, 'SAMPLES', {
@@ -281,47 +284,82 @@ export default class VCF {
       },
     })
 
-    return new Variant(variant)
-  }
+    let currChar = 0
+    for (let currField = 0; currChar < line.length; currChar += 1) {
+      if (line[currChar] === '\t') {
+        currField += 1
+      }
+      if (currField === 9) {
+        // reached genotypes, rest of fields are evaluated lazily
+        break
+      }
+    }
+    const fields = line.substr(0, currChar).split('\t')
+    const rest = line.substr(currChar + 1)
+    const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
+    const chrom = CHROM
+    const pos = +POS
+    const id = ID === '.' ? null : ID.split(';')
+    const ref = REF
+    const alt = ALT === '.' ? null : ALT.split(',')
+    const qual = QUAL === '.' ? null : +QUAL
+    const filter = FILTER === '.' ? null : FILTER.split(';')
 
-  _parseGenotypes(formatKeys, rest) {
-    // eslint-disable-next-line no-param-reassign
-    rest = rest.split('\t')
-    const genotypes = {}
-    // eslint-disable-next-line no-param-reassign
-    formatKeys = formatKeys && formatKeys.split(':')
-    this.samples.forEach((sample, index) => {
-      genotypes[sample] = {}
-      formatKeys.forEach(key => {
-        genotypes[sample][key] = null
-      })
-      rest[index].split(':').forEach((formatValue, formatIndex) => {
-        let thisValue
-        if (
-          formatValue === '' ||
-          formatValue === '.' ||
-          formatValue === undefined
-        ) {
-          thisValue = null
-        } else {
-          thisValue = formatValue
-            .split(',')
-            .map(val => (val === '.' ? null : val))
-          const valueType = this.getMetadata(
-            'FORMAT',
-            formatKeys[formatIndex],
-            'Type',
-          )
-          if ((valueType === 'Integer' || valueType === 'Float') && thisValue) {
-            thisValue = thisValue.map(val => {
-              if (!val) return null
-              return Number(val)
-            })
+    if (this.strict && fields[7] === undefined) {
+      throw new Error(
+        "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
+      )
+    }
+    const info: any =
+      fields[7] === undefined || fields[7] === '.'
+        ? {}
+        : this._parseKeyValue(fields[7])
+
+    Object.keys(info).forEach(key => {
+      let items
+      if (info[key]) {
+        items = (info[key] as string)
+          .split(',')
+          .map(val => (val === '.' ? null : val))
+          .map(f => (f ? decodeURIComponentNoThrow(f) : f))
+      } else {
+        // it will be falsy so just assign whatever is there
+        items = info[key]
+      }
+      const itemType = this.getMetadata('INFO', key, 'Type')
+      if (itemType) {
+        if (itemType === 'Integer' || itemType === 'Float') {
+          items = items.map((val: string) => {
+            if (val === null) {
+              return null
+            }
+            return Number(val)
+          })
+        } else if (itemType === 'Flag') {
+          if (info[key]) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              `Info field ${key} is a Flag and should not have a value (got value ${info[key]})`,
+            )
+          } else {
+            items = true
           }
         }
-        genotypes[sample][formatKeys[formatIndex]] = thisValue
-      }, {})
+      }
+      info[key] = items
     })
-    return genotypes
+
+    //@ts-ignore
+    return new Variant({
+      CHROM: chrom,
+      POS: pos,
+      ALT: alt,
+      INFO: info,
+      REF: ref,
+      FILTER:
+        filter && filter.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
+      ID: id,
+      QUAL: qual,
+    })
   }
 }

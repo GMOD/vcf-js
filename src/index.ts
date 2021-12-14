@@ -1,24 +1,26 @@
 import VCF from './parse'
 
-export function parseBreakend(breakendString) {
+export function parseBreakend(breakendString: string) {
   const tokens = breakendString.split(/[[\]]/)
   if (tokens.length > 1) {
-    const parsed = {}
-    parsed.MateDirection = breakendString.includes('[') ? 'right' : 'left'
+    const MateDirection = breakendString.includes('[') ? 'right' : 'left'
+    let Join
+    let Replacement
+    let MatePosition
     for (let i = 0; i < tokens.length; i += 1) {
       const tok = tokens[i]
       if (tok) {
         if (tok.includes(':')) {
           // this is the remote location
-          parsed.MatePosition = tok
-          parsed.Join = parsed.Replacement ? 'right' : 'left'
+          MatePosition = tok
+          Join = Replacement ? 'right' : 'left'
         } else {
           // this is the local alteration
-          parsed.Replacement = tok
+          Replacement = tok
         }
       }
     }
-    return parsed
+    return { MatePosition, Join, Replacement, MateDirection }
   }
   return undefined
 }

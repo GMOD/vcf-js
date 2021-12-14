@@ -1,3 +1,4 @@
+// @ts-nocheck
 import fs from 'fs'
 import VCF, { parseBreakend } from '../src'
 
@@ -7,8 +8,11 @@ const readVcf = file => {
   const header = []
   const rest = []
   lines.forEach(line => {
-    if (line.startsWith('#')) header.push(line)
-    else if (line) rest.push(line)
+    if (line.startsWith('#')) {
+      header.push(line)
+    } else if (line) {
+      rest.push(line)
+    }
   })
   return { header: header.join('\n'), lines: rest }
 }
@@ -112,27 +116,28 @@ describe('VCF parser', () => {
     expect(variant).toMatchSnapshot()
   })
 
-  let tmp; // eslint-disable-line
   it('throws errors with bad header lines', () => {
     expect(() => {
-      tmp = new VCF({ header: 'notARealHeader' })
+      new VCF({ header: 'notARealHeader' })
     }).toThrow('Bad line in header')
     expect(() => {
-      tmp = new VCF({ header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\n' })
+      new VCF({
+        header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\n',
+      })
     }).toThrow('VCF header missing columns')
     expect(() => {
-      tmp = new VCF({
+      new VCF({
         header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\n',
       })
     }).toThrow('VCF header has FORMAT but no samples')
     expect(() => {
-      tmp = new VCF({
+      new VCF({
         header: '#CHROM\tPS\tID\tRF\tALT\tQUAL\tFILTER\tINFO\n',
       })
     }).toThrow('VCF column headers not correct')
     expect(() => {
-      tmp = new VCF({ header: '##this=badHeader\n' })
-    }).toThrow('VCF does not have a header line')
+      new VCF({ header: '##this=badHeader\n' })
+    }).toThrow(/No format line/)
   })
 })
 
@@ -252,11 +257,12 @@ test('can parse breakends', () => {
   const VCFParser = new VCF({
     header,
   })
-  const lines = `11	94975747	MantaBND:0:2:3:0:0:0:1	G	G]8:107653520]	.	PASS	SVTYPE=BND;MATEID=MantaBND:0:2:3:0:0:0:0;CIPOS=0,2;HOMLEN=2;HOMSEQ=TT;BND_DEPTH=216;MATE_BND_DEPTH=735	PR:SR	722,9:463,15
+  const lines =
+    `11	94975747	MantaBND:0:2:3:0:0:0:1	G	G]8:107653520]	.	PASS	SVTYPE=BND;MATEID=MantaBND:0:2:3:0:0:0:0;CIPOS=0,2;HOMLEN=2;HOMSEQ=TT;BND_DEPTH=216;MATE_BND_DEPTH=735	PR:SR	722,9:463,15
 11	94975753	MantaDEL:0:1:2:0:0:0	T	<DEL>	.	PASS	END=94987865;SVTYPE=DEL;SVLEN=12112;IMPRECISE;CIPOS=-156,156;CIEND=-150,150	PR	161,13
 11	94987872	MantaBND:0:0:1:0:0:0:0	T	T[8:107653411[	.	PASS	SVTYPE=BND;MATEID=MantaBND:0:0:1:0:0:0:1;BND_DEPTH=171;MATE_BND_DEPTH=830	PR:SR	489,4:520,19`.split(
-    '\n',
-  )
+      '\n',
+    )
 
   const variants = lines.map(line => VCFParser.parseLine(line))
   expect(variants).toMatchSnapshot()
@@ -271,14 +277,15 @@ describe('Obscure VCF', () => {
     })
   })
   it('vcf lines with weird info field and missing format/genotypes', () => {
-    const lines = `lcl|Scaffald_1\t80465\trs118266897\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
+    const lines =
+      `lcl|Scaffald_1\t80465\trs118266897\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t84818\trs118269296\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t95414\trs118218236\tW\tT\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t231384\trs118264755\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t236429\trs118223336\tR\tG\t29\tPASS\tNS=3;0,14;AF=6.5;DB;112;PG2.1
 lcl|Scaffald_1\t245378\trs118217257\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1`.split(
-      '\n',
-    )
+        '\n',
+      )
 
     const variants = lines.map(line => VCFParser.parseLine(line))
     expect(variants).toMatchSnapshot()
@@ -312,10 +319,6 @@ test('empty header', () => {
 
 test('empty header lines', () => {
   expect(() => new VCF({ header: '\n' })).toThrow(/no non-empty/)
-})
-
-test('empty header lines', () => {
-  expect(() => new VCF()).toThrow(/empty/)
 })
 
 test('shortcut parsing with 1000 genomes', () => {

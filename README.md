@@ -247,9 +247,10 @@ Class representing a VCF parser, instantiated with the VCF header.
 #### Parameters
 
 - `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**
+
   - `args.header` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF header. Supports both LF and CRLF
-    newlines.
-  - `args.strict` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether to parse in strict mode or not (default true)
+    newlines. (optional, default `''`)
+  - `args.strict` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether to parse in strict mode or not (default true) (optional, default `true`)
 
 #### \_parseMetadata
 
@@ -264,7 +265,7 @@ properties to the object.
 #### \_parseStructuredMetaVal
 
 Parse a VCF header structured meta string (i.e. a meta value that starts
-with "&lt;ID=...")
+with "\<ID=...")
 
 ##### Parameters
 
@@ -277,7 +278,7 @@ and 2) an object with the other key-value pairs in the metadata
 
 Get metadata filtered by the elements in args. For example, can pass
 ('INFO', 'DP') to only get info on an metadata tag that was like
-"##INFO=&lt;ID=DP,...>"
+"##INFO=\<ID=DP,...>"
 
 ##### Parameters
 

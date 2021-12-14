@@ -3,6 +3,7 @@
   "version": "5.0.2",
   "description": "High performance streaming Variant Call Format (VCF) parser in pure JavaScript",
   "main": "dist/index.js",
+  "module": "esm/index.js",
   "repository": "github:GMOD/vcf-js",
   "author": {
     "name": "Garrett Stevens",
@@ -15,7 +16,8 @@
     "url": "https://github.com/GMOD/vcf-js/issues"
   },
   "files": [
-    "dist"
+    "dist",
+    "esm"
   ],
   "engines": {
     "node": ">=6"
@@ -23,35 +25,33 @@
   "scripts": {
     "test": "jest",
     "coverage": "npm test -- --coverage",
-    "lint": "eslint src test",
-    "docs": "documentation readme src/parse.js --section API",
-    "clean": "rimraf dist",
-    "prebuild": "npm run docs && npm run clean && npm run lint",
-    "build": "babel src -d dist",
+    "lint": "eslint . --ext .ts,.js",
+    "docs": "documentation readme src/parse.ts --section=API  --shallow",
+    "postdocs": "prettier --write README.md",
+    "clean": "rimraf dist esm",
+    "build:esm": "tsc --target es2018 --outDir esm",
+    "build:es5": "tsc --target es5 --outDir dist",
+    "build": "npm run build:esm && npm run build:es5",
+    "prebuild": "npm run clean && npm run lint",
     "preversion": "npm run lint && npm test && npm run build",
     "version": "standard-changelog && git add CHANGELOG.md",
     "postversion": "git push --follow-tags"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.3",
-    "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.3.1",
-    "babel-jest": "^24.5.0",
-    "documentation": "^11.0.0",
-    "eslint": "^5.5.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-config-prettier": "^5.0.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-prettier": "^3.0.1",
-    "jest": "^24.5.0",
-    "prettier": "^1.14.2",
-    "regenerator-runtime": "^0.13.1",
+    "@babel/core": "^7.16.0",
+    "@types/jest": "^27.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "documentation": "^13.2.5",
+    "eslint": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.3.1",
+    "prettier": "^2.5.0",
     "rimraf": "^2.6.2",
-    "standard-changelog": "^1.0.0"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.3.1"
+    "standard-changelog": "^1.0.0",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.5.2"
   },
   "keywords": [
     "vcf",
