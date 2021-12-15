@@ -1,6 +1,13 @@
 import VCF from './parse'
 
-export function parseBreakend(breakendString: string) {
+export interface Breakend {
+  MatePosition: string
+  Join: string
+  Replacement: string
+  MateDirection: string
+}
+
+export function parseBreakend(breakendString: string): Breakend | undefined {
   const tokens = breakendString.split(/[[\]]/)
   if (tokens.length > 1) {
     const MateDirection = breakendString.includes('[') ? 'right' : 'left'
@@ -19,6 +26,9 @@ export function parseBreakend(breakendString: string) {
           Replacement = tok
         }
       }
+    }
+    if (!(MatePosition && Join && Replacement)) {
+      throw new Error(`Invalid breakend: ${breakendString}`)
     }
     return { MatePosition, Join, Replacement, MateDirection }
   }
