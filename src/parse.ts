@@ -26,7 +26,7 @@ export default class VCF {
     strict = true,
   }: {
     header: string
-    strict: boolean
+    strict?: boolean
   }) {
     if (!header || !header.length) {
       throw new Error('empty header received')
