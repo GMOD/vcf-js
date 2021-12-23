@@ -1,17 +1,20 @@
+<a name="5.0.4"></a>
+## [5.0.4](https://github.com/GMOD/vcf-js/compare/v5.0.3...v5.0.4) (2021-12-23)
+
+
+
 - Make the strict field in the constructor optional
+- Export `Breakend` type for typescript users
 
 <a name="5.0.3"></a>
+
 ## [5.0.3](https://github.com/GMOD/vcf-js/compare/v5.0.2...v5.0.3) (2021-12-14)
-
-
 
 - Add typescripting and esm module build
 
-
 <a name="5.0.2"></a>
+
 ## [5.0.2](https://github.com/GMOD/vcf-js/compare/v5.0.1...v5.0.2) (2021-11-13)
-
-
 
 - Update package description to refer to variant call format
 
