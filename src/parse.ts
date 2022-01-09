@@ -1,5 +1,10 @@
 import vcfReserved from './vcfReserved'
 
+function Variant(stuff: any) {
+  //@ts-ignore
+  Object.assign(this, stuff)
+}
+
 function decodeURIComponentNoThrow(uri: string) {
   try {
     return decodeURIComponent(uri)
@@ -261,28 +266,8 @@ export default class VCF {
       return undefined
     }
 
-    // This creates a closure that allows us to attach "SAMPLES" as a lazy
-    // attribute
-
-    function Variant(stuff: any) {
-      //@ts-ignore
-      Object.assign(this, stuff)
-    }
-
     //@ts-ignore
-    const that = this
-
-    Object.defineProperty(Variant.prototype, 'SAMPLES', {
-      get() {
-        const samples = that._parseGenotypes(fields[8], rest)
-
-        Object.defineProperty(this, 'SAMPLES', {
-          value: samples,
-        })
-
-        return samples
-      },
-    })
+    const parser = this // so we can include this in lazy-property closure
 
     let currChar = 0
     for (let currField = 0; currChar < line.length; currChar += 1) {
@@ -350,7 +335,7 @@ export default class VCF {
     })
 
     //@ts-ignore
-    return new Variant({
+    const variant = new Variant({
       CHROM: chrom,
       POS: pos,
       ALT: alt,
@@ -361,5 +346,22 @@ export default class VCF {
       ID: id,
       QUAL: qual,
     })
+
+    Object.defineProperty(variant, 'SAMPLES', {
+      get() {
+        const samples = parser._parseGenotypes(fields[8], rest)
+
+        Object.defineProperty(this, 'SAMPLES', {
+          value: samples,
+          configurable: false,
+        })
+
+        return samples
+      },
+      configurable: true,
+    })
+
+    //@ts-ignore
+    return variant
   }
 }
