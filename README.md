@@ -38,7 +38,7 @@ async function doStuff() {
 
 If you want to stream a VCF file, you can alternatively use something like this
 
-```
+```javascript
 const fs = require('fs')
 const VCF = require('@gmod/vcf').default
 const { createGunzip } = require('zlib')
