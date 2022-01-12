@@ -70,6 +70,9 @@ rl.on('close', function () {
 
 This method is used to test @gmod/vcf in https://github.com/brentp/vcf-bench
 
+## Methods
+
+
 Given a VCF with a single variant line
 
 ```text
