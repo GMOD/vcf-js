@@ -1,3 +1,5 @@
+- Add optimization related to better allocation of variant records, thanks to @bpow for contributing
+
 <a name="5.0.4"></a>
 ## [5.0.4](https://github.com/GMOD/vcf-js/compare/v5.0.3...v5.0.4) (2021-12-23)
 
