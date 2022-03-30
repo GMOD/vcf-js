@@ -1,3 +1,5 @@
+- Include src directory for better source maps
+
 <a name="5.0.5"></a>
 ## [5.0.5](https://github.com/GMOD/vcf-js/compare/v5.0.4...v5.0.5) (2022-01-12)
 
