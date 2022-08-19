@@ -127,11 +127,6 @@ describe('VCF parser', () => {
     }).toThrow('VCF header missing columns')
     expect(() => {
       new VCF({
-        header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\n',
-      })
-    }).toThrow('VCF header has FORMAT but no samples')
-    expect(() => {
-      new VCF({
         header: '#CHROM\tPS\tID\tRF\tALT\tQUAL\tFILTER\tINFO\n',
       })
     }).toThrow('VCF column headers not correct')
