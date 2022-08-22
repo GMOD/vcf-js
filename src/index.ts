@@ -33,17 +33,17 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
     }
     return { MatePosition, Join, Replacement, MateDirection }
   } else {
-    if (breakendString[0] === '.') {
+    if (breakendString.startsWith('.')) {
       return {
         Join: 'left',
         SingleBreakend: true,
         Replacement: breakendString.slice(1),
       }
-    } else if (breakendString[1] === '.') {
+    } else if (breakendString.endsWith('.')) {
       return {
         Join: 'right',
         SingleBreakend: true,
-        Replacement: breakendString[0],
+        Replacement: breakendString.slice(0, breakendString.length - 1),
       }
     } else if (breakendString[0] === '<') {
       const res = breakendString.match('<(.*)>(.*)')
@@ -54,7 +54,7 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
         Join: 'left',
         Replacement: res?.[2],
         MateDirection: 'right',
-        MatePosition: `<${res?.[2]}>:1`,
+        MatePosition: `<${res?.[1]}>:1`,
       }
     } else if (breakendString.includes('<')) {
       const res = breakendString.match('(.*)<(.*)>')

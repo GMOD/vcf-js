@@ -352,6 +352,8 @@ test('vcf 4.3 single breakends', () => {
   // large insertion
   expect(parseBreakend(']13:123456]AGTNNNNNCAT')).toMatchSnapshot()
   expect(parseBreakend('G.')).toMatchSnapshot()
+  expect(parseBreakend('ACGT.')).toMatchSnapshot()
+  expect(parseBreakend('.ACGT')).toMatchSnapshot()
   expect(parseBreakend('G<ctgA>')).toMatchSnapshot()
   expect(parseBreakend('<ctgA>G')).toMatchSnapshot()
 })

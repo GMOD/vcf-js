@@ -1944,17 +1944,33 @@ Object {
 exports[`vcf 4.3 single breakends 5`] = `
 Object {
   "Join": "right",
-  "MateDirection": "right",
-  "MatePosition": "<ctgA>:1",
-  "Replacement": "G",
+  "Replacement": "ACGT",
+  "SingleBreakend": true,
 }
 `;
 
 exports[`vcf 4.3 single breakends 6`] = `
 Object {
   "Join": "left",
+  "Replacement": "ACGT",
+  "SingleBreakend": true,
+}
+`;
+
+exports[`vcf 4.3 single breakends 7`] = `
+Object {
+  "Join": "right",
   "MateDirection": "right",
-  "MatePosition": "<G>:1",
+  "MatePosition": "<ctgA>:1",
+  "Replacement": "G",
+}
+`;
+
+exports[`vcf 4.3 single breakends 8`] = `
+Object {
+  "Join": "left",
+  "MateDirection": "right",
+  "MatePosition": "<ctgA>:1",
   "Replacement": "G",
 }
 `;
