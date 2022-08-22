@@ -2,7 +2,7 @@
   "include": ["src"],
   "compilerOptions": {
     "outDir": "dist",
-    "target": "es2015",
+    "target": "esnext",
     "types": ["jest"],
     "lib": ["dom", "esnext"],
     "declaration": true,
