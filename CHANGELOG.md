@@ -1,3 +1,5 @@
+- Don't throw error when there is a FORMAT column but no genotypes
+
 <a name="5.0.6"></a>
 ## [5.0.6](https://github.com/GMOD/vcf-js/compare/v5.0.5...v5.0.6) (2022-03-30)
 
