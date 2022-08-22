@@ -79,8 +79,6 @@ export default class VCF {
     ]
     if (fields.length < 8) {
       throw new Error(`VCF header missing columns:\n${lastLine}`)
-    } else if (fields.length === 9) {
-      throw new Error(`VCF header has FORMAT but no samples:\n${lastLine}`)
     } else if (
       thisHeader.length !== correctHeader.length ||
       !thisHeader.every((value, index) => value === correctHeader[index])
