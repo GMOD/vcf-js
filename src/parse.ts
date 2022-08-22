@@ -1,8 +1,20 @@
 import vcfReserved from './vcfReserved'
 
-function Variant(stuff: any) {
-  //@ts-ignore
-  Object.assign(this, stuff)
+class Variant {
+  #fields8: any
+  #rest: any
+  #parser: any
+  constructor(stuff: any, fields8: any, rest: any, parser: any) {
+    Object.assign(this, stuff)
+    this.#fields8 = fields8
+    this.#rest = rest
+    this.#parser = parser
+  }
+
+  get SAMPLES() {
+    //@ts-ignore
+    return this.#parser._parseGenotypes(this.#fields8, this.#rest)
+  }
 }
 
 function decodeURIComponentNoThrow(uri: string) {
@@ -156,9 +168,9 @@ export default class VCF {
   /**
    * Parse a VCF header structured meta string (i.e. a meta value that starts
    * with "<ID=...")
-   * @param {string} metaVal - The VCF metadata value
+   * @param metaVal - The VCF metadata value
    *
-   * @returns {Array} - Array with two entries, 1) a string of the metadata ID
+   * @returns - Array with two entries, 1) a string of the metadata ID
    * and 2) an object with the other key-value pairs in the metadata
    */
   _parseStructuredMetaVal(metaVal: string) {
@@ -170,16 +182,16 @@ export default class VCF {
         keyVals.Number = Number(keyVals.Number)
       }
     }
-    return [id, keyVals]
+    return [id, keyVals] as [string, any]
   }
 
   /**
    * Get metadata filtered by the elements in args. For example, can pass
    * ('INFO', 'DP') to only get info on an metadata tag that was like
    * "##INFO=<ID=DP,...>"
-   * @param  {...string} args - List of metadata filter strings.
+   * @param  args - List of metadata filter strings.
    *
-   * @returns {any} An object, string, or number, depending on the filtering
+   * @returns An object, string, or number, depending on the filtering
    */
   getMetadata(...args: string[]) {
     let filteredMetadata: any = this.metadata
@@ -200,17 +212,22 @@ export default class VCF {
    * Parse this at a low level since we can't just split at "," (or whatever
    * separator). Above line would be parsed to:
    * {ID: 'DB', Number: '0', Type: 'Flag', Description: 'dbSNP membership, build 129'}
-   * @param {string} str - Key-value pairs in a string
-   * @param {string} [pairSeparator] - A string that separates sets of key-value
+   * @param str - Key-value pairs in a string
+   * @param [pairSeparator] - A string that separates sets of key-value
    * pairs
    *
-   * @returns {object} An object containing the key-value pairs
+   * @returns An object containing the key-value pairs
    */
   _parseKeyValue(str: string, pairSeparator = ';') {
-    const data: any = {}
+    const data = {} as Record<string, unknown>
     let currKey = ''
     let currValue = ''
-    let state = 1 // states: 1: read key to = or pair sep, 2: read value to sep or quote, 3: read value to quote
+
+    // states:
+    // 1: read key to = or pair sep
+    // 2: read value to sep or quote
+    // 3: read value to quote
+    let state = 1
     for (let i = 0; i < str.length; i += 1) {
       if (state === 1) {
         // read key to = or pair sep
@@ -257,9 +274,9 @@ export default class VCF {
    * @param {string} line - A string of a line from a VCF. Supports both LF and
    * CRLF newlines.
    */
-  parseLine(line: string) {
+  parseLine(l: string) {
     // eslint-disable-next-line no-param-reassign
-    line = line.trim()
+    const line = l.trim()
     if (!line.length) {
       return undefined
     }
@@ -277,8 +294,8 @@ export default class VCF {
         break
       }
     }
-    const fields = line.substr(0, currChar).split('\t')
-    const rest = line.substr(currChar + 1)
+    const fields = line.slice(0, currChar).split('\t')
+    const rest = line.slice(currChar + 1)
     const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
     const chrom = CHROM
     const pos = +POS
@@ -332,34 +349,23 @@ export default class VCF {
       info[key] = items
     })
 
-    //@ts-ignore
-    const variant = new Variant({
-      CHROM: chrom,
-      POS: pos,
-      ALT: alt,
-      INFO: info,
-      REF: ref,
-      FILTER:
-        filter && filter.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
-      ID: id,
-      QUAL: qual,
-    })
-
-    Object.defineProperty(variant, 'SAMPLES', {
-      get() {
-        const samples = parser._parseGenotypes(fields[8], rest)
-
-        Object.defineProperty(this, 'SAMPLES', {
-          value: samples,
-          configurable: false,
-        })
-
-        return samples
+    return new Variant(
+      {
+        CHROM: chrom,
+        POS: pos,
+        ALT: alt,
+        INFO: info,
+        REF: ref,
+        FILTER:
+          filter && filter.length === 1 && filter[0] === 'PASS'
+            ? 'PASS'
+            : filter,
+        ID: id,
+        QUAL: qual,
       },
-      configurable: true,
-    })
-
-    //@ts-ignore
-    return variant
+      fields[8],
+      rest,
+      parser,
+    )
   }
 }
