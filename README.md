@@ -35,7 +35,6 @@ async function doStuff() {
 }
 ```
 
-
 If you want to stream a VCF file, you can alternatively use something like this
 
 ```javascript
@@ -71,7 +70,6 @@ rl.on('close', function () {
 This method is used to test @gmod/vcf in https://github.com/brentp/vcf-bench
 
 ## Methods
-
 
 Given a VCF with a single variant line
 
@@ -289,7 +287,7 @@ Class representing a VCF parser, instantiated with the VCF header.
 
 #### Parameters
 
-- `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**
+- `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
 
   - `args.header` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF header. Supports both LF and CRLF
     newlines. (optional, default `''`)
