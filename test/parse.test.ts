@@ -345,11 +345,15 @@ test('shortcut parsing with vcf 4.3 bnd example', () => {
 })
 
 test('vcf 4.3 single breakends', () => {
-  // inserted contig
-  expect(parseBreakend('C[<ctg1>:1[')).toMatchSnapshot()
   // single breakend
-  expect(parseBreakend('.[13:123457')).toMatchSnapshot()
-  // large insertion
-  expect(parseBreakend(']13:123456]AGTNNNNNCAT')).toMatchSnapshot()
   expect(parseBreakend('G.')).toMatchSnapshot()
+  expect(parseBreakend('ACGT.')).toMatchSnapshot()
+  expect(parseBreakend('.ACGT')).toMatchSnapshot()
+})
+
+test('vcf 4.3 insertion shorthand', () => {
+  expect(parseBreakend('G<ctgA>')).toMatchSnapshot()
+  expect(parseBreakend('<ctgA>G')).toMatchSnapshot()
+  expect(parseBreakend('C[<ctg1>:1[')).toMatchSnapshot()
+  expect(parseBreakend(']13:123456]AGTNNNNNCAT')).toMatchSnapshot()
 })

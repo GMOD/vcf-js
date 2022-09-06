@@ -1,10 +1,11 @@
 import VCF from './parse'
 
 export interface Breakend {
-  MatePosition: string
   Join: string
   Replacement: string
-  MateDirection: string
+  MatePosition?: string
+  MateDirection?: string
+  SingleBreakend?: boolean
 }
 
 export function parseBreakend(breakendString: string): Breakend | undefined {
@@ -31,6 +32,42 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
       throw new Error(`Invalid breakend: ${breakendString}`)
     }
     return { MatePosition, Join, Replacement, MateDirection }
+  } else {
+    if (breakendString.startsWith('.')) {
+      return {
+        Join: 'left',
+        SingleBreakend: true,
+        Replacement: breakendString.slice(1),
+      }
+    } else if (breakendString.endsWith('.')) {
+      return {
+        Join: 'right',
+        SingleBreakend: true,
+        Replacement: breakendString.slice(0, breakendString.length - 1),
+      }
+    } else if (breakendString[0] === '<') {
+      const res = breakendString.match('<(.*)>(.*)')
+      if (!res) {
+        throw new Error(`failed to parse ${breakendString}`)
+      }
+      return {
+        Join: 'left',
+        Replacement: res?.[2],
+        MateDirection: 'right',
+        MatePosition: `<${res?.[1]}>:1`,
+      }
+    } else if (breakendString.includes('<')) {
+      const res = breakendString.match('(.*)<(.*)>')
+      if (!res) {
+        throw new Error(`failed to parse ${breakendString}`)
+      }
+      return {
+        Join: 'right',
+        Replacement: res?.[1],
+        MateDirection: 'right',
+        MatePosition: `<${res?.[2]}>:1`,
+      }
+    }
   }
   return undefined
 }
