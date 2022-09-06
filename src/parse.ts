@@ -34,6 +34,7 @@ function decodeURIComponentNoThrow(uri: string) {
  * @param {boolean} args.strict - Whether to parse in strict mode or not (default true)
  */
 export default class VCF {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private metadata: Record<string, any>
   public strict: boolean
   public samples: string[]
@@ -102,6 +103,7 @@ export default class VCF {
 
   _parseGenotypes(format: string | undefined, prerest: string) {
     const rest = prerest.split('\t')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const genotypes = {} as any
     const formatKeys = format?.split(':')
     if (formatKeys) {
@@ -182,6 +184,7 @@ export default class VCF {
         keyVals.Number = Number(keyVals.Number)
       }
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return [id, keyVals] as [string, any]
   }
 
@@ -194,7 +197,8 @@ export default class VCF {
    * @returns An object, string, or number, depending on the filtering
    */
   getMetadata(...args: string[]) {
-    let filteredMetadata: any = this.metadata
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let filteredMetadata = this.metadata as any
     for (let i = 0; i < args.length; i += 1) {
       filteredMetadata = filteredMetadata[args[i]]
       if (!filteredMetadata) {
@@ -271,18 +275,16 @@ export default class VCF {
   /**
    * Parse a VCF line into an object like { CHROM POS ID REF ALT QUAL FILTER
    * INFO } with SAMPLES optionally included if present in the VCF
-   * @param {string} line - A string of a line from a VCF. Supports both LF and
+   * @param {string} l - A string of a line from a VCF. Supports both LF and
    * CRLF newlines.
    */
   parseLine(l: string) {
-    // eslint-disable-next-line no-param-reassign
     const line = l.trim()
     if (!line.length) {
       return undefined
     }
 
-    //@ts-ignore
-    const parser = this // so we can include this in lazy-property closure
+    const parser = this
 
     let currChar = 0
     for (let currField = 0; currChar < line.length; currChar += 1) {
@@ -310,7 +312,7 @@ export default class VCF {
         "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
       )
     }
-    const info: any =
+    const info =
       fields[7] === undefined || fields[7] === '.'
         ? {}
         : this._parseKeyValue(fields[7])
@@ -329,15 +331,11 @@ export default class VCF {
       const itemType = this.getMetadata('INFO', key, 'Type')
       if (itemType) {
         if (itemType === 'Integer' || itemType === 'Float') {
-          items = items.map((val: string) => {
-            if (val === null) {
-              return null
-            }
-            return Number(val)
-          })
+          items = (items as string[]).map((val: string) =>
+            val === null ? null : Number(val),
+          )
         } else if (itemType === 'Flag') {
           if (info[key]) {
-            // eslint-disable-next-line no-console
             console.warn(
               `Info field ${key} is a Flag and should not have a value (got value ${info[key]})`,
             )
@@ -356,10 +354,7 @@ export default class VCF {
         ALT: alt,
         INFO: info,
         REF: ref,
-        FILTER:
-          filter && filter.length === 1 && filter[0] === 'PASS'
-            ? 'PASS'
-            : filter,
+        FILTER: filter?.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
         ID: id,
         QUAL: qual,
       },
