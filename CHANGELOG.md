@@ -1,28 +1,26 @@
+- Parse single breakends and large insertion shorthand notation (#95)
+
 <a name="5.0.7"></a>
+
 ## [5.0.7](https://github.com/GMOD/vcf-js/compare/v5.0.6...v5.0.7) (2022-08-24)
-
-
 
 - Don't throw error when there is a FORMAT column but no genotypes
 
 <a name="5.0.6"></a>
+
 ## [5.0.6](https://github.com/GMOD/vcf-js/compare/v5.0.5...v5.0.6) (2022-03-30)
-
-
 
 - Include src directory for better source maps
 
 <a name="5.0.5"></a>
+
 ## [5.0.5](https://github.com/GMOD/vcf-js/compare/v5.0.4...v5.0.5) (2022-01-12)
-
-
 
 - Add optimization related to better allocation of variant records, thanks to @bpow for contributing
 
 <a name="5.0.4"></a>
+
 ## [5.0.4](https://github.com/GMOD/vcf-js/compare/v5.0.3...v5.0.4) (2021-12-23)
-
-
 
 - Make the strict field in the constructor optional
 - Export `Breakend` type for typescript users
