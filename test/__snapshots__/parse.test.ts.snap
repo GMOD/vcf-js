@@ -1,24 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Obscure VCF vcf lines with weird info field and missing format/genotypes 1`] = `
-Array [
+[
   Variant {
-    "ALT": Array [
+    "ALT": [
       "A",
     ],
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "rs118266897",
     ],
-    "INFO": Object {
+    "INFO": {
       "0,14": null,
       "112": null,
-      "AF": Array [
+      "AF": [
         0.5,
       ],
       "DB": true,
-      "NS": Array [
+      "NS": [
         3,
       ],
       "PG2.1": null,
@@ -28,22 +28,22 @@ Array [
     "REF": "R",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "G",
     ],
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "rs118269296",
     ],
-    "INFO": Object {
+    "INFO": {
       "0,14": null,
       "112": null,
-      "AF": Array [
+      "AF": [
         0.5,
       ],
       "DB": true,
-      "NS": Array [
+      "NS": [
         3,
       ],
       "PG2.1": null,
@@ -53,22 +53,22 @@ Array [
     "REF": "R",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "T",
     ],
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "rs118218236",
     ],
-    "INFO": Object {
+    "INFO": {
       "0,14": null,
       "112": null,
-      "AF": Array [
+      "AF": [
         0.5,
       ],
       "DB": true,
-      "NS": Array [
+      "NS": [
         3,
       ],
       "PG2.1": null,
@@ -78,22 +78,22 @@ Array [
     "REF": "W",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "A",
     ],
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "rs118264755",
     ],
-    "INFO": Object {
+    "INFO": {
       "0,14": null,
       "112": null,
-      "AF": Array [
+      "AF": [
         0.5,
       ],
       "DB": true,
-      "NS": Array [
+      "NS": [
         3,
       ],
       "PG2.1": null,
@@ -103,22 +103,22 @@ Array [
     "REF": "R",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "G",
     ],
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "rs118223336",
     ],
-    "INFO": Object {
+    "INFO": {
       "0,14": null,
       "112": null,
-      "AF": Array [
+      "AF": [
         6.5,
       ],
       "DB": true,
-      "NS": Array [
+      "NS": [
         3,
       ],
       "PG2.1": null,
@@ -128,22 +128,22 @@ Array [
     "REF": "R",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "G",
     ],
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "rs118217257",
     ],
-    "INFO": Object {
+    "INFO": {
       "0,14": null,
       "112": null,
-      "AF": Array [
+      "AF": [
         0.5,
       ],
       "DB": true,
-      "NS": Array [
+      "NS": [
         3,
       ],
       "PG2.1": null,
@@ -156,357 +156,357 @@ Array [
 `;
 
 exports[`VCF parser can get metadata from the header 1`] = `
-Object {
-  "ALT": Object {
-    "*": Object {
+{
+  "ALT": {
+    "*": {
       "Description": "Represents any possible alternative allele at this location",
     },
-    "CNV": Object {
+    "CNV": {
       "Description": "Copy number variable region (may be both deletion and duplication)",
     },
-    "DEL": Object {
+    "DEL": {
       "Description": "Deletion relative to the reference",
     },
-    "DEL:ME": Object {
+    "DEL:ME": {
       "Description": "Deletion of mobile element relative to the reference",
     },
-    "DUP": Object {
+    "DUP": {
       "Description": "Region of elevated copy number relative to the reference",
     },
-    "DUP:TANDEM": Object {
+    "DUP:TANDEM": {
       "Description": "Tandem duplication",
     },
-    "INS": Object {
+    "INS": {
       "Description": "Insertion of novel sequence relative to the reference",
     },
-    "INS:ME": Object {
+    "INS:ME": {
       "Description": "Insertion of a mobile element relative to the reference",
     },
-    "INV": Object {
+    "INV": {
       "Description": "Inversion of reference sequence",
     },
-    "NON_REF": Object {
+    "NON_REF": {
       "Description": "Represents any possible alternative allele at this location",
     },
   },
-  "FILTER": Object {
-    "PASS": Object {
+  "FILTER": {
+    "PASS": {
       "Description": "Passed all filters",
     },
-    "q10": Object {
+    "q10": {
       "Description": "Quality below 10",
     },
-    "s50": Object {
+    "s50": {
       "Description": "Less than 50% of samples have data",
     },
   },
-  "FORMAT": Object {
-    "AD": Object {
+  "FORMAT": {
+    "AD": {
       "Description": "Read depth for each allele",
       "Number": "R",
       "Type": "Integer",
     },
-    "ADF": Object {
+    "ADF": {
       "Description": "Read depth for each allele on the forward strand",
       "Number": "R",
       "Type": "Integer",
     },
-    "ADR": Object {
+    "ADR": {
       "Description": "Read depth for each allele on the reverse strand",
       "Number": "R",
       "Type": "Integer",
     },
-    "DP": Object {
+    "DP": {
       "Description": "Read Depth",
       "Number": 1,
       "Type": "Integer",
     },
-    "EC": Object {
+    "EC": {
       "Description": "Expected alternate allele counts",
       "Number": "A",
       "Type": "Integer",
     },
-    "FT": Object {
-      "Description": "Filter indicating if this genotype was \\"called\\"",
+    "FT": {
+      "Description": "Filter indicating if this genotype was "called"",
       "Number": 1,
       "Type": "String",
     },
-    "GL": Object {
+    "GL": {
       "Description": "Genotype likelihoods",
       "Number": "G",
       "Type": "Float",
     },
-    "GP": Object {
+    "GP": {
       "Description": "Genotype posterior probabilities",
       "Number": "G",
       "Type": "Float",
     },
-    "GQ": Object {
+    "GQ": {
       "Description": "Genotype Quality",
       "Number": 1,
       "Type": "Integer",
     },
-    "GT": Object {
+    "GT": {
       "Description": "Genotype",
       "Number": 1,
       "Type": "String",
     },
-    "HQ": Object {
+    "HQ": {
       "Description": "Haplotype Quality",
       "Number": 2,
       "Type": "Integer",
     },
-    "MQ": Object {
+    "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
       "Type": "Integer",
     },
-    "PL": Object {
+    "PL": {
       "Description": "List of Phred-scaled genotype likelihoods",
       "Number": "G",
       "Type": "Integer",
     },
-    "PQ": Object {
+    "PQ": {
       "Description": "Phasing quality",
       "Number": 1,
       "Type": "Integer",
     },
-    "PS": Object {
+    "PS": {
       "Description": "Phase set",
       "Number": 1,
       "Type": "Integer",
     },
-    "TEST": Object {
+    "TEST": {
       "Description": "Used for testing",
       "Number": 1,
       "Type": "String",
     },
   },
-  "INFO": Object {
-    "1000G": Object {
+  "INFO": {
+    "1000G": {
       "Description": "1000 Genomes membership",
       "Number": 0,
       "Type": "Flag",
     },
-    "AA": Object {
+    "AA": {
       "Description": "Ancestral Allele",
       "Number": 1,
       "Type": "String",
     },
-    "AC": Object {
+    "AC": {
       "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
       "Number": "A",
       "Type": "Integer",
     },
-    "AD": Object {
+    "AD": {
       "Description": "Total read depth for each allele",
       "Number": "R",
       "Type": "Integer",
     },
-    "ADF": Object {
+    "ADF": {
       "Description": "Read depth for each allele on the forward strand",
       "Number": "R",
       "Type": "Integer",
     },
-    "ADR": Object {
+    "ADR": {
       "Description": "Read depth for each allele on the reverse strand",
       "Number": "R",
       "Type": "Integer",
     },
-    "AF": Object {
+    "AF": {
       "Description": "Allele Frequency",
       "Number": "A",
       "Type": "Float",
     },
-    "AN": Object {
+    "AN": {
       "Description": "Total number of alleles in called genotypes",
       "Number": 1,
       "Type": "Integer",
     },
-    "BKPTID": Object {
+    "BKPTID": {
       "Description": "ID of the assembled alternate allele in the assembly file",
       "Type": "String",
     },
-    "BQ": Object {
+    "BQ": {
       "Description": "RMS base quality",
       "Number": 1,
       "Type": "Float",
     },
-    "CICN": Object {
+    "CICN": {
       "Description": "Confidence interval around copy number for the segment",
       "Number": 2,
       "Type": "Integer",
     },
-    "CICNADJ": Object {
+    "CICNADJ": {
       "Description": "Confidence interval around copy number for the adjacency",
       "Number": null,
       "Type": "Integer",
     },
-    "CIEND": Object {
+    "CIEND": {
       "Description": "Confidence interval around END for imprecise variants",
       "Number": 2,
       "Type": "Integer",
     },
-    "CIGAR": Object {
+    "CIGAR": {
       "Description": "Cigar string describing how to align an alternate allele to the reference allele",
       "Number": 1,
       "Type": "Float",
     },
-    "CILEN": Object {
+    "CILEN": {
       "Description": "Confidence interval around the inserted material between breakend",
       "Number": 2,
       "Type": "Integer",
     },
-    "CIPOS": Object {
+    "CIPOS": {
       "Description": "Confidence interval around POS for imprecise variants",
       "Number": 2,
       "Type": "Integer",
     },
-    "CN": Object {
+    "CN": {
       "Description": "Copy number of segment containing breakend",
       "Number": 1,
       "Type": "Integer",
     },
-    "CNADJ": Object {
+    "CNADJ": {
       "Description": "Copy number of adjacency",
       "Number": null,
       "Type": "Integer",
     },
-    "DB": Object {
+    "DB": {
       "Description": "dbSNP membership, build 129",
       "Number": 0,
       "Type": "Flag",
     },
-    "DBRIPID": Object {
+    "DBRIPID": {
       "Description": "ID of this element in DBRIP",
       "Number": 1,
       "Type": "String",
     },
-    "DBVARID": Object {
+    "DBVARID": {
       "Description": "ID of this element in DBVAR",
       "Number": 1,
       "Type": "String",
     },
-    "DGVID": Object {
+    "DGVID": {
       "Description": "ID of this element in Database of Genomic Variation",
       "Number": 1,
       "Type": "String",
     },
-    "DP": Object {
+    "DP": {
       "Description": "Total Depth",
       "Number": 1,
       "Type": "Integer",
     },
-    "DPADJ": Object {
+    "DPADJ": {
       "Description": "Read Depth of adjacency",
       "Type": "Integer",
     },
-    "END": Object {
+    "END": {
       "Description": "End position (for use with symbolic alleles)",
       "Number": 1,
       "Type": "Integer",
     },
-    "EVENT": Object {
+    "EVENT": {
       "Description": "ID of event associated to breakend",
       "Number": 1,
       "Type": "String",
     },
-    "H2": Object {
+    "H2": {
       "Description": "HapMap2 membership",
       "Number": 0,
       "Type": "Flag",
     },
-    "H3": Object {
+    "H3": {
       "Description": "HapMap3 membership",
       "Number": 0,
       "Type": "Flag",
     },
-    "HOMLEN": Object {
+    "HOMLEN": {
       "Description": "Length of base pair identical micro-homology at event breakpoints",
       "Type": "Integer",
     },
-    "HOMSEQ": Object {
+    "HOMSEQ": {
       "Description": "Sequence of base pair identical micro-homology at event breakpoints",
       "Type": "String",
     },
-    "IMPRECISE": Object {
+    "IMPRECISE": {
       "Description": "Imprecise structural variation",
       "Number": 0,
       "Type": "Flag",
     },
-    "MATEID": Object {
+    "MATEID": {
       "Description": "ID of mate breakends",
       "Number": null,
       "Type": "String",
     },
-    "MEINFO": Object {
+    "MEINFO": {
       "Description": "Mobile element info of the form NAME,START,END,POLARITY",
       "Number": 4,
       "Type": "String",
     },
-    "METRANS": Object {
+    "METRANS": {
       "Description": "Mobile element transduction info of the form CHR,START,END,POLARITY",
       "Number": 4,
       "Type": "String",
     },
-    "MQ": Object {
+    "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
       "Type": null,
     },
-    "MQ0": Object {
+    "MQ0": {
       "Description": "Number of MAPQ == 0 reads",
       "Number": 1,
       "Type": "Integer",
     },
-    "NOVEL": Object {
+    "NOVEL": {
       "Description": "Indicates a novel structural variation",
       "Number": 0,
       "Type": "Flag",
     },
-    "NS": Object {
+    "NS": {
       "Description": "Number of Samples With Data",
       "Number": 1,
       "Type": "Integer",
     },
-    "PARID": Object {
+    "PARID": {
       "Description": "ID of partner breakend",
       "Number": 1,
       "Type": "String",
     },
-    "SB": Object {
+    "SB": {
       "Description": "Strand bias",
       "Number": 4,
       "Type": "Integer",
     },
-    "SOMATIC": Object {
+    "SOMATIC": {
       "Description": "Somatic mutation (for cancer genomics)",
       "Number": 0,
       "Type": "Flag",
     },
-    "SVLEN": Object {
+    "SVLEN": {
       "Description": "Difference in length between REF and ALT alleles",
       "Number": null,
       "Type": "Integer",
     },
-    "SVTYPE": Object {
+    "SVTYPE": {
       "Description": "Type of structural variant",
       "Number": 1,
       "Type": "String",
     },
-    "TEST": Object {
+    "TEST": {
       "Description": "Used for testing",
       "Number": 1,
       "Type": "String",
     },
-    "VALIDATED": Object {
+    "VALIDATED": {
       "Description": "Validated by follow-up experiment",
       "Number": 0,
       "Type": "Flag",
     },
   },
-  "contig": Object {
-    "20": Object {
+  "contig": {
+    "20": {
       "assembly": "B36",
       "length": "62435964",
       "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
@@ -523,224 +523,224 @@ Object {
 `;
 
 exports[`VCF parser can get metadata from the header 2`] = `
-Object {
-  "1000G": Object {
+{
+  "1000G": {
     "Description": "1000 Genomes membership",
     "Number": 0,
     "Type": "Flag",
   },
-  "AA": Object {
+  "AA": {
     "Description": "Ancestral Allele",
     "Number": 1,
     "Type": "String",
   },
-  "AC": Object {
+  "AC": {
     "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
     "Number": "A",
     "Type": "Integer",
   },
-  "AD": Object {
+  "AD": {
     "Description": "Total read depth for each allele",
     "Number": "R",
     "Type": "Integer",
   },
-  "ADF": Object {
+  "ADF": {
     "Description": "Read depth for each allele on the forward strand",
     "Number": "R",
     "Type": "Integer",
   },
-  "ADR": Object {
+  "ADR": {
     "Description": "Read depth for each allele on the reverse strand",
     "Number": "R",
     "Type": "Integer",
   },
-  "AF": Object {
+  "AF": {
     "Description": "Allele Frequency",
     "Number": "A",
     "Type": "Float",
   },
-  "AN": Object {
+  "AN": {
     "Description": "Total number of alleles in called genotypes",
     "Number": 1,
     "Type": "Integer",
   },
-  "BKPTID": Object {
+  "BKPTID": {
     "Description": "ID of the assembled alternate allele in the assembly file",
     "Type": "String",
   },
-  "BQ": Object {
+  "BQ": {
     "Description": "RMS base quality",
     "Number": 1,
     "Type": "Float",
   },
-  "CICN": Object {
+  "CICN": {
     "Description": "Confidence interval around copy number for the segment",
     "Number": 2,
     "Type": "Integer",
   },
-  "CICNADJ": Object {
+  "CICNADJ": {
     "Description": "Confidence interval around copy number for the adjacency",
     "Number": null,
     "Type": "Integer",
   },
-  "CIEND": Object {
+  "CIEND": {
     "Description": "Confidence interval around END for imprecise variants",
     "Number": 2,
     "Type": "Integer",
   },
-  "CIGAR": Object {
+  "CIGAR": {
     "Description": "Cigar string describing how to align an alternate allele to the reference allele",
     "Number": 1,
     "Type": "Float",
   },
-  "CILEN": Object {
+  "CILEN": {
     "Description": "Confidence interval around the inserted material between breakend",
     "Number": 2,
     "Type": "Integer",
   },
-  "CIPOS": Object {
+  "CIPOS": {
     "Description": "Confidence interval around POS for imprecise variants",
     "Number": 2,
     "Type": "Integer",
   },
-  "CN": Object {
+  "CN": {
     "Description": "Copy number of segment containing breakend",
     "Number": 1,
     "Type": "Integer",
   },
-  "CNADJ": Object {
+  "CNADJ": {
     "Description": "Copy number of adjacency",
     "Number": null,
     "Type": "Integer",
   },
-  "DB": Object {
+  "DB": {
     "Description": "dbSNP membership, build 129",
     "Number": 0,
     "Type": "Flag",
   },
-  "DBRIPID": Object {
+  "DBRIPID": {
     "Description": "ID of this element in DBRIP",
     "Number": 1,
     "Type": "String",
   },
-  "DBVARID": Object {
+  "DBVARID": {
     "Description": "ID of this element in DBVAR",
     "Number": 1,
     "Type": "String",
   },
-  "DGVID": Object {
+  "DGVID": {
     "Description": "ID of this element in Database of Genomic Variation",
     "Number": 1,
     "Type": "String",
   },
-  "DP": Object {
+  "DP": {
     "Description": "Total Depth",
     "Number": 1,
     "Type": "Integer",
   },
-  "DPADJ": Object {
+  "DPADJ": {
     "Description": "Read Depth of adjacency",
     "Type": "Integer",
   },
-  "END": Object {
+  "END": {
     "Description": "End position (for use with symbolic alleles)",
     "Number": 1,
     "Type": "Integer",
   },
-  "EVENT": Object {
+  "EVENT": {
     "Description": "ID of event associated to breakend",
     "Number": 1,
     "Type": "String",
   },
-  "H2": Object {
+  "H2": {
     "Description": "HapMap2 membership",
     "Number": 0,
     "Type": "Flag",
   },
-  "H3": Object {
+  "H3": {
     "Description": "HapMap3 membership",
     "Number": 0,
     "Type": "Flag",
   },
-  "HOMLEN": Object {
+  "HOMLEN": {
     "Description": "Length of base pair identical micro-homology at event breakpoints",
     "Type": "Integer",
   },
-  "HOMSEQ": Object {
+  "HOMSEQ": {
     "Description": "Sequence of base pair identical micro-homology at event breakpoints",
     "Type": "String",
   },
-  "IMPRECISE": Object {
+  "IMPRECISE": {
     "Description": "Imprecise structural variation",
     "Number": 0,
     "Type": "Flag",
   },
-  "MATEID": Object {
+  "MATEID": {
     "Description": "ID of mate breakends",
     "Number": null,
     "Type": "String",
   },
-  "MEINFO": Object {
+  "MEINFO": {
     "Description": "Mobile element info of the form NAME,START,END,POLARITY",
     "Number": 4,
     "Type": "String",
   },
-  "METRANS": Object {
+  "METRANS": {
     "Description": "Mobile element transduction info of the form CHR,START,END,POLARITY",
     "Number": 4,
     "Type": "String",
   },
-  "MQ": Object {
+  "MQ": {
     "Description": "RMS mapping quality",
     "Number": 1,
     "Type": null,
   },
-  "MQ0": Object {
+  "MQ0": {
     "Description": "Number of MAPQ == 0 reads",
     "Number": 1,
     "Type": "Integer",
   },
-  "NOVEL": Object {
+  "NOVEL": {
     "Description": "Indicates a novel structural variation",
     "Number": 0,
     "Type": "Flag",
   },
-  "NS": Object {
+  "NS": {
     "Description": "Number of Samples With Data",
     "Number": 1,
     "Type": "Integer",
   },
-  "PARID": Object {
+  "PARID": {
     "Description": "ID of partner breakend",
     "Number": 1,
     "Type": "String",
   },
-  "SB": Object {
+  "SB": {
     "Description": "Strand bias",
     "Number": 4,
     "Type": "Integer",
   },
-  "SOMATIC": Object {
+  "SOMATIC": {
     "Description": "Somatic mutation (for cancer genomics)",
     "Number": 0,
     "Type": "Flag",
   },
-  "SVLEN": Object {
+  "SVLEN": {
     "Description": "Difference in length between REF and ALT alleles",
     "Number": null,
     "Type": "Integer",
   },
-  "SVTYPE": Object {
+  "SVTYPE": {
     "Description": "Type of structural variant",
     "Number": 1,
     "Type": "String",
   },
-  "TEST": Object {
+  "TEST": {
     "Description": "Used for testing",
     "Number": 1,
     "Type": "String",
   },
-  "VALIDATED": Object {
+  "VALIDATED": {
     "Description": "Validated by follow-up experiment",
     "Number": 0,
     "Type": "Flag",
@@ -750,24 +750,24 @@ Object {
 
 exports[`VCF parser can parse a line from the VCF spec 1`] = `
 Variant {
-  "ALT": Array [
+  "ALT": [
     "A",
   ],
   "CHROM": "20",
   "FILTER": "PASS",
-  "ID": Array [
+  "ID": [
     "rs6054257",
   ],
-  "INFO": Object {
-    "AF": Array [
+  "INFO": {
+    "AF": [
       0.5,
     ],
     "DB": true,
-    "DP": Array [
+    "DP": [
       14,
     ],
     "H2": true,
-    "NS": Array [
+    "NS": [
       3,
     ],
   },
@@ -778,48 +778,48 @@ Variant {
 `;
 
 exports[`VCF parser can parse a line from the VCF spec 2`] = `
-Object {
-  "NA00001": Object {
-    "DP": Array [
+{
+  "NA00001": {
+    "DP": [
       1,
     ],
-    "GQ": Array [
+    "GQ": [
       48,
     ],
-    "GT": Array [
+    "GT": [
       "0|0",
     ],
-    "HQ": Array [
+    "HQ": [
       51,
       51,
     ],
   },
-  "NA00002": Object {
-    "DP": Array [
+  "NA00002": {
+    "DP": [
       8,
     ],
-    "GQ": Array [
+    "GQ": [
       48,
     ],
-    "GT": Array [
+    "GT": [
       "1|0",
     ],
-    "HQ": Array [
+    "HQ": [
       51,
       51,
     ],
   },
-  "NA00003": Object {
-    "DP": Array [
+  "NA00003": {
+    "DP": [
       5,
     ],
-    "GQ": Array [
+    "GQ": [
       43,
     ],
-    "GT": Array [
+    "GT": [
       "1/1",
     ],
-    "HQ": Array [
+    "HQ": [
       null,
       null,
     ],
@@ -829,13 +829,13 @@ Object {
 
 exports[`VCF parser can parse a line with minimal entries 1`] = `
 Variant {
-  "ALT": Array [
+  "ALT": [
     "A",
   ],
   "CHROM": "20",
   "FILTER": null,
   "ID": null,
-  "INFO": Object {},
+  "INFO": {},
   "POS": 14370,
   "QUAL": null,
   "REF": "G",
@@ -843,20 +843,20 @@ Variant {
 `;
 
 exports[`VCF parser can parse a line with minimal entries 2`] = `
-Object {
-  "NA00001": Object {
+{
+  "NA00001": {
     "DP": null,
     "GQ": null,
     "GT": null,
     "HQ": null,
   },
-  "NA00002": Object {
+  "NA00002": {
     "DP": null,
     "GQ": null,
     "GT": null,
     "HQ": null,
   },
-  "NA00003": Object {
+  "NA00003": {
     "DP": null,
     "GQ": null,
     "GT": null,
@@ -867,50 +867,50 @@ Object {
 
 exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 1`] = `
 Variant {
-  "ALT": Array [
+  "ALT": [
     "<CN0>",
   ],
   "CHROM": "Y",
   "FILTER": "PASS",
-  "ID": Array [
+  "ID": [
     "CNV_Y_14483990_15232198",
   ],
-  "INFO": Object {
-    "AC": Array [
+  "INFO": {
+    "AC": [
       1,
     ],
-    "AF": Array [
+    "AF": [
       0.000817661,
     ],
-    "AFR_AF": Array [
+    "AFR_AF": [
       0,
     ],
-    "AMR_AF": Array [
+    "AMR_AF": [
       0,
     ],
-    "AN": Array [
+    "AN": [
       1223,
     ],
-    "EAS_AF": Array [
+    "EAS_AF": [
       0,
     ],
-    "END": Array [
+    "END": [
       15232198,
     ],
-    "EUR_AF": Array [
+    "EUR_AF": [
       0.0042,
     ],
     "EX_TARGET": true,
-    "NS": Array [
+    "NS": [
       1233,
     ],
-    "SAS_AF": Array [
+    "SAS_AF": [
       0,
     ],
-    "SVTYPE": Array [
+    "SVTYPE": [
       "CNV",
     ],
-    "VT": Array [
+    "VT": [
       "SV",
     ],
   },
@@ -921,72 +921,72 @@ Variant {
 `;
 
 exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 2`] = `
-Object {
-  "HG00096": Object {
-    "CN": Array [
+{
+  "HG00096": {
+    "CN": [
       1,
     ],
-    "CNL": Array [
+    "CNL": [
       -1000,
       0,
       -119.08,
     ],
-    "CNP": Array [
+    "CNP": [
       -1000,
       0,
       -218.16,
     ],
-    "CNQ": Array [
+    "CNQ": [
       99,
     ],
-    "GP": Array [
+    "GP": [
       0,
       -1000,
     ],
-    "GQ": Array [
+    "GQ": [
       99,
     ],
-    "GT": Array [
+    "GT": [
       "0",
     ],
-    "PL": Array [
+    "PL": [
       0,
       10000,
     ],
   },
-  "HG00101": Object {
-    "CN": Array [
+  "HG00101": {
+    "CN": [
       1,
     ],
-    "CNL": Array [
+    "CNL": [
       -1000,
       0,
       -43.56,
     ],
-    "CNP": Array [
+    "CNP": [
       -1000,
       0,
       -142.64,
     ],
-    "CNQ": Array [
+    "CNQ": [
       99,
     ],
-    "GP": Array [
+    "GP": [
       0,
       -1000,
     ],
-    "GQ": Array [
+    "GQ": [
       99,
     ],
-    "GT": Array [
+    "GT": [
       "0",
     ],
-    "PL": Array [
+    "PL": [
       0,
       10000,
     ],
   },
-  "HG00103": Object {
+  "HG00103": {
     "CN": null,
     "CNL": null,
     "CNP": null,
@@ -996,7 +996,7 @@ Object {
     "GT": null,
     "PL": null,
   },
-  "HG001055": Object {
+  "HG001055": {
     "CN": null,
     "CNL": null,
     "CNP": null,
@@ -1011,50 +1011,50 @@ Object {
 
 exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 3`] = `
 Variant {
-  "ALT": Array [
+  "ALT": [
     "A",
   ],
   "CHROM": "Y",
   "FILTER": "PASS",
-  "ID": Array [
+  "ID": [
     "rs11575897",
   ],
-  "INFO": Object {
-    "AA": Array [
+  "INFO": {
+    "AA": [
       "G",
     ],
-    "AC": Array [
+    "AC": [
       22,
     ],
-    "AF": Array [
+    "AF": [
       0.0178427,
     ],
-    "AFR_AF": Array [
+    "AFR_AF": [
       0,
     ],
-    "AMR_AF": Array [
+    "AMR_AF": [
       0,
     ],
-    "AN": Array [
+    "AN": [
       1233,
     ],
-    "DP": Array [
+    "DP": [
       84761,
     ],
-    "EAS_AF": Array [
+    "EAS_AF": [
       0.0902,
     ],
-    "EUR_AF": Array [
+    "EUR_AF": [
       0,
     ],
     "EX_TARGET": true,
-    "NS": Array [
+    "NS": [
       1233,
     ],
-    "SAS_AF": Array [
+    "SAS_AF": [
       0,
     ],
-    "VT": Array [
+    "VT": [
       "SNP",
     ],
   },
@@ -1065,23 +1065,23 @@ Variant {
 `;
 
 exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 4`] = `
-Object {
-  "HG00096": Object {
-    "GT": Array [
+{
+  "HG00096": {
+    "GT": [
       "0",
     ],
   },
-  "HG00101": Object {
-    "GT": Array [
+  "HG00101": {
+    "GT": [
       "0",
     ],
   },
-  "HG00103": Object {
-    "GT": Array [
+  "HG00103": {
+    "GT": [
       "0",
     ],
   },
-  "HG001055": Object {
+  "HG001055": {
     "GT": null,
   },
 }
@@ -1089,59 +1089,59 @@ Object {
 
 exports[`VCF parser for structural variants can parse a line from the VCF spec 1`] = `
 Variant {
-  "ALT": Array [
+  "ALT": [
     "<DEL>",
   ],
   "CHROM": "8",
   "FILTER": "PASS",
-  "ID": Array [
+  "ID": [
     "28329_0",
   ],
-  "INFO": Object {
-    "AF": Array [
+  "INFO": {
+    "AF": [
       0.971429,
     ],
-    "CHR2": Array [
+    "CHR2": [
       "8",
     ],
-    "END": Array [
+    "END": [
       17709148,
     ],
-    "Kurtosis_quant_start": Array [
+    "Kurtosis_quant_start": [
       "20.524521",
     ],
-    "Kurtosis_quant_stop": Array [
+    "Kurtosis_quant_stop": [
       "3.925926",
     ],
     "PRECISE": true,
-    "RE": Array [
+    "RE": [
       34,
     ],
-    "STD_quant_start": Array [
+    "STD_quant_start": [
       "0.000000",
     ],
-    "STD_quant_stop": Array [
+    "STD_quant_stop": [
       "0.000000",
     ],
-    "STRANDS": Array [
+    "STRANDS": [
       "+-",
     ],
-    "STRANDS2": Array [
+    "STRANDS2": [
       "20",
       "14",
       "20",
       "14",
     ],
-    "SUPTYPE": Array [
+    "SUPTYPE": [
       "AL",
     ],
-    "SVLEN": Array [
+    "SVLEN": [
       33,
     ],
-    "SVMETHOD": Array [
+    "SVMETHOD": [
       "Snifflesv1.0.3",
     ],
-    "SVTYPE": Array [
+    "SVTYPE": [
       "DEL",
     ],
   },
@@ -1152,15 +1152,15 @@ Variant {
 `;
 
 exports[`VCF parser for structural variants can parse a line from the VCF spec 2`] = `
-Object {
-  "/seq/schatz/fritz/sv-paper/real/Nanopore_NA12878/mapped/ngm_Nanopore_human_ngmlr-0.2.3_mapped.bam": Object {
-    "DR": Array [
+{
+  "/seq/schatz/fritz/sv-paper/real/Nanopore_NA12878/mapped/ngm_Nanopore_human_ngmlr-0.2.3_mapped.bam": {
+    "DR": [
       1,
     ],
-    "DV": Array [
+    "DV": [
       34,
     ],
-    "GT": Array [
+    "GT": [
       "1/1",
     ],
   },
@@ -1169,16 +1169,16 @@ Object {
 
 exports[`VCF parser parses a line with a breakend ALT 1`] = `
 Variant {
-  "ALT": Array [
+  "ALT": [
     "G]17:198982]",
   ],
   "CHROM": "2",
   "FILTER": "PASS",
-  "ID": Array [
+  "ID": [
     "bnd_W",
   ],
-  "INFO": Object {
-    "SVTYPE": Array [
+  "INFO": {
+    "SVTYPE": [
       "BND",
     ],
   },
@@ -1190,22 +1190,22 @@ Variant {
 
 exports[`VCF parser parses a line with mix of multiple breakends and non breakends 1`] = `
 Variant {
-  "ALT": Array [
+  "ALT": [
     "CTATGTCG",
     "C[2 : 321682[",
     "C[17 : 198983[",
   ],
   "CHROM": "13",
   "FILTER": "PASS",
-  "ID": Array [
+  "ID": [
     "bnd_U",
   ],
-  "INFO": Object {
-    "MATEID": Array [
+  "INFO": {
+    "MATEID": [
       "bnd V",
       "bnd Z",
     ],
-    "SVTYPE": Array [
+    "SVTYPE": [
       "BND",
     ],
   },
@@ -1216,37 +1216,37 @@ Variant {
 `;
 
 exports[`can parse breakends 1`] = `
-Array [
+[
   Variant {
-    "ALT": Array [
+    "ALT": [
       "G]8:107653520]",
     ],
     "CHROM": "11",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "MantaBND:0:2:3:0:0:0:1",
     ],
-    "INFO": Object {
-      "BND_DEPTH": Array [
+    "INFO": {
+      "BND_DEPTH": [
         "216",
       ],
-      "CIPOS": Array [
+      "CIPOS": [
         0,
         2,
       ],
-      "HOMLEN": Array [
+      "HOMLEN": [
         2,
       ],
-      "HOMSEQ": Array [
+      "HOMSEQ": [
         "TT",
       ],
-      "MATEID": Array [
+      "MATEID": [
         "MantaBND:0:2:3:0:0:0:0",
       ],
-      "MATE_BND_DEPTH": Array [
+      "MATE_BND_DEPTH": [
         "735",
       ],
-      "SVTYPE": Array [
+      "SVTYPE": [
         "BND",
       ],
     },
@@ -1255,31 +1255,31 @@ Array [
     "REF": "G",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "<DEL>",
     ],
     "CHROM": "11",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "MantaDEL:0:1:2:0:0:0",
     ],
-    "INFO": Object {
-      "CIEND": Array [
+    "INFO": {
+      "CIEND": [
         -150,
         150,
       ],
-      "CIPOS": Array [
+      "CIPOS": [
         -156,
         156,
       ],
-      "END": Array [
+      "END": [
         94987865,
       ],
       "IMPRECISE": true,
-      "SVLEN": Array [
+      "SVLEN": [
         12112,
       ],
-      "SVTYPE": Array [
+      "SVTYPE": [
         "DEL",
       ],
     },
@@ -1288,25 +1288,25 @@ Array [
     "REF": "T",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "T[8:107653411[",
     ],
     "CHROM": "11",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "MantaBND:0:0:1:0:0:0:0",
     ],
-    "INFO": Object {
-      "BND_DEPTH": Array [
+    "INFO": {
+      "BND_DEPTH": [
         "171",
       ],
-      "MATEID": Array [
+      "MATEID": [
         "MantaBND:0:0:1:0:0:0:1",
       ],
-      "MATE_BND_DEPTH": Array [
+      "MATE_BND_DEPTH": [
         "830",
       ],
-      "SVTYPE": Array [
+      "SVTYPE": [
         "BND",
       ],
     },
@@ -1318,7 +1318,7 @@ Array [
 `;
 
 exports[`shortcut parsing with 1000 genomes 1`] = `
-Array [
+[
   "HG00096",
   "HG00101",
   "HG00103",
@@ -1328,7 +1328,7 @@ Array [
 `;
 
 exports[`shortcut parsing with 1000 genomes 2`] = `
-Array [
+[
   "NA21128",
   "NA21129",
   "NA21130",
@@ -1338,52 +1338,52 @@ Array [
 `;
 
 exports[`shortcut parsing with 1000 genomes 3`] = `
-Array [
-  Object {
-    "ALT": Array [
+[
+  {
+    "ALT": [
       "A",
     ],
     "CHROM": "Y",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "rs11575897",
     ],
-    "INFO": Object {
-      "AA": Array [
+    "INFO": {
+      "AA": [
         "G",
       ],
-      "AC": Array [
+      "AC": [
         22,
       ],
-      "AF": Array [
+      "AF": [
         0.0178427,
       ],
-      "AFR_AF": Array [
+      "AFR_AF": [
         0,
       ],
-      "AMR_AF": Array [
+      "AMR_AF": [
         0,
       ],
-      "AN": Array [
+      "AN": [
         1233,
       ],
-      "DP": Array [
+      "DP": [
         84761,
       ],
-      "EAS_AF": Array [
+      "EAS_AF": [
         0.0902,
       ],
-      "EUR_AF": Array [
+      "EUR_AF": [
         0,
       ],
       "EX_TARGET": true,
-      "NS": Array [
+      "NS": [
         1233,
       ],
-      "SAS_AF": Array [
+      "SAS_AF": [
         0,
       ],
-      "VT": Array [
+      "VT": [
         "SNP",
       ],
     },
@@ -1391,49 +1391,49 @@ Array [
     "QUAL": 100,
     "REF": "G",
   },
-  Object {
-    "ALT": Array [
+  {
+    "ALT": [
       "C",
     ],
     "CHROM": "Y",
     "FILTER": "PASS",
     "ID": null,
-    "INFO": Object {
-      "AA": Array [
+    "INFO": {
+      "AA": [
         "A",
       ],
-      "AC": Array [
+      "AC": [
         5,
       ],
-      "AF": Array [
+      "AF": [
         0.00405515,
       ],
-      "AFR_AF": Array [
+      "AFR_AF": [
         0,
       ],
-      "AMR_AF": Array [
+      "AMR_AF": [
         0,
       ],
-      "AN": Array [
+      "AN": [
         1233,
       ],
-      "DP": Array [
+      "DP": [
         72067,
       ],
-      "EAS_AF": Array [
+      "EAS_AF": [
         0.0205,
       ],
-      "EUR_AF": Array [
+      "EUR_AF": [
         0,
       ],
       "EX_TARGET": true,
-      "NS": Array [
+      "NS": [
         1233,
       ],
-      "SAS_AF": Array [
+      "SAS_AF": [
         0,
       ],
-      "VT": Array [
+      "VT": [
         "SNP",
       ],
     },
@@ -1445,18 +1445,18 @@ Array [
 `;
 
 exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
-Array [
+[
   Variant {
-    "ALT": Array [
+    "ALT": [
       "G]17:198982]",
     ],
     "CHROM": "2",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "bnd_W",
     ],
-    "INFO": Object {
-      "SVTYPE": Array [
+    "INFO": {
+      "SVTYPE": [
         "BND",
       ],
     },
@@ -1465,16 +1465,16 @@ Array [
     "REF": "G",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "]13:123456]T",
     ],
     "CHROM": "2",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "bnd_V",
     ],
-    "INFO": Object {
-      "SVTYPE": Array [
+    "INFO": {
+      "SVTYPE": [
         "BND",
       ],
     },
@@ -1483,16 +1483,16 @@ Array [
     "REF": "T",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "C[2:321682[",
     ],
     "CHROM": "13",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "bnd_U",
     ],
-    "INFO": Object {
-      "SVTYPE": Array [
+    "INFO": {
+      "SVTYPE": [
         "BND",
       ],
     },
@@ -1501,16 +1501,16 @@ Array [
     "REF": "C",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "[17:198983[A",
     ],
     "CHROM": "13",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "bnd_X",
     ],
-    "INFO": Object {
-      "SVTYPE": Array [
+    "INFO": {
+      "SVTYPE": [
         "BND",
       ],
     },
@@ -1519,16 +1519,16 @@ Array [
     "REF": "A",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "A]2:321681]",
     ],
     "CHROM": "17",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "bnd_Y",
     ],
-    "INFO": Object {
-      "SVTYPE": Array [
+    "INFO": {
+      "SVTYPE": [
         "BND",
       ],
     },
@@ -1537,16 +1537,16 @@ Array [
     "REF": "A",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "[13:123457[C",
     ],
     "CHROM": "17",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "bnd_Z",
     ],
-    "INFO": Object {
-      "SVTYPE": Array [
+    "INFO": {
+      "SVTYPE": [
         "BND",
       ],
     },
@@ -1558,26 +1558,26 @@ Array [
 `;
 
 exports[`snippet from VCF 4.3 spec 1`] = `
-Array [
+[
   Variant {
-    "ALT": Array [
+    "ALT": [
       "A",
     ],
     "CHROM": "20",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "rs6054257",
     ],
-    "INFO": Object {
-      "AF": Array [
+    "INFO": {
+      "AF": [
         0.5,
       ],
       "DB": true,
-      "DP": Array [
+      "DP": [
         14,
       ],
       "H2": true,
-      "NS": Array [
+      "NS": [
         3,
       ],
     },
@@ -1586,22 +1586,22 @@ Array [
     "REF": "G",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "A",
     ],
     "CHROM": "20",
-    "FILTER": Array [
+    "FILTER": [
       "q10",
     ],
     "ID": null,
-    "INFO": Object {
-      "AF": Array [
+    "INFO": {
+      "AF": [
         0.017,
       ],
-      "DP": Array [
+      "DP": [
         11,
       ],
-      "NS": Array [
+      "NS": [
         3,
       ],
     },
@@ -1610,28 +1610,28 @@ Array [
     "REF": "T",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "G",
       "T",
     ],
     "CHROM": "20",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "rs6040355",
     ],
-    "INFO": Object {
-      "AA": Array [
+    "INFO": {
+      "AA": [
         "T",
       ],
-      "AF": Array [
+      "AF": [
         0.333,
         0.667,
       ],
       "DB": true,
-      "DP": Array [
+      "DP": [
         10,
       ],
-      "NS": Array [
+      "NS": [
         2,
       ],
     },
@@ -1644,14 +1644,14 @@ Array [
     "CHROM": "20",
     "FILTER": "PASS",
     "ID": null,
-    "INFO": Object {
-      "AA": Array [
+    "INFO": {
+      "AA": [
         "T",
       ],
-      "DP": Array [
+      "DP": [
         13,
       ],
-      "NS": Array [
+      "NS": [
         3,
       ],
     },
@@ -1660,23 +1660,23 @@ Array [
     "REF": "T",
   },
   Variant {
-    "ALT": Array [
+    "ALT": [
       "G",
       "GTCT",
     ],
     "CHROM": "20",
     "FILTER": "PASS",
-    "ID": Array [
+    "ID": [
       "microsat1",
     ],
-    "INFO": Object {
-      "AA": Array [
+    "INFO": {
+      "AA": [
         "G",
       ],
-      "DP": Array [
+      "DP": [
         9,
       ],
-      "NS": Array [
+      "NS": [
         3,
       ],
     },
@@ -1688,217 +1688,217 @@ Array [
 `;
 
 exports[`snippet from VCF 4.3 spec 2`] = `
-Array [
-  Object {
-    "NA00001": Object {
-      "DP": Array [
+[
+  {
+    "NA00001": {
+      "DP": [
         1,
       ],
-      "GQ": Array [
+      "GQ": [
         48,
       ],
-      "GT": Array [
+      "GT": [
         "0|0",
       ],
-      "HQ": Array [
+      "HQ": [
         51,
         51,
       ],
     },
-    "NA00002": Object {
-      "DP": Array [
+    "NA00002": {
+      "DP": [
         8,
       ],
-      "GQ": Array [
+      "GQ": [
         48,
       ],
-      "GT": Array [
+      "GT": [
         "1|0",
       ],
-      "HQ": Array [
+      "HQ": [
         51,
         51,
       ],
     },
-    "NA00003": Object {
-      "DP": Array [
+    "NA00003": {
+      "DP": [
         5,
       ],
-      "GQ": Array [
+      "GQ": [
         43,
       ],
-      "GT": Array [
+      "GT": [
         "1/1",
       ],
-      "HQ": Array [
+      "HQ": [
         null,
         null,
       ],
     },
   },
-  Object {
-    "NA00001": Object {
-      "DP": Array [
+  {
+    "NA00001": {
+      "DP": [
         3,
       ],
-      "GQ": Array [
+      "GQ": [
         49,
       ],
-      "GT": Array [
+      "GT": [
         "0|0",
       ],
-      "HQ": Array [
+      "HQ": [
         58,
         50,
       ],
     },
-    "NA00002": Object {
-      "DP": Array [
+    "NA00002": {
+      "DP": [
         5,
       ],
-      "GQ": Array [
+      "GQ": [
         3,
       ],
-      "GT": Array [
+      "GT": [
         "0|1",
       ],
-      "HQ": Array [
+      "HQ": [
         65,
         3,
       ],
     },
-    "NA00003": Object {
-      "DP": Array [
+    "NA00003": {
+      "DP": [
         3,
       ],
-      "GQ": Array [
+      "GQ": [
         41,
       ],
-      "GT": Array [
+      "GT": [
         "0/0",
       ],
       "HQ": null,
     },
   },
-  Object {
-    "NA00001": Object {
-      "DP": Array [
+  {
+    "NA00001": {
+      "DP": [
         6,
       ],
-      "GQ": Array [
+      "GQ": [
         21,
       ],
-      "GT": Array [
+      "GT": [
         "1|2",
       ],
-      "HQ": Array [
+      "HQ": [
         23,
         27,
       ],
     },
-    "NA00002": Object {
-      "DP": Array [
+    "NA00002": {
+      "DP": [
         0,
       ],
-      "GQ": Array [
+      "GQ": [
         2,
       ],
-      "GT": Array [
+      "GT": [
         "2|1",
       ],
-      "HQ": Array [
+      "HQ": [
         18,
         2,
       ],
     },
-    "NA00003": Object {
-      "DP": Array [
+    "NA00003": {
+      "DP": [
         4,
       ],
-      "GQ": Array [
+      "GQ": [
         35,
       ],
-      "GT": Array [
+      "GT": [
         "2/2",
       ],
       "HQ": null,
     },
   },
-  Object {
-    "NA00001": Object {
-      "DP": Array [
+  {
+    "NA00001": {
+      "DP": [
         7,
       ],
-      "GQ": Array [
+      "GQ": [
         54,
       ],
-      "GT": Array [
+      "GT": [
         "0|0",
       ],
-      "HQ": Array [
+      "HQ": [
         56,
         60,
       ],
     },
-    "NA00002": Object {
-      "DP": Array [
+    "NA00002": {
+      "DP": [
         4,
       ],
-      "GQ": Array [
+      "GQ": [
         48,
       ],
-      "GT": Array [
+      "GT": [
         "0|0",
       ],
-      "HQ": Array [
+      "HQ": [
         51,
         51,
       ],
     },
-    "NA00003": Object {
-      "DP": Array [
+    "NA00003": {
+      "DP": [
         2,
       ],
-      "GQ": Array [
+      "GQ": [
         61,
       ],
-      "GT": Array [
+      "GT": [
         "0/0",
       ],
       "HQ": null,
     },
   },
-  Object {
-    "NA00001": Object {
-      "DP": Array [
+  {
+    "NA00001": {
+      "DP": [
         4,
       ],
-      "GQ": Array [
+      "GQ": [
         35,
       ],
-      "GT": Array [
+      "GT": [
         "0/1",
       ],
     },
-    "NA00002": Object {
-      "DP": Array [
+    "NA00002": {
+      "DP": [
         2,
       ],
-      "GQ": Array [
+      "GQ": [
         17,
       ],
-      "GT": Array [
+      "GT": [
         "0/2",
       ],
     },
-    "NA00003": Object {
-      "DP": Array [
+    "NA00003": {
+      "DP": [
         3,
       ],
-      "GQ": Array [
+      "GQ": [
         40,
       ],
-      "GT": Array [
+      "GT": [
         "1/1",
       ],
     },
@@ -1907,7 +1907,7 @@ Array [
 `;
 
 exports[`vcf 4.3 insertion shorthand 1`] = `
-Object {
+{
   "Join": "right",
   "MateDirection": "right",
   "MatePosition": "<ctgA>:1",
@@ -1916,7 +1916,7 @@ Object {
 `;
 
 exports[`vcf 4.3 insertion shorthand 2`] = `
-Object {
+{
   "Join": "left",
   "MateDirection": "right",
   "MatePosition": "<ctgA>:1",
@@ -1925,7 +1925,7 @@ Object {
 `;
 
 exports[`vcf 4.3 insertion shorthand 3`] = `
-Object {
+{
   "Join": "right",
   "MateDirection": "right",
   "MatePosition": "<ctg1>:1",
@@ -1934,7 +1934,7 @@ Object {
 `;
 
 exports[`vcf 4.3 insertion shorthand 4`] = `
-Object {
+{
   "Join": "left",
   "MateDirection": "left",
   "MatePosition": "13:123456",
@@ -1943,7 +1943,7 @@ Object {
 `;
 
 exports[`vcf 4.3 single breakends 1`] = `
-Object {
+{
   "Join": "right",
   "Replacement": "G",
   "SingleBreakend": true,
@@ -1951,7 +1951,7 @@ Object {
 `;
 
 exports[`vcf 4.3 single breakends 2`] = `
-Object {
+{
   "Join": "right",
   "Replacement": "ACGT",
   "SingleBreakend": true,
@@ -1959,7 +1959,7 @@ Object {
 `;
 
 exports[`vcf 4.3 single breakends 3`] = `
-Object {
+{
   "Join": "left",
   "Replacement": "ACGT",
   "SingleBreakend": true,
