@@ -357,3 +357,14 @@ test('vcf 4.3 insertion shorthand', () => {
   expect(parseBreakend('C[<ctg1>:1[')).toMatchSnapshot()
   expect(parseBreakend(']13:123456]AGTNNNNNCAT')).toMatchSnapshot()
 })
+
+test('parse breakend on symbolic alleles', () => {
+  expect(parseBreakend('<TRA>')).not.toBeTruthy()
+  expect(parseBreakend('<INS>')).not.toBeTruthy()
+  expect(parseBreakend('<DEL>')).not.toBeTruthy()
+  expect(parseBreakend('<INV>')).not.toBeTruthy()
+})
+
+test('parse breakend on thing that looks like symbolic allele but is actually a feature', () => {
+  expect(parseBreakend('<INV>C')).toMatchSnapshot()
+})

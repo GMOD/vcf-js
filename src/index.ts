@@ -50,23 +50,29 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
       if (!res) {
         throw new Error(`failed to parse ${breakendString}`)
       }
-      return {
-        Join: 'left',
-        Replacement: res?.[2],
-        MateDirection: 'right',
-        MatePosition: `<${res?.[1]}>:1`,
-      }
+      const Replacement = res?.[2]
+      return Replacement
+        ? {
+            Join: 'left',
+            Replacement,
+            MateDirection: 'right',
+            MatePosition: `<${res?.[1]}>:1`,
+          }
+        : undefined
     } else if (breakendString.includes('<')) {
       const res = breakendString.match('(.*)<(.*)>')
       if (!res) {
         throw new Error(`failed to parse ${breakendString}`)
       }
-      return {
-        Join: 'right',
-        Replacement: res?.[1],
-        MateDirection: 'right',
-        MatePosition: `<${res?.[2]}>:1`,
-      }
+      const Replacement = res?.[1]
+      return Replacement
+        ? {
+            Join: 'right',
+            Replacement,
+            MateDirection: 'right',
+            MatePosition: `<${res?.[2]}>:1`,
+          }
+        : undefined
     }
   }
   return undefined

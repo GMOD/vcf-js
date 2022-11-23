@@ -1317,6 +1317,15 @@ exports[`can parse breakends 1`] = `
 ]
 `;
 
+exports[`parse breakend on thing that looks like symbolic allele but is actually a feature 1`] = `
+{
+  "Join": "left",
+  "MateDirection": "right",
+  "MatePosition": "<INV>:1",
+  "Replacement": "C",
+}
+`;
+
 exports[`shortcut parsing with 1000 genomes 1`] = `
 [
   "HG00096",
