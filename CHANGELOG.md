@@ -1,3 +1,5 @@
+- Fix erroneous parsing of symbolic alleles as breakends
+
 ## [5.0.8](https://github.com/GMOD/vcf-js/compare/v5.0.7...v5.0.8) (2022-11-20)
 
 
