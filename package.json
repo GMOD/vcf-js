@@ -39,20 +39,20 @@
     "postversion": "git push --follow-tags"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.2",
-    "@types/jest": "^29.2.3",
-    "@typescript-eslint/eslint-plugin": "^5.43.0",
-    "@typescript-eslint/parser": "^5.43.0",
-    "documentation": "^14.0.0",
-    "eslint": "^8.28.0",
+    "@babel/core": "^7.20.5",
+    "@types/jest": "^29.2.4",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
+    "documentation": "^14.0.1",
+    "eslint": "^8.30.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^29.3.1",
-    "prettier": "^2.5.0",
+    "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
     "standard-changelog": "^2.0.27",
     "ts-jest": "^29.0.3",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.4"
   },
   "keywords": [
     "vcf",
