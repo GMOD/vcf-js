@@ -30,7 +30,7 @@
     "docs": "documentation readme src/parse.ts --section=API  --shallow",
     "postdocs": "prettier --write README.md",
     "clean": "rimraf dist esm",
-    "build:esm": "tsc --outDir esm",
+    "build:esm": "tsc --module esnext --outDir esm",
     "build:es5": "tsc --module commonjs --outDir dist",
     "build": "npm run build:esm && npm run build:es5",
     "prebuild": "npm run clean && npm run lint",

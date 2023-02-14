@@ -13,7 +13,7 @@ High performance Variant Call Format (VCF) parser in pure JavaScript.
 This module is best used when combined with some easy way of retrieving the
 header and individual lines from a VCF, like the `@gmod/tabix` module.
 
-```javascript
+```typescript
 import { TabixIndexedFile } from '@gmod/tabix'
 
 // with import
@@ -37,7 +37,7 @@ async function doStuff() {
 
 If you want to stream a VCF file, you can alternatively use something like this
 
-```javascript
+```typescript
 const fs = require('fs')
 const VCF = require('@gmod/vcf').default
 const { createGunzip } = require('zlib')
@@ -80,7 +80,7 @@ contigA	3000	rs17883296	G	T,A	100	PASS	NS=3;DP=14;AF=0.5;DB;XYZ=5	GT:AP	0|0:0.00
 
 The `variant` object returned by `parseLine()` would be
 
-```javascript
+```typescript
 {
   CHROM: 'contigA',
   POS: 3000,
@@ -105,7 +105,7 @@ the variant information and not the sample-specific information, especially if
 your VCF has a lot of samples in it. In the above case the `variant.SAMPLES`
 object would look like
 
-```javascript
+```typescript
 {
   HG00096: {
     GT: ['0|0'],
@@ -148,7 +148,7 @@ VCF with this header:
 
 you can access the VCF's header metadata like (some output omitted for clarity):
 
-```javascript
+```typescript
 > console.log(vcfParser.getMetadata())
 { INFO:
    { AA:
@@ -198,7 +198,7 @@ you can access the VCF's header metadata like (some output omitted for clarity):
 
 A list of sample names is also available in the `samples` attribute of the parser object:
 
-```javascript
+```typescript
 > console.log(vcfParser.samples)
 [ 'HG00096' ]
 ```
@@ -208,7 +208,7 @@ A list of sample names is also available in the `samples` attribute of the parse
 We offer a helper function to parse breakend strings. We used to parse these
 automatically but it is now a helper function
 
-```js
+```typescript
 import { parseBreakend } from '@gmod/vcf'
 parseBreakend('C[2:321682[')
 // output

@@ -2,9 +2,9 @@
   "include": ["src"],
   "compilerOptions": {
     "outDir": "dist",
-    "target": "esnext",
+    "lib": ["ES2019", "dom"],
+    "target": "ES2019",
     "types": ["jest"],
-    "lib": ["dom", "esnext"],
     "declaration": true,
     "moduleResolution": "node",
     "sourceMap": true,
