@@ -324,6 +324,7 @@ test('shortcut parsing with 1000 genomes', () => {
   expect(Object.keys(variants[0].SAMPLES).slice(0, 5)).toMatchSnapshot()
   expect(Object.keys(variants[0].SAMPLES).slice(-5)).toMatchSnapshot()
   const ret = variants.map(v => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { SAMPLES, ...rest } = v
     return rest
   })
