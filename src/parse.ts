@@ -1,10 +1,15 @@
 import vcfReserved from './vcfReserved'
 
 class Variant {
-  #fields8: any
-  #rest: any
-  #parser: any
-  constructor(stuff: any, fields8: any, rest: any, parser: any) {
+  #fields8: string
+  #rest: string
+  #parser: VCF
+  constructor(
+    stuff: Record<string, unknown>,
+    fields8: string,
+    rest: string,
+    parser: VCF,
+  ) {
     Object.assign(this, stuff)
     this.#fields8 = fields8
     this.#rest = rest
@@ -12,7 +17,6 @@ class Variant {
   }
 
   get SAMPLES() {
-    //@ts-ignore
     return this.#parser._parseGenotypes(this.#fields8, this.#rest)
   }
 }
@@ -34,8 +38,7 @@ function decodeURIComponentNoThrow(uri: string) {
  * @param {boolean} args.strict - Whether to parse in strict mode or not (default true)
  */
 export default class VCF {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private metadata: Record<string, any>
+  private metadata: Record<string, unknown>
   public strict: boolean
   public samples: string[]
 
@@ -103,18 +106,17 @@ export default class VCF {
 
   _parseGenotypes(format: string | undefined, prerest: string) {
     const rest = prerest.split('\t')
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const genotypes = {} as any
+    const genotypes = {} as Record<string, unknown>
     const formatKeys = format?.split(':')
     if (formatKeys) {
       this.samples.forEach((sample, index) => {
-        genotypes[sample] = {}
-        formatKeys.forEach(key => {
-          genotypes[sample][key] = null
-        })
+        const genotypeSample = {} as Record<string, unknown>
+        formatKeys.forEach(key => (genotypeSample[key] = null))
+        genotypes[sample] = genotypeSample
+
         rest[index]
           .split(':')
-          .filter(f => f)
+          .filter(f => !!f)
           .forEach((val, index) => {
             let thisValue: unknown
             if (val === '' || val === '.' || val === undefined) {
@@ -136,8 +138,8 @@ export default class VCF {
               }
             }
 
-            genotypes[sample][formatKeys[index]] = thisValue
-          }, {})
+            genotypeSample[formatKeys[index]] = thisValue
+          })
       })
     }
     return genotypes
@@ -161,6 +163,7 @@ export default class VCF {
         this.metadata[metaKey] = {}
       }
       const [id, keyVals] = this._parseStructuredMetaVal(metaVal)
+      // @ts-expect-error
       this.metadata[metaKey][id] = keyVals
     } else {
       this.metadata[metaKey] = metaVal
@@ -184,8 +187,7 @@ export default class VCF {
         keyVals.Number = Number(keyVals.Number)
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return [id, keyVals] as [string, any]
+    return [id, keyVals] as const
   }
 
   /**
@@ -196,16 +198,9 @@ export default class VCF {
    *
    * @returns An object, string, or number, depending on the filtering
    */
-  getMetadata(...args: string[]) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let filteredMetadata = this.metadata as any
-    for (let i = 0; i < args.length; i += 1) {
-      filteredMetadata = filteredMetadata[args[i]]
-      if (!filteredMetadata) {
-        return filteredMetadata
-      }
-    }
-    return filteredMetadata
+  getMetadata(...args: string[]): unknown {
+    // @ts-expect-error
+    return args.reduce((prev, curr) => prev?.[curr], this.metadata)
   }
 
   /**
