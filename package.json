@@ -2,8 +2,12 @@
   "name": "@gmod/vcf",
   "version": "5.0.10",
   "description": "High performance streaming Variant Call Format (VCF) parser in pure JavaScript",
-  "main": "dist/index.js",
-  "module": "esm/index.js",
+  "exports": {
+    ".": {
+      "require": "dist/index.js",
+      "import": "esm/index.js"
+    }
+  },
   "repository": "github:GMOD/vcf-js",
   "author": {
     "name": "Garrett Stevens",
