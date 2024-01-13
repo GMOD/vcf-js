@@ -15,8 +15,7 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
     let Join
     let Replacement
     let MatePosition
-    for (let i = 0; i < tokens.length; i += 1) {
-      const tok = tokens[i]
+    for (const tok of tokens) {
       if (tok) {
         if (tok.includes(':')) {
           // this is the remote location
@@ -45,7 +44,7 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
         SingleBreakend: true,
         Replacement: breakendString.slice(0, breakendString.length - 1),
       }
-    } else if (breakendString[0] === '<') {
+    } else if (breakendString.startsWith('<')) {
       const res = breakendString.match('<(.*)>(.*)')
       if (!res) {
         throw new Error(`failed to parse ${breakendString}`)

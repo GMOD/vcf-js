@@ -33,7 +33,7 @@ export default class VCF {
     header: string
     strict?: boolean
   }) {
-    if (!header || !header.length) {
+    if (!header?.length) {
       throw new Error('empty header received')
     }
     const headerLines = header.split(/[\r\n]+/).filter(line => line)
@@ -183,8 +183,8 @@ export default class VCF {
    */
   getMetadata(...args: string[]) {
     let filteredMetadata: any = this.metadata
-    for (let i = 0; i < args.length; i += 1) {
-      filteredMetadata = filteredMetadata[args[i]]
+    for (const arg of args) {
+      filteredMetadata = filteredMetadata[arg]
       if (!filteredMetadata) {
         return filteredMetadata
       }
@@ -211,33 +211,33 @@ export default class VCF {
     let currKey = ''
     let currValue = ''
     let state = 1 // states: 1: read key to = or pair sep, 2: read value to sep or quote, 3: read value to quote
-    for (let i = 0; i < str.length; i += 1) {
+    for (const s of str) {
       if (state === 1) {
         // read key to = or pair sep
-        if (str[i] === '=') {
+        if (s === '=') {
           state = 2
-        } else if (str[i] !== pairSeparator) {
-          currKey += str[i]
+        } else if (s !== pairSeparator) {
+          currKey += s
         } else if (currValue === '') {
           data[currKey] = null
           currKey = ''
         }
       } else if (state === 2) {
         // read value to pair sep or quote
-        if (str[i] === pairSeparator) {
+        if (s === pairSeparator) {
           data[currKey] = currValue
           currKey = ''
           currValue = ''
           state = 1
-        } else if (str[i] === '"') {
+        } else if (s === '"') {
           state = 3
         } else {
-          currValue += str[i]
+          currValue += s
         }
       } else if (state === 3) {
         // read value to quote
-        if (str[i] !== '"') {
-          currValue += str[i]
+        if (s !== '"') {
+          currValue += s
         } else {
           state = 2
         }
@@ -258,7 +258,6 @@ export default class VCF {
    * CRLF newlines.
    */
   parseLine(line: string) {
-    // eslint-disable-next-line no-param-reassign
     line = line.trim()
     if (!line.length) {
       return undefined
@@ -320,7 +319,6 @@ export default class VCF {
           })
         } else if (itemType === 'Flag') {
           if (info[key]) {
-            // eslint-disable-next-line no-console
             console.warn(
               `Info field ${key} is a Flag and should not have a value (got value ${info[key]})`,
             )
