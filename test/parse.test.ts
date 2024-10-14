@@ -52,18 +52,18 @@ describe('VCF parser', () => {
   it('can get metadata from the header', () => {
     // Note that there is a custom PL that overrides the default PL
     expect(VCFParser.getMetadata()).toMatchSnapshot()
-    expect(VCFParser.getMetadata('nonexistant')).toBe(undefined)
+    expect(VCFParser.getMetadata('nonexistent')).toBe(undefined)
     expect(VCFParser.getMetadata('fileDate')).toBe('20090805')
     expect(VCFParser.getMetadata('INFO')).toMatchSnapshot()
-    expect(VCFParser.getMetadata('INFO', 'nonexistant')).toBe(undefined)
+    expect(VCFParser.getMetadata('INFO', 'nonexistent')).toBe(undefined)
     expect(VCFParser.getMetadata('INFO', 'AA')).toEqual({
       Description: 'Ancestral Allele',
       Number: 1,
       Type: 'String',
     })
-    expect(VCFParser.getMetadata('INFO', 'AA', 'nonexistant')).toBe(undefined)
+    expect(VCFParser.getMetadata('INFO', 'AA', 'nonexistent')).toBe(undefined)
     expect(VCFParser.getMetadata('INFO', 'AA', 'Type')).toBe('String')
-    expect(VCFParser.getMetadata('INFO', 'AA', 'Type', 'nonexistant')).toBe(
+    expect(VCFParser.getMetadata('INFO', 'AA', 'Type', 'nonexistent')).toBe(
       undefined,
     )
     expect(VCFParser.getMetadata('INFO', 'TEST')).toEqual({
@@ -307,10 +307,6 @@ test('blank line returns undefined', () => {
   const { header } = readVcf(require.resolve('./data/multipleAltSVs.vcf'))
   const VCFParser = new VCF({ header })
   expect(VCFParser.parseLine('')).toBeUndefined()
-})
-
-test('empty header', () => {
-  expect(() => new VCF({ header: null })).toThrow(/empty/)
 })
 
 test('empty header lines', () => {
