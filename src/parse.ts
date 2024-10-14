@@ -8,7 +8,7 @@ function Variant(stuff: any) {
 function decodeURIComponentNoThrow(uri: string) {
   try {
     return decodeURIComponent(uri)
-  } catch (e) {
+  } catch (_e) {
     // avoid throwing exception on a failure to decode URI component
     return uri
   }
@@ -33,7 +33,7 @@ export default class VCF {
     header: string
     strict?: boolean
   }) {
-    if (!header?.length) {
+    if (!header.length) {
       throw new Error('empty header received')
     }
     const headerLines = header.split(/[\r\n]+/).filter(line => line)
@@ -98,12 +98,11 @@ export default class VCF {
         formatKeys.forEach(key => {
           genotypes[sample][key] = null
         })
-        rest[index]
-          .split(':')
+        rest[index]!.split(':')
           .filter(f => f)
           .forEach((val, index) => {
             let thisValue: unknown
-            if (val === '' || val === '.' || val === undefined) {
+            if (val === '' || val === '.') {
               thisValue = null
             } else {
               const entries = val
@@ -112,7 +111,7 @@ export default class VCF {
 
               const valueType = this.getMetadata(
                 'FORMAT',
-                formatKeys[index],
+                formatKeys[index]!,
                 'Type',
               )
               if (valueType === 'Integer' || valueType === 'Float') {
@@ -122,7 +121,7 @@ export default class VCF {
               }
             }
 
-            genotypes[sample][formatKeys[index]] = thisValue
+            genotypes[sample][formatKeys[index]!] = thisValue
           }, {})
       })
     }
@@ -136,20 +135,21 @@ export default class VCF {
    * newlines.
    */
   _parseMetadata(line: string) {
-    const match = line.trim().match(/^##(.+?)=(.*)/)
+    const match = /^##(.+?)=(.*)/.exec(line.trim())
     if (!match) {
       throw new Error(`Line is not a valid metadata line: ${line}`)
     }
     const [metaKey, metaVal] = match.slice(1, 3)
 
-    if (metaVal.startsWith('<')) {
-      if (!(metaKey in this.metadata)) {
-        this.metadata[metaKey] = {}
+    const r = metaKey!
+    if (metaVal?.startsWith('<')) {
+      if (!(r in this.metadata)) {
+        this.metadata[metaKey!] = {}
       }
       const [id, keyVals] = this._parseStructuredMetaVal(metaVal)
-      this.metadata[metaKey][id] = keyVals
+      this.metadata[r][id] = keyVals
     } else {
-      this.metadata[metaKey] = metaVal
+      this.metadata[r] = metaVal
     }
   }
 
@@ -276,16 +276,16 @@ export default class VCF {
         break
       }
     }
-    const fields = line.substr(0, currChar).split('\t')
-    const rest = line.substr(currChar + 1)
+    const fields = line.slice(0, currChar).split('\t')
+    const rest = line.slice(currChar + 1)
     const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
     const chrom = CHROM
-    const pos = +POS
-    const id = ID === '.' ? null : ID.split(';')
+    const pos = +POS!
+    const id = ID === '.' ? null : ID!.split(';')
     const ref = REF
-    const alt = ALT === '.' ? null : ALT.split(',')
-    const qual = QUAL === '.' ? null : +QUAL
-    const filter = FILTER === '.' ? null : FILTER.split(';')
+    const alt = ALT === '.' ? null : ALT!.split(',')
+    const qual = QUAL === '.' ? null : +QUAL!
+    const filter = FILTER === '.' ? null : FILTER!.split(';')
 
     if (this.strict && fields[7] === undefined) {
       throw new Error(
@@ -311,7 +311,7 @@ export default class VCF {
       const itemType = this.getMetadata('INFO', key, 'Type')
       if (itemType) {
         if (itemType === 'Integer' || itemType === 'Float') {
-          items = items.map((val: string) => {
+          items = items.map((val: string | null) => {
             if (val === null) {
               return null
             }

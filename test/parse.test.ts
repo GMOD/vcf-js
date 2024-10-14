@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { beforeAll, test, describe, it, expect } from 'vitest'
 import fs from 'fs'
 import VCF, { parseBreakend } from '../src'
 
