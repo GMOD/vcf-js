@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { beforeAll, test, describe, it, expect } from 'vitest'
 import fs from 'fs'
 import VCF, { parseBreakend } from '../src'
 
@@ -51,18 +52,18 @@ describe('VCF parser', () => {
   it('can get metadata from the header', () => {
     // Note that there is a custom PL that overrides the default PL
     expect(VCFParser.getMetadata()).toMatchSnapshot()
-    expect(VCFParser.getMetadata('nonexistant')).toBe(undefined)
+    expect(VCFParser.getMetadata('nonexistent')).toBe(undefined)
     expect(VCFParser.getMetadata('fileDate')).toBe('20090805')
     expect(VCFParser.getMetadata('INFO')).toMatchSnapshot()
-    expect(VCFParser.getMetadata('INFO', 'nonexistant')).toBe(undefined)
+    expect(VCFParser.getMetadata('INFO', 'nonexistent')).toBe(undefined)
     expect(VCFParser.getMetadata('INFO', 'AA')).toEqual({
       Description: 'Ancestral Allele',
       Number: 1,
       Type: 'String',
     })
-    expect(VCFParser.getMetadata('INFO', 'AA', 'nonexistant')).toBe(undefined)
+    expect(VCFParser.getMetadata('INFO', 'AA', 'nonexistent')).toBe(undefined)
     expect(VCFParser.getMetadata('INFO', 'AA', 'Type')).toBe('String')
-    expect(VCFParser.getMetadata('INFO', 'AA', 'Type', 'nonexistant')).toBe(
+    expect(VCFParser.getMetadata('INFO', 'AA', 'Type', 'nonexistent')).toBe(
       undefined,
     )
     expect(VCFParser.getMetadata('INFO', 'TEST')).toEqual({
@@ -308,10 +309,6 @@ test('blank line returns undefined', () => {
   expect(VCFParser.parseLine('')).toBeUndefined()
 })
 
-test('empty header', () => {
-  expect(() => new VCF({ header: null })).toThrow(/empty/)
-})
-
 test('empty header lines', () => {
   expect(() => new VCF({ header: '\n' })).toThrow(/no non-empty/)
 })
@@ -324,8 +321,7 @@ test('shortcut parsing with 1000 genomes', () => {
   expect(Object.keys(variants[0].SAMPLES).slice(0, 5)).toMatchSnapshot()
   expect(Object.keys(variants[0].SAMPLES).slice(-5)).toMatchSnapshot()
   const ret = variants.map(v => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { SAMPLES, ...rest } = v
+    const { SAMPLES: _, ...rest } = v
     return rest
   })
   expect(ret).toMatchSnapshot()

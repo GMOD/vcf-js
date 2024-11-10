@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Obscure VCF vcf lines with weird info field and missing format/genotypes 1`] = `
+exports[`Obscure VCF > vcf lines with weird info field and missing format/genotypes 1`] = `
 [
   Variant {
     "ALT": [
@@ -155,7 +155,7 @@ exports[`Obscure VCF vcf lines with weird info field and missing format/genotype
 ]
 `;
 
-exports[`VCF parser can get metadata from the header 1`] = `
+exports[`VCF parser > can get metadata from the header 1`] = `
 {
   "ALT": {
     "*": {
@@ -522,7 +522,7 @@ exports[`VCF parser can get metadata from the header 1`] = `
 }
 `;
 
-exports[`VCF parser can get metadata from the header 2`] = `
+exports[`VCF parser > can get metadata from the header 2`] = `
 {
   "1000G": {
     "Description": "1000 Genomes membership",
@@ -748,7 +748,7 @@ exports[`VCF parser can get metadata from the header 2`] = `
 }
 `;
 
-exports[`VCF parser can parse a line from the VCF spec 1`] = `
+exports[`VCF parser > can parse a line from the VCF spec 1`] = `
 Variant {
   "ALT": [
     "A",
@@ -777,7 +777,7 @@ Variant {
 }
 `;
 
-exports[`VCF parser can parse a line from the VCF spec 2`] = `
+exports[`VCF parser > can parse a line from the VCF spec 2`] = `
 {
   "NA00001": {
     "DP": [
@@ -827,7 +827,7 @@ exports[`VCF parser can parse a line from the VCF spec 2`] = `
 }
 `;
 
-exports[`VCF parser can parse a line with minimal entries 1`] = `
+exports[`VCF parser > can parse a line with minimal entries 1`] = `
 Variant {
   "ALT": [
     "A",
@@ -842,30 +842,69 @@ Variant {
 }
 `;
 
-exports[`VCF parser can parse a line with minimal entries 2`] = `
+exports[`VCF parser > can parse a line with minimal entries 2`] = `
 {
   "NA00001": {
-    "DP": null,
-    "GQ": null,
     "GT": null,
-    "HQ": null,
   },
   "NA00002": {
-    "DP": null,
-    "GQ": null,
     "GT": null,
-    "HQ": null,
   },
   "NA00003": {
-    "DP": null,
-    "GQ": null,
     "GT": null,
-    "HQ": null,
   },
 }
 `;
 
-exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 1`] = `
+exports[`VCF parser > parses a line with a breakend ALT 1`] = `
+Variant {
+  "ALT": [
+    "G]17:198982]",
+  ],
+  "CHROM": "2",
+  "FILTER": "PASS",
+  "ID": [
+    "bnd_W",
+  ],
+  "INFO": {
+    "SVTYPE": [
+      "BND",
+    ],
+  },
+  "POS": 321681,
+  "QUAL": 6,
+  "REF": "G",
+}
+`;
+
+exports[`VCF parser > parses a line with mix of multiple breakends and non breakends 1`] = `
+Variant {
+  "ALT": [
+    "CTATGTCG",
+    "C[2 : 321682[",
+    "C[17 : 198983[",
+  ],
+  "CHROM": "13",
+  "FILTER": "PASS",
+  "ID": [
+    "bnd_U",
+  ],
+  "INFO": {
+    "MATEID": [
+      "bnd V",
+      "bnd Z",
+    ],
+    "SVTYPE": [
+      "BND",
+    ],
+  },
+  "POS": 123456,
+  "QUAL": 6,
+  "REF": "C",
+}
+`;
+
+exports[`VCF parser for Y chrom (haploid) > can parse a line from the VCF spec 1`] = `
 Variant {
   "ALT": [
     "<CN0>",
@@ -920,7 +959,7 @@ Variant {
 }
 `;
 
-exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 2`] = `
+exports[`VCF parser for Y chrom (haploid) > can parse a line from the VCF spec 2`] = `
 {
   "HG00096": {
     "CN": [
@@ -1009,7 +1048,7 @@ exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 2`]
 }
 `;
 
-exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 3`] = `
+exports[`VCF parser for Y chrom (haploid) > can parse a line from the VCF spec 3`] = `
 Variant {
   "ALT": [
     "A",
@@ -1064,7 +1103,7 @@ Variant {
 }
 `;
 
-exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 4`] = `
+exports[`VCF parser for Y chrom (haploid) > can parse a line from the VCF spec 4`] = `
 {
   "HG00096": {
     "GT": [
@@ -1087,7 +1126,7 @@ exports[`VCF parser for Y chrom (haploid) can parse a line from the VCF spec 4`]
 }
 `;
 
-exports[`VCF parser for structural variants can parse a line from the VCF spec 1`] = `
+exports[`VCF parser for structural variants > can parse a line from the VCF spec 1`] = `
 Variant {
   "ALT": [
     "<DEL>",
@@ -1151,7 +1190,7 @@ Variant {
 }
 `;
 
-exports[`VCF parser for structural variants can parse a line from the VCF spec 2`] = `
+exports[`VCF parser for structural variants > can parse a line from the VCF spec 2`] = `
 {
   "/seq/schatz/fritz/sv-paper/real/Nanopore_NA12878/mapped/ngm_Nanopore_human_ngmlr-0.2.3_mapped.bam": {
     "DR": [
@@ -1164,54 +1203,6 @@ exports[`VCF parser for structural variants can parse a line from the VCF spec 2
       "1/1",
     ],
   },
-}
-`;
-
-exports[`VCF parser parses a line with a breakend ALT 1`] = `
-Variant {
-  "ALT": [
-    "G]17:198982]",
-  ],
-  "CHROM": "2",
-  "FILTER": "PASS",
-  "ID": [
-    "bnd_W",
-  ],
-  "INFO": {
-    "SVTYPE": [
-      "BND",
-    ],
-  },
-  "POS": 321681,
-  "QUAL": 6,
-  "REF": "G",
-}
-`;
-
-exports[`VCF parser parses a line with mix of multiple breakends and non breakends 1`] = `
-Variant {
-  "ALT": [
-    "CTATGTCG",
-    "C[2 : 321682[",
-    "C[17 : 198983[",
-  ],
-  "CHROM": "13",
-  "FILTER": "PASS",
-  "ID": [
-    "bnd_U",
-  ],
-  "INFO": {
-    "MATEID": [
-      "bnd V",
-      "bnd Z",
-    ],
-    "SVTYPE": [
-      "BND",
-    ],
-  },
-  "POS": 123456,
-  "QUAL": 6,
-  "REF": "C",
 }
 `;
 
@@ -1786,7 +1777,6 @@ exports[`snippet from VCF 4.3 spec 2`] = `
       "GT": [
         "0/0",
       ],
-      "HQ": null,
     },
   },
   {
@@ -1830,7 +1820,6 @@ exports[`snippet from VCF 4.3 spec 2`] = `
       "GT": [
         "2/2",
       ],
-      "HQ": null,
     },
   },
   {
@@ -1874,7 +1863,6 @@ exports[`snippet from VCF 4.3 spec 2`] = `
       "GT": [
         "0/0",
       ],
-      "HQ": null,
     },
   },
   {

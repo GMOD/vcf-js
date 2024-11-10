@@ -24,7 +24,7 @@ class Variant {
 function decodeURIComponentNoThrow(uri: string) {
   try {
     return decodeURIComponent(uri)
-  } catch (e) {
+  } catch (_e) {
     // avoid throwing exception on a failure to decode URI component
     return uri
   }
@@ -49,7 +49,7 @@ export default class VCF {
     header: string
     strict?: boolean
   }) {
-    if (!header || !header.length) {
+    if (!header.length) {
       throw new Error('empty header received')
     }
     const headerLines = header.split(/[\r\n]+/).filter(line => line)
@@ -106,20 +106,16 @@ export default class VCF {
 
   _parseGenotypes(format: string | undefined, prerest: string) {
     const rest = prerest.split('\t')
-    const genotypes = {} as Record<string, unknown>
+    const genotypes = {} as Record<string, Record<string, unknown>>
     const formatKeys = format?.split(':')
     if (formatKeys) {
       this.samples.forEach((sample, index) => {
-        const genotypeSample = {} as Record<string, unknown>
-        formatKeys.forEach(key => (genotypeSample[key] = null))
-        genotypes[sample] = genotypeSample
-
-        rest[index]
-          .split(':')
-          .filter(f => !!f)
+        genotypes[sample] = {}
+        rest[index]!.split(':')
+          .filter(f => f)
           .forEach((val, index) => {
             let thisValue: unknown
-            if (val === '' || val === '.' || val === undefined) {
+            if (val === '' || val === '.') {
               thisValue = null
             } else {
               const entries = val
@@ -128,7 +124,7 @@ export default class VCF {
 
               const valueType = this.getMetadata(
                 'FORMAT',
-                formatKeys[index],
+                formatKeys[index]!,
                 'Type',
               )
               if (valueType === 'Integer' || valueType === 'Float') {
@@ -138,8 +134,8 @@ export default class VCF {
               }
             }
 
-            genotypeSample[formatKeys[index]] = thisValue
-          })
+            genotypes[sample]![formatKeys[index]!] = thisValue
+          }, {})
       })
     }
     return genotypes
@@ -152,30 +148,31 @@ export default class VCF {
    * newlines.
    */
   _parseMetadata(line: string) {
-    const match = line.trim().match(/^##(.+?)=(.*)/)
+    const match = /^##(.+?)=(.*)/.exec(line.trim())
     if (!match) {
       throw new Error(`Line is not a valid metadata line: ${line}`)
     }
     const [metaKey, metaVal] = match.slice(1, 3)
 
-    if (metaVal.startsWith('<')) {
-      if (!(metaKey in this.metadata)) {
-        this.metadata[metaKey] = {}
+    const r = metaKey!
+    if (metaVal?.startsWith('<')) {
+      if (!(r in this.metadata)) {
+        this.metadata[r] = {} as Record<string, unknown>
       }
       const [id, keyVals] = this._parseStructuredMetaVal(metaVal)
       // @ts-expect-error
-      this.metadata[metaKey][id] = keyVals
+      this.metadata[r]![id] = keyVals
     } else {
-      this.metadata[metaKey] = metaVal
+      this.metadata[r] = metaVal
     }
   }
 
   /**
    * Parse a VCF header structured meta string (i.e. a meta value that starts
    * with "<ID=...")
-   * @param metaVal - The VCF metadata value
+   * @param {string} metaVal - The VCF metadata value
    *
-   * @returns - Array with two entries, 1) a string of the metadata ID
+   * @returns {Array} - Array with two entries, 1) a string of the metadata ID
    * and 2) an object with the other key-value pairs in the metadata
    */
   _parseStructuredMetaVal(metaVal: string) {
@@ -187,20 +184,26 @@ export default class VCF {
         keyVals.Number = Number(keyVals.Number)
       }
     }
-    return [id, keyVals] as const
+    return [id as string, keyVals] as const
   }
 
   /**
    * Get metadata filtered by the elements in args. For example, can pass
    * ('INFO', 'DP') to only get info on an metadata tag that was like
    * "##INFO=<ID=DP,...>"
-   * @param  args - List of metadata filter strings.
+   * @param  {...string} args - List of metadata filter strings.
    *
-   * @returns An object, string, or number, depending on the filtering
+   * @returns {any} An object, string, or number, depending on the filtering
    */
-  getMetadata(...args: string[]): unknown {
-    // @ts-expect-error
-    return args.reduce((prev, curr) => prev?.[curr], this.metadata)
+  getMetadata(...args: string[]) {
+    let filteredMetadata: any = this.metadata
+    for (const arg of args) {
+      filteredMetadata = filteredMetadata[arg]
+      if (!filteredMetadata) {
+        return filteredMetadata
+      }
+    }
+    return filteredMetadata
   }
 
   /**
@@ -211,11 +214,11 @@ export default class VCF {
    * Parse this at a low level since we can't just split at "," (or whatever
    * separator). Above line would be parsed to:
    * {ID: 'DB', Number: '0', Type: 'Flag', Description: 'dbSNP membership, build 129'}
-   * @param str - Key-value pairs in a string
-   * @param [pairSeparator] - A string that separates sets of key-value
+   * @param {string} str - Key-value pairs in a string
+   * @param {string} [pairSeparator] - A string that separates sets of key-value
    * pairs
    *
-   * @returns An object containing the key-value pairs
+   * @returns {object} An object containing the key-value pairs
    */
   _parseKeyValue(str: string, pairSeparator = ';') {
     const data = {} as Record<string, unknown>
@@ -227,33 +230,33 @@ export default class VCF {
     // 2: read value to sep or quote
     // 3: read value to quote
     let state = 1
-    for (let i = 0; i < str.length; i += 1) {
+    for (const s of str) {
       if (state === 1) {
         // read key to = or pair sep
-        if (str[i] === '=') {
+        if (s === '=') {
           state = 2
-        } else if (str[i] !== pairSeparator) {
-          currKey += str[i]
+        } else if (s !== pairSeparator) {
+          currKey += s
         } else if (currValue === '') {
           data[currKey] = null
           currKey = ''
         }
       } else if (state === 2) {
         // read value to pair sep or quote
-        if (str[i] === pairSeparator) {
+        if (s === pairSeparator) {
           data[currKey] = currValue
           currKey = ''
           currValue = ''
           state = 1
-        } else if (str[i] === '"') {
+        } else if (s === '"') {
           state = 3
         } else {
-          currValue += str[i]
+          currValue += s
         }
       } else if (state === 3) {
         // read value to quote
-        if (str[i] !== '"') {
-          currValue += str[i]
+        if (s !== '"') {
+          currValue += s
         } else {
           state = 2
         }
@@ -270,7 +273,7 @@ export default class VCF {
   /**
    * Parse a VCF line into an object like { CHROM POS ID REF ALT QUAL FILTER
    * INFO } with SAMPLES optionally included if present in the VCF
-   * @param {string} l - A string of a line from a VCF. Supports both LF and
+   * @param {string} line - A string of a line from a VCF. Supports both LF and
    * CRLF newlines.
    */
   parseLine(l: string) {
@@ -295,12 +298,12 @@ export default class VCF {
     const rest = line.slice(currChar + 1)
     const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
     const chrom = CHROM
-    const pos = +POS
-    const id = ID === '.' ? null : ID.split(';')
+    const pos = +POS!
+    const id = ID === '.' ? null : ID!.split(';')
     const ref = REF
-    const alt = ALT === '.' ? null : ALT.split(',')
-    const qual = QUAL === '.' ? null : +QUAL
-    const filter = FILTER === '.' ? null : FILTER.split(';')
+    const alt = ALT === '.' ? null : ALT!.split(',')
+    const qual = QUAL === '.' ? null : +QUAL!
+    const filter = FILTER === '.' ? null : FILTER!.split(';')
 
     if (this.strict && fields[7] === undefined) {
       throw new Error(
@@ -326,7 +329,7 @@ export default class VCF {
       const itemType = this.getMetadata('INFO', key, 'Type')
       if (itemType) {
         if (itemType === 'Integer' || itemType === 'Float') {
-          items = (items as string[]).map((val: string) =>
+          items = (items as (string | null)[]).map(val =>
             val === null ? null : Number(val),
           )
         } else if (itemType === 'Flag') {
@@ -353,7 +356,7 @@ export default class VCF {
         ID: id,
         QUAL: qual,
       },
-      fields[8],
+      fields[8]!,
       rest,
       parser,
     )
