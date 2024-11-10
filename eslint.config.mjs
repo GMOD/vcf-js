@@ -1,43 +1,23 @@
-import typescriptEslint from '@typescript-eslint/eslint-plugin'
-import prettier from 'eslint-plugin-prettier'
-import tsParser from '@typescript-eslint/parser'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import js from '@eslint/js'
-import { FlatCompat } from '@eslint/eslintrc'
+import eslint from '@eslint/js'
+import tseslint from 'typescript-eslint'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-})
-
-export default [
-  ...compat.extends(
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-type-checked',
-    'plugin:@typescript-eslint/stylistic-type-checked',
-    'prettier',
-  ),
+export default tseslint.config(
   {
-    plugins: {
-      '@typescript-eslint': typescriptEslint,
-      prettier,
-    },
-
+    ignores: ['esm/**/*', 'dist/**/*', '*.js', '*.mjs', 'example/*'],
+  },
+  {
     languageOptions: {
-      parser: tsParser,
-      ecmaVersion: 5,
-      sourceType: 'script',
-
       parserOptions: {
-        project: './tsconfig.lint.json',
+        project: ['./tsconfig.lint.json'],
+        tsconfigRootDir: import.meta.dirname,
       },
     },
-
+  },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
+  ...tseslint.configs.stylisticTypeChecked,
+  ...tseslint.configs.strictTypeChecked,
+  {
     rules: {
       curly: 'error',
 
@@ -45,6 +25,7 @@ export default [
         'warn',
         {
           argsIgnorePattern: '^_',
+          caughtErrors: 'none',
           ignoreRestSiblings: true,
         },
       ],
@@ -57,8 +38,8 @@ export default [
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
-      'prettier/prettier': 'error',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/restrict-template-expressions': 'off',
     },
   },
-]
-
+)
