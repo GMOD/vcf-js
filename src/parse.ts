@@ -20,7 +20,7 @@ function decodeURIComponentNoThrow(uri: string) {
  * @param {boolean} args.strict - Whether to parse in strict mode or not
  * (default true)
  */
-export default class VCF {
+export default class VCFParser {
   private metadata: Record<string, any>
   public strict: boolean
   public samples: string[]
@@ -88,10 +88,9 @@ export default class VCF {
   }
 
   private parseSamples(format: string, prerest: string) {
-    console.log('wtf1')
     const genotypes = {} as Record<
       string,
-      Record<string, (string | number | null)[] | null>
+      Record<string, (string | number | undefined)[] | undefined>
     >
     if (format) {
       const rest = prerest.split('\t')
@@ -108,11 +107,11 @@ export default class VCF {
           const val = columns[j]!
           genotypes[sample][formatKeys[j]!] =
             val === '' || val === '.'
-              ? null
+              ? undefined
               : val
                   .split(',')
                   .map(ent =>
-                    ent === '.' ? null : isNumberType[j] ? +ent : ent,
+                    ent === '.' ? undefined : isNumberType[j] ? +ent : ent,
                   )
         }
       }
@@ -121,7 +120,6 @@ export default class VCF {
   }
 
   private parseGenotypesOnly(format: string, prerest: string) {
-    console.log('wtf2')
     const rest = prerest.split('\t')
     const genotypes = {} as Record<string, string>
     let i = 0
@@ -247,7 +245,7 @@ export default class VCF {
         } else if (s !== pairSeparator) {
           currKey += s
         } else if (currValue === '') {
-          data[currKey] = null
+          data[currKey] = undefined
           currKey = ''
         }
       } else if (state === 2) {
@@ -274,7 +272,7 @@ export default class VCF {
     if (state === 2 || state === 3) {
       data[currKey] = currValue
     } else if (state === 1) {
-      data[currKey] = null
+      data[currKey] = undefined
     }
     return data
   }
@@ -287,11 +285,6 @@ export default class VCF {
    * CRLF newlines.
    */
   parseLine(line: string) {
-    line = line.trim()
-    if (!line.length) {
-      return undefined
-    }
-
     let currChar = 0
     for (let currField = 0; currChar < line.length; currChar += 1) {
       if (line[currChar] === '\t') {
@@ -307,13 +300,13 @@ export default class VCF {
     const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
     const chrom = CHROM
     const pos = +POS!
-    const id = ID === '.' ? null : ID!.split(';')
+    const id = ID === '.' ? undefined : ID!.split(';')
     const ref = REF
-    const alt = ALT === '.' ? null : ALT!.split(',')
-    const qual = QUAL === '.' ? null : +QUAL!
-    const filter = FILTER === '.' ? null : FILTER!.split(';')
+    const alt = ALT === '.' ? undefined : ALT!.split(',')
+    const qual = QUAL === '.' ? undefined : +QUAL!
+    const filter = FILTER === '.' ? undefined : FILTER!.split(';')
 
-    if (this.strict && fields[7] === undefined) {
+    if (this.strict && !fields[7]) {
       throw new Error(
         "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
       )
@@ -328,7 +321,7 @@ export default class VCF {
       if (info[key]) {
         items = (info[key] as string)
           .split(',')
-          .map(val => (val === '.' ? null : val))
+          .map(val => (val === '.' ? undefined : val))
           .map(f => (f ? decodeURIComponentNoThrow(f) : f))
       } else {
         // it will be falsy so just assign whatever is there
@@ -337,8 +330,8 @@ export default class VCF {
       const itemType = this.getMetadata('INFO', key, 'Type')
       if (itemType) {
         if (itemType === 'Integer' || itemType === 'Float') {
-          items = items.map((val: string | null) =>
-            val === null ? null : Number(val),
+          items = items.map((val: string | undefined) =>
+            val === undefined ? undefined : Number(val),
           )
         } else if (itemType === 'Flag') {
           if (info[key]) {
@@ -368,3 +361,5 @@ export default class VCF {
     }
   }
 }
+
+export type Variant = ReturnType<VCFParser['parseLine']>

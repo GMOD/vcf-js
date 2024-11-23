@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { beforeAll, test, describe, it, expect } from 'vitest'
+import { test, expect } from 'vitest'
 import fs from 'fs'
 import VCF, { parseBreakend } from '../src'
 
@@ -18,11 +18,9 @@ const readVcf = file => {
   return { header: header.join('\n'), lines: rest }
 }
 
-describe('VCF parser', () => {
-  let VCFParser
-  beforeAll(() => {
-    VCFParser = new VCF({
-      header: `##fileformat=VCFv4.3
+function makeParser() {
+  return new VCF({
+    header: `##fileformat=VCFv4.3
 ##fileDate=20090805
 ##source=myImputationProgramV3.1
 ##reference=file:///seq/references/1000GenomesPilot-NCBI36.fasta
@@ -46,102 +44,105 @@ describe('VCF parser', () => {
 ##FORMAT=<ID=TEST,Number=1,Type=String,Description="Used for testing">
 #CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tNA00001\tNA00002\tNA00003
 `,
-    })
   })
+}
 
-  it('can get metadata from the header', () => {
-    // Note that there is a custom PL that overrides the default PL
-    expect(VCFParser.getMetadata()).toMatchSnapshot()
-    expect(VCFParser.getMetadata('nonexistent')).toBe(undefined)
-    expect(VCFParser.getMetadata('fileDate')).toBe('20090805')
-    expect(VCFParser.getMetadata('INFO')).toMatchSnapshot()
-    expect(VCFParser.getMetadata('INFO', 'nonexistent')).toBe(undefined)
-    expect(VCFParser.getMetadata('INFO', 'AA')).toEqual({
-      Description: 'Ancestral Allele',
-      Number: 1,
-      Type: 'String',
-    })
-    expect(VCFParser.getMetadata('INFO', 'AA', 'nonexistent')).toBe(undefined)
-    expect(VCFParser.getMetadata('INFO', 'AA', 'Type')).toBe('String')
-    expect(VCFParser.getMetadata('INFO', 'AA', 'Type', 'nonexistent')).toBe(
-      undefined,
-    )
-    expect(VCFParser.getMetadata('INFO', 'TEST')).toEqual({
-      Description: 'Used for testing',
-      Number: 1,
-      Type: 'String',
-    })
+test('can get metadata from the header', () => {
+  const VCFParser = makeParser()
+  // Note that there is a custom PL that overrides the default PL
+  expect(VCFParser.getMetadata()).toMatchSnapshot()
+  expect(VCFParser.getMetadata('nonexistent')).toBe(undefined)
+  expect(VCFParser.getMetadata('fileDate')).toBe('20090805')
+  expect(VCFParser.getMetadata('INFO')).toMatchSnapshot()
+  expect(VCFParser.getMetadata('INFO', 'nonexistent')).toBe(undefined)
+  expect(VCFParser.getMetadata('INFO', 'AA')).toEqual({
+    Description: 'Ancestral Allele',
+    Number: 1,
+    Type: 'String',
   })
-
-  it('can get default metadata not in the header', () => {
-    const metadata = VCFParser.getMetadata()
-    expect(metadata.INFO.AC).toEqual({
-      Number: 'A',
-      Type: 'Integer',
-      Description:
-        'Allele count in genotypes, for each ALT allele, in the same order as listed',
-    })
-  })
-
-  it('can parse a line from the VCF spec', () => {
-    const variant = VCFParser.parseLine(
-      '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
-    )
-    expect(variant).toMatchSnapshot()
-    expect(variant.SAMPLES).toMatchSnapshot()
-  })
-
-  it('can parse a line with minimal entries', () => {
-    const variant = VCFParser.parseLine(
-      '20\t14370\t.\tG\tA\t.\t.\t.\tGT:GQ:DP:HQ\t.\t.\t.\n',
-    )
-    expect(variant).toMatchSnapshot()
-    expect(variant.SAMPLES).toMatchSnapshot()
-  })
-
-  it('parses a line with a breakend ALT', () => {
-    const variant = VCFParser.parseLine(
-      '2\t321681\tbnd_W\tG\tG]17:198982]\t6\tPASS\tSVTYPE=BND\n',
-    )
-    expect(variant.ALT.length).toBe(1)
-    expect(variant.INFO.SVTYPE).toEqual(['BND'])
-    expect(variant).toMatchSnapshot()
-  })
-
-  it(`parses a line with mix of multiple breakends and non breakends`, () => {
-    const variant = VCFParser.parseLine(
-      `13\t123456\tbnd_U\tC\tCTATGTCG,C[2 : 321682[,C[17 : 198983[\t6\tPASS\tSVTYPE=BND;MATEID=bnd V,bnd Z`,
-    )
-    expect(variant.ALT.length).toBe(3)
-    expect(variant.INFO.SVTYPE).toEqual(['BND'])
-    expect(variant).toMatchSnapshot()
-  })
-
-  it('throws errors with bad header lines', () => {
-    expect(() => {
-      new VCF({ header: 'notARealHeader' })
-    }).toThrow('Bad line in header')
-    expect(() => {
-      new VCF({
-        header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\n',
-      })
-    }).toThrow('VCF header missing columns')
-    expect(() => {
-      new VCF({
-        header: '#CHROM\tPS\tID\tRF\tALT\tQUAL\tFILTER\tINFO\n',
-      })
-    }).toThrow('VCF column headers not correct')
-    expect(() => {
-      new VCF({ header: '##this=badHeader\n' })
-    }).toThrow(/No format line/)
+  expect(VCFParser.getMetadata('INFO', 'AA', 'nonexistent')).toBe(undefined)
+  expect(VCFParser.getMetadata('INFO', 'AA', 'Type')).toBe('String')
+  expect(VCFParser.getMetadata('INFO', 'AA', 'Type', 'nonexistent')).toBe(
+    undefined,
+  )
+  expect(VCFParser.getMetadata('INFO', 'TEST')).toEqual({
+    Description: 'Used for testing',
+    Number: 1,
+    Type: 'String',
   })
 })
 
-describe('VCF parser for structural variants', () => {
-  let VCFParser
-  beforeAll(() => {
-    VCFParser = new VCF({
-      header: `##fileformat=VCFv4.2
+test('can get default metadata not in the header', () => {
+  const VCFParser = makeParser()
+  const metadata = VCFParser.getMetadata()
+  expect(metadata.INFO.AC).toEqual({
+    Number: 'A',
+    Type: 'Integer',
+    Description:
+      'Allele count in genotypes, for each ALT allele, in the same order as listed',
+  })
+})
+
+test('can parse a line from the VCF spec', () => {
+  const VCFParser = makeParser()
+  const variant = VCFParser.parseLine(
+    '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
+  )
+  expect(variant).toMatchSnapshot()
+  expect(variant.SAMPLES()).toMatchSnapshot()
+})
+
+test('can parse a line with minimal entries', () => {
+  const VCFParser = makeParser()
+  const variant = VCFParser.parseLine(
+    '20\t14370\t.\tG\tA\t.\t.\t.\tGT:GQ:DP:HQ\t.\t.\t.\n',
+  )
+  expect(variant).toMatchSnapshot()
+  expect(variant.SAMPLES()).toMatchSnapshot()
+})
+
+test('parses a line with a breakend ALT', () => {
+  const VCFParser = makeParser()
+  const variant = VCFParser.parseLine(
+    '2\t321681\tbnd_W\tG\tG]17:198982]\t6\tPASS\tSVTYPE=BND',
+  )
+  expect(variant.ALT.length).toBe(1)
+  expect(variant.INFO.SVTYPE).toEqual(['BND'])
+  expect(variant).toMatchSnapshot()
+})
+
+test(`parses a line with mix of multiple breakends and non breakends`, () => {
+  const VCFParser = makeParser()
+  const variant = VCFParser.parseLine(
+    `13\t123456\tbnd_U\tC\tCTATGTCG,C[2 : 321682[,C[17 : 198983[\t6\tPASS\tSVTYPE=BND;MATEID=bnd V,bnd Z`,
+  )
+  expect(variant.ALT.length).toBe(3)
+  expect(variant.INFO.SVTYPE).toEqual(['BND'])
+  expect(variant).toMatchSnapshot()
+})
+
+test('throws errors with bad header lines', () => {
+  expect(() => {
+    new VCF({ header: 'notARealHeader' })
+  }).toThrow('Bad line in header')
+  expect(() => {
+    new VCF({
+      header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\n',
+    })
+  }).toThrow('VCF header missing columns')
+  expect(() => {
+    new VCF({
+      header: '#CHROM\tPS\tID\tRF\tALT\tQUAL\tFILTER\tINFO\n',
+    })
+  }).toThrow('VCF column headers not correct')
+  expect(() => {
+    new VCF({ header: '##this=badHeader\n' })
+  }).toThrow(/No format line/)
+})
+
+test('can parse a line from the VCF spec', () => {
+  const VCFParser = new VCF({
+    header: `##fileformat=VCFv4.2
 ##source=Sniffles
 ##fileDate=20170420
 ##ALT=<ID=DEL,Description="Deletion">
@@ -163,23 +164,17 @@ describe('VCF parser for structural variants', () => {
 ##FORMAT=<ID=DR,Number=1,Type=Integer,Description="# high-quality reference reads">
 ##FORMAT=<ID=DV,Number=1,Type=Integer,Description="# high-quality variant reads">
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	/seq/schatz/fritz/sv-paper/real/Nanopore_NA12878/mapped/ngm_Nanopore_human_ngmlr-0.2.3_mapped.bam`,
-    })
   })
-
-  it('can parse a line from the VCF spec', () => {
-    const variant = VCFParser.parseLine(
-      '8\t17709115\t28329_0\tN\t<DEL>\t.\tPASS\tPRECISE;SVMETHOD=Snifflesv1.0.3;CHR2=8;END=17709148;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=20.524521;Kurtosis_quant_stop=3.925926;SVTYPE=DEL;SUPTYPE=AL;SVLEN=33;STRANDS=+-;STRANDS2=20,14,20,14;RE=34;AF=0.971429\tGT:DR:DV\t1/1:1:34',
-    )
-    expect(variant).toMatchSnapshot()
-    expect(variant.SAMPLES).toMatchSnapshot()
-  })
+  const variant = VCFParser.parseLine(
+    '8\t17709115\t28329_0\tN\t<DEL>\t.\tPASS\tPRECISE;SVMETHOD=Snifflesv1.0.3;CHR2=8;END=17709148;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=20.524521;Kurtosis_quant_stop=3.925926;SVTYPE=DEL;SUPTYPE=AL;SVLEN=33;STRANDS=+-;STRANDS2=20,14,20,14;RE=34;AF=0.971429\tGT:DR:DV\t1/1:1:34',
+  )
+  expect(variant).toMatchSnapshot()
+  expect(variant.SAMPLES()).toMatchSnapshot()
 })
 
-describe('VCF parser for Y chrom (haploid)', () => {
-  let VCFParser
-  beforeAll(() => {
-    VCFParser = new VCF({
-      header: `##fileformat=VCFv4.1
+test('can parse a line from the VCF spec Y chrom (haploid))', () => {
+  const VCFParser = new VCF({
+    header: `##fileformat=VCFv4.1
 ##FILTER=<ID=PASS,Description="All filters passed">
 ##fileDate=20150218
 ##reference=ftp://ftp.1000genomes.ebi.ac.uk//vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz
@@ -219,34 +214,27 @@ describe('VCF parser for Y chrom (haploid)', () => {
 ##INFO=<ID=EX_TARGET,Number=0,Type=Flag,Description="indicates whether a variant is within the exon pull down target boundaries">
 ##INFO=<ID=MULTI_ALLELIC,Number=0,Type=Flag,Description="indicates whether a site is multi-allelic">
 #CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tHG00096\tHG00101\tHG00103\tHG001055`,
-    })
   })
-
-  it('can parse a line from the VCF spec', () => {
-    const variant = VCFParser.parseLine(
-      'Y\t14483990\tCNV_Y_14483990_15232198\tC\t<CN0>\t100\tPASS\tAC=1;AF=0.000817661;AN=1223;END=15232198;NS=1233;SVTYPE=CNV;AMR_AF=0;AFR_AF=0;EUR_AF=0.0042;SAS_AF=0;EAS_AF=0;VT=SV;EX_TARGET\tGT:CN:CNL:CNP:CNQ:GP:GQ:PL\t0:1:-1000,0,-119.08:-1000,0,-218.16:99:0,-1000:99:0,10000\t0:1:-1000,0,-43.56:-1000,0,-142.64:99:0,-1000:99:0,10000\t.:.:.:.:.:.:.:.\t.:.:.:.:.:.:.:.',
-    )
-    const variant2 = VCFParser.parseLine(
-      'Y\t2655180\trs11575897\tG\tA\t100\tPASS\tAA=G;AC=22;AF=0.0178427;AN=1233;DP=84761;NS=1233;AMR_AF=0;AFR_AF=0;EUR_AF=0;SAS_AF=0;EAS_AF=0.0902;VT=SNP;EX_TARGET\tGT\t0\t0\t0\t.',
-    )
-    expect(variant).toMatchSnapshot()
-    expect(variant.SAMPLES).toMatchSnapshot()
-    expect(variant2).toMatchSnapshot()
-    expect(variant2.SAMPLES).toMatchSnapshot()
-  })
+  const variant = VCFParser.parseLine(
+    'Y\t14483990\tCNV_Y_14483990_15232198\tC\t<CN0>\t100\tPASS\tAC=1;AF=0.000817661;AN=1223;END=15232198;NS=1233;SVTYPE=CNV;AMR_AF=0;AFR_AF=0;EUR_AF=0.0042;SAS_AF=0;EAS_AF=0;VT=SV;EX_TARGET\tGT:CN:CNL:CNP:CNQ:GP:GQ:PL\t0:1:-1000,0,-119.08:-1000,0,-218.16:99:0,-1000:99:0,10000\t0:1:-1000,0,-43.56:-1000,0,-142.64:99:0,-1000:99:0,10000\t.:.:.:.:.:.:.:.\t.:.:.:.:.:.:.:.',
+  )
+  const variant2 = VCFParser.parseLine(
+    'Y\t2655180\trs11575897\tG\tA\t100\tPASS\tAA=G;AC=22;AF=0.0178427;AN=1233;DP=84761;NS=1233;AMR_AF=0;AFR_AF=0;EUR_AF=0;SAS_AF=0;EAS_AF=0.0902;VT=SNP;EX_TARGET\tGT\t0\t0\t0\t.',
+  )
+  expect(variant).toMatchSnapshot()
+  expect(variant.SAMPLES()).toMatchSnapshot()
+  expect(variant2).toMatchSnapshot()
+  expect(variant2.SAMPLES()).toMatchSnapshot()
 })
 
 test('snippet from VCF 4.3 spec', () => {
-  const { header, lines } = readVcf(
-    require.resolve('./data/vcf4.3_spec_snippet.vcf'),
-  )
+  const { header, lines } = readVcf('test/data/vcf4.3_spec_snippet.vcf')
   const VCFParser = new VCF({
     header,
   })
-  const variants = lines.map(line => VCFParser.parseLine(line)).filter(x => x)
+  const variants = lines.map(line => VCFParser.parseLine(line))
   expect(variants).toMatchSnapshot()
-  const samples = variants.map(variant => variant.SAMPLES)
-  expect(samples).toMatchSnapshot()
+  expect(variants.map(variant => variant.SAMPLES())).toMatchSnapshot()
 })
 test('can parse breakends', () => {
   const header = `#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tBAMs/caudaus.sorted.sam`
@@ -260,53 +248,43 @@ test('can parse breakends', () => {
       '\n',
     )
 
-  const variants = lines.map(line => VCFParser.parseLine(line))
-  expect(variants).toMatchSnapshot()
+  expect(lines.map(line => VCFParser.parseLine(line))).toMatchSnapshot()
 })
 
 // from https://github.com/GMOD/jbrowse/issues/1358
-describe('Obscure VCF', () => {
-  let VCFParser
-  beforeAll(() => {
-    VCFParser = new VCF({
-      header: `#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tBAMs/caudaus.sorted.sam`,
-    })
+test('vcf lines with weird info field and missing format/genotypes', () => {
+  const VCFParser = new VCF({
+    header: `#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tBAMs/caudaus.sorted.sam`,
   })
-  it('vcf lines with weird info field and missing format/genotypes', () => {
-    const lines =
-      `lcl|Scaffald_1\t80465\trs118266897\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
+  const lines =
+    `lcl|Scaffald_1\t80465\trs118266897\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t84818\trs118269296\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t95414\trs118218236\tW\tT\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t231384\trs118264755\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
 lcl|Scaffald_1\t236429\trs118223336\tR\tG\t29\tPASS\tNS=3;0,14;AF=6.5;DB;112;PG2.1
 lcl|Scaffald_1\t245378\trs118217257\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1`.split(
-        '\n',
-      )
+      '\n',
+    )
 
-    const variants = lines.map(line => VCFParser.parseLine(line))
-    expect(variants).toMatchSnapshot()
-  })
+  expect(lines.map(line => VCFParser.parseLine(line))).toMatchSnapshot()
 })
 test('test no info strict', () => {
-  const { header, lines } = readVcf(
-    require.resolve('./data/multipleAltSVs.vcf'),
-  )
-  const VCFParser = new VCF({ header, strict: true })
+  const { header, lines } = readVcf('test/data/multipleAltSVs.vcf')
+  const VCFParser = new VCF({
+    header,
+    strict: true,
+  })
   expect(() => VCFParser.parseLine(lines[0])).toThrow(/INFO/)
 })
 
 test('test no info non-strict', () => {
-  const { header, lines } = readVcf(
-    require.resolve('./data/multipleAltSVs.vcf'),
-  )
-  const VCFParser = new VCF({ header, strict: false })
+  const { header, lines } = readVcf('test/data/multipleAltSVs.vcf')
+  const VCFParser = new VCF({
+    header,
+    strict: false,
+  })
   expect(VCFParser.parseLine(lines[0])).toBeTruthy()
-  expect(VCFParser.parseLine(lines[0]).GENOTYPES).toBeUndefined()
-})
-test('blank line returns undefined', () => {
-  const { header } = readVcf(require.resolve('./data/multipleAltSVs.vcf'))
-  const VCFParser = new VCF({ header })
-  expect(VCFParser.parseLine('')).toBeUndefined()
+  expect(VCFParser.parseLine(lines[0]).GENOTYPES()).toStrictEqual({})
 })
 
 test('empty header lines', () => {
@@ -314,26 +292,17 @@ test('empty header lines', () => {
 })
 
 test('shortcut parsing with 1000 genomes', () => {
-  const { header, lines } = readVcf(require.resolve('./data/1000genomes.vcf'))
+  const { header, lines } = readVcf('test/data/1000genomes.vcf')
 
   const VCFParser = new VCF({ header })
-  const variants = lines.map(line => VCFParser.parseLine(line)).filter(x => x)
-  expect(Object.keys(variants[0].SAMPLES).slice(0, 5)).toMatchSnapshot()
-  expect(Object.keys(variants[0].SAMPLES).slice(-5)).toMatchSnapshot()
-  const ret = variants.map(v => {
-    const { SAMPLES: _, ...rest } = v
-    return rest
-  })
-  expect(ret).toMatchSnapshot()
+  expect(lines.map(line => VCFParser.parseLine(line))).toMatchSnapshot()
 })
 
 test('shortcut parsing with vcf 4.3 bnd example', () => {
-  const { header, lines } = readVcf(
-    require.resolve('./data/vcf4.3_spec_bnd.vcf'),
-  )
+  const { header, lines } = readVcf('test/data/vcf4.3_spec_bnd.vcf')
 
   const VCFParser = new VCF({ header })
-  const variants = lines.map(line => VCFParser.parseLine(line)).filter(x => x)
+  const variants = lines.map(line => VCFParser.parseLine(line))
   expect(variants.map(m => m.ALT[0].toString())).toEqual(
     lines.map(line => line.split('\t')[4]),
   )
