@@ -1,10 +1,5 @@
 import vcfReserved from './vcfReserved'
 
-function Variant(stuff: any) {
-  //@ts-ignore
-  Object.assign(this, stuff)
-}
-
 function decodeURIComponentNoThrow(uri: string) {
   try {
     return decodeURIComponent(uri)
@@ -93,6 +88,7 @@ export default class VCF {
   }
 
   private parseSamples(format: string, prerest: string) {
+    console.log('wtf1')
     const genotypes = {} as Record<
       string,
       Record<string, (string | number | null)[] | null>
@@ -125,15 +121,14 @@ export default class VCF {
   }
 
   private parseGenotypesOnly(format: string, prerest: string) {
+    console.log('wtf2')
     const rest = prerest.split('\t')
-    const genotypes = {} as any
+    const genotypes = {} as Record<string, string>
     let i = 0
     const formatSplit = format.split(':')
     if (formatSplit.length === 1) {
       for (const sample of this.samples) {
-        genotypes[sample] = {
-          GT: rest[i++]!,
-        }
+        genotypes[sample] = rest[i++]!
       }
     } else {
       const gtIndex = formatSplit.findIndex(f => f === 'GT')
@@ -142,9 +137,7 @@ export default class VCF {
           const val = rest[i++]!
           const idx = val.indexOf(':')
           if (idx !== -1) {
-            genotypes[sample] = {
-              GT: val.slice(0, idx),
-            }
+            genotypes[sample] = val.slice(0, idx)
           } else {
             console.warn('unknown')
           }
@@ -152,9 +145,7 @@ export default class VCF {
       } else {
         for (const sample of this.samples) {
           const val = rest[i++]!.split(':')
-          genotypes[sample] = {
-            GT: val[gtIndex],
-          }
+          genotypes[sample] = val[gtIndex]!
         }
       }
     }
@@ -301,9 +292,6 @@ export default class VCF {
       return undefined
     }
 
-    //@ts-ignore
-    const parser = this // so we can include this in lazy-property closure
-
     let currChar = 0
     for (let currField = 0; currChar < line.length; currChar += 1) {
       if (line[currChar] === '\t') {
@@ -330,7 +318,7 @@ export default class VCF {
         "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
       )
     }
-    const info: any =
+    const info =
       fields[7] === undefined || fields[7] === '.'
         ? {}
         : this.parseKeyValue(fields[7])
@@ -365,8 +353,7 @@ export default class VCF {
       info[key] = items
     }
 
-    //@ts-ignore
-    return new Variant({
+    return {
       CHROM: chrom,
       POS: pos,
       ALT: alt,
@@ -376,8 +363,8 @@ export default class VCF {
         filter && filter.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
       ID: id,
       QUAL: qual,
-      SAMPLES: parser.parseSamples(fields[8] ?? '', rest),
-      GENOTYPES: parser.parseGenotypesOnly(fields[8] ?? '', rest),
-    })
+      SAMPLES: () => this.parseSamples(fields[8] ?? '', rest),
+      GENOTYPES: () => this.parseGenotypesOnly(fields[8] ?? '', rest),
+    }
   }
 }
