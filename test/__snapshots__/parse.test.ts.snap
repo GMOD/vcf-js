@@ -845,22 +845,13 @@ Variant {
 exports[`VCF parser > can parse a line with minimal entries 2`] = `
 {
   "NA00001": {
-    "DP": null,
-    "GQ": null,
     "GT": null,
-    "HQ": null,
   },
   "NA00002": {
-    "DP": null,
-    "GQ": null,
     "GT": null,
-    "HQ": null,
   },
   "NA00003": {
-    "DP": null,
-    "GQ": null,
     "GT": null,
-    "HQ": null,
   },
 }
 `;
@@ -1786,7 +1777,6 @@ exports[`snippet from VCF 4.3 spec 2`] = `
       "GT": [
         "0/0",
       ],
-      "HQ": null,
     },
   },
   {
@@ -1830,7 +1820,6 @@ exports[`snippet from VCF 4.3 spec 2`] = `
       "GT": [
         "2/2",
       ],
-      "HQ": null,
     },
   },
   {
@@ -1874,7 +1863,6 @@ exports[`snippet from VCF 4.3 spec 2`] = `
       "GT": [
         "0/0",
       ],
-      "HQ": null,
     },
   },
   {
