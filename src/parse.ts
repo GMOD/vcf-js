@@ -21,7 +21,7 @@ function decodeURIComponentNoThrow(uri: string) {
  * (default true)
  */
 export default class VCFParser {
-  private metadata: Record<string, any>
+  private metadata: Record<string, unknown>
   public strict: boolean
   public samples: string[]
 
@@ -171,7 +171,7 @@ export default class VCFParser {
         this.metadata[r] = {}
       }
       const [id, keyVals] = this.parseStructuredMetaVal(metaVal)
-      this.metadata[r][id] = keyVals
+      ;(this.metadata[r] as Record<string, unknown>)[id] = keyVals
     } else {
       this.metadata[r] = metaVal
     }
@@ -188,14 +188,14 @@ export default class VCFParser {
    */
   private parseStructuredMetaVal(metaVal: string) {
     const keyVals = this.parseKeyValue(metaVal.replace(/^<|>$/g, ''), ',')
-    const id = keyVals.ID
+    const id = keyVals.ID as string
     delete keyVals.ID
     if ('Number' in keyVals) {
       if (!Number.isNaN(Number(keyVals.Number))) {
         keyVals.Number = Number(keyVals.Number)
       }
     }
-    return [id, keyVals]
+    return [id, keyVals] as const
   }
 
   /**
@@ -228,7 +228,7 @@ export default class VCFParser {
    * 'Flag', Description: 'dbSNP membership, build 129'}
    */
   private parseKeyValue(str: string, pairSeparator = ';') {
-    const data: any = {}
+    const data = {} as Record<string, unknown>
     let currKey = ''
     let currValue = ''
 
@@ -311,39 +311,27 @@ export default class VCFParser {
         "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
       )
     }
+    const hasDecode = fields[7]?.includes('%')
     const info =
       fields[7] === undefined || fields[7] === '.'
         ? {}
         : this.parseKeyValue(fields[7])
 
     for (const key of Object.keys(info)) {
-      let items
-      if (info[key]) {
-        items = (info[key] as string)
-          .split(',')
-          .map(val => (val === '.' ? undefined : val))
-          .map(f => (f ? decodeURIComponentNoThrow(f) : f))
-      } else {
-        // it will be falsy so just assign whatever is there
-        items = info[key]
-      }
+      const items = (info[key] as string | undefined)
+        ?.split(',')
+        .map(val => (val === '.' ? undefined : val))
+        .map(f => (f && hasDecode ? decodeURIComponentNoThrow(f) : f))
       const itemType = this.getMetadata('INFO', key, 'Type')
-      if (itemType) {
-        if (itemType === 'Integer' || itemType === 'Float') {
-          items = items.map((val: string | undefined) =>
-            val === undefined ? undefined : Number(val),
-          )
-        } else if (itemType === 'Flag') {
-          if (info[key]) {
-            console.warn(
-              `Info field ${key} is a Flag and should not have a value (got value ${info[key]})`,
-            )
-          } else {
-            items = true
-          }
-        }
+      if (itemType === 'Integer' || itemType === 'Float') {
+        info[key] = items?.map(val =>
+          val === undefined ? undefined : Number(val),
+        )
+      } else if (itemType === 'Flag') {
+        info[key] = true
+      } else {
+        info[key] = items
       }
-      info[key] = items
     }
 
     return {
