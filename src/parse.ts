@@ -207,7 +207,7 @@ export default class VCFParser {
    *
    * @returns {any} An object, string, or number, depending on the filtering
    */
-  private getMetadata(...args: string[]) {
+  getMetadata(...args: string[]) {
     let filteredMetadata: any = this.metadata
     for (const arg of args) {
       filteredMetadata = filteredMetadata[arg]
