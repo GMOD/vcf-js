@@ -1,4 +1,4 @@
-import VCF from './parse'
+import VCFParser from './parse'
 
 export interface Breakend {
   Join: string
@@ -77,4 +77,6 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
   return undefined
 }
 
-export default VCF
+export default VCFParser
+
+export type { Variant } from './parse'
