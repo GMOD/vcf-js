@@ -1,3 +1,7 @@
+# [6.0.0](https://github.com/GMOD/vcf-js/compare/v5.0.10...v6.0.0) (2024-11-30)
+
+
+
 ## [5.0.10](https://github.com/GMOD/vcf-js/compare/v5.0.9...v5.0.10) (2022-12-17)
 
 - Use es2015 for nodejs build
