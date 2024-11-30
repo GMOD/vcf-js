@@ -1,6 +1,6 @@
 # [6.0.0](https://github.com/GMOD/vcf-js/compare/v5.0.10...v6.0.0) (2024-11-30)
 
-
+- Changes the default Variant object to have a SAMPLES() function call instead of a SAMPLES getter, to make it mor abundantly clear that it is a lazy operation. Also adds a GENOTYPES() function that returns the raw string of genotype fields
 
 ## [5.0.10](https://github.com/GMOD/vcf-js/compare/v5.0.9...v5.0.10) (2022-12-17)
 

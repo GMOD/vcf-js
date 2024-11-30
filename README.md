@@ -268,20 +268,14 @@ this
 
 #### Table of Contents
 
-- [VCF](#vcf)
+- [VCFParser](#vcfparser)
   - [Parameters](#parameters)
-  - [\_parseMetadata](#_parsemetadata)
-    - [Parameters](#parameters-1)
-  - [\_parseStructuredMetaVal](#_parsestructuredmetaval)
-    - [Parameters](#parameters-2)
   - [getMetadata](#getmetadata)
-    - [Parameters](#parameters-3)
-  - [\_parseKeyValue](#_parsekeyvalue)
-    - [Parameters](#parameters-4)
+    - [Parameters](#parameters-1)
   - [parseLine](#parseline)
-    - [Parameters](#parameters-5)
+    - [Parameters](#parameters-2)
 
-### VCF
+### VCFParser
 
 Class representing a VCF parser, instantiated with the VCF header.
 
@@ -291,29 +285,8 @@ Class representing a VCF parser, instantiated with the VCF header.
 
   - `args.header` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF header. Supports both LF and CRLF
     newlines. (optional, default `''`)
-  - `args.strict` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether to parse in strict mode or not (default true) (optional, default `true`)
-
-#### \_parseMetadata
-
-Parse a VCF metadata line (i.e. a line that starts with "##") and add its
-properties to the object.
-
-##### Parameters
-
-- `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A line from the VCF. Supports both LF and CRLF
-  newlines.
-
-#### \_parseStructuredMetaVal
-
-Parse a VCF header structured meta string (i.e. a meta value that starts
-with "\<ID=...")
-
-##### Parameters
-
-- `metaVal` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF metadata value
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array with two entries, 1) a string of the metadata ID
-and 2) an object with the other key-value pairs in the metadata
+  - `args.strict` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether to parse in strict mode or not
+    (default true) (optional, default `true`)
 
 #### getMetadata
 
@@ -326,24 +299,6 @@ Get metadata filtered by the elements in args. For example, can pass
 - `args` **...[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** List of metadata filter strings.
 
 Returns **any** An object, string, or number, depending on the filtering
-
-#### \_parseKeyValue
-
-Sometimes VCFs have key-value strings that allow the separator within
-the value if it's in quotes, like:
-'ID=DB,Number=0,Type=Flag,Description="dbSNP membership, build 129"'
-
-Parse this at a low level since we can't just split at "," (or whatever
-separator). Above line would be parsed to:
-{ID: 'DB', Number: '0', Type: 'Flag', Description: 'dbSNP membership, build 129'}
-
-##### Parameters
-
-- `str` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Key-value pairs in a string
-- `pairSeparator` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** A string that separates sets of key-value
-  pairs (optional, default `';'`)
-
-Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing the key-value pairs
 
 #### parseLine
 
