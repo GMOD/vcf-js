@@ -31,9 +31,9 @@
     "clean": "rimraf dist esm",
     "build:esm": "tsc --target es2018 --outDir esm",
     "build:es5": "tsc --target es2015 --module commonjs --outDir dist",
-    "build": "npm run build:esm && npm run build:es5",
-    "prebuild": "npm run clean && npm run lint",
-    "preversion": "npm run lint && npm test --run && npm run build",
+    "build": "yarn build:esm && yarn build:es5",
+    "prebuild": "yarn clean && yarn lint",
+    "preversion": "yarn lint && yarn test --run && yarn build",
     "version": "standard-changelog && git add CHANGELOG.md",
     "postversion": "git push --follow-tags"
   },
