@@ -35,7 +35,7 @@ export default class VCFParser {
     if (!header.length) {
       throw new Error('empty header received')
     }
-    const headerLines = header.split(/[\r\n]+/).filter(line => line)
+    const headerLines = header.split(/[\r\n]+/).filter(Boolean)
     if (!headerLines.length) {
       throw new Error('no non-empty header lines specified')
     }
@@ -129,7 +129,7 @@ export default class VCFParser {
         genotypes[sample] = rest[i++]!
       }
     } else {
-      const gtIndex = formatSplit.findIndex(f => f === 'GT')
+      const gtIndex = formatSplit.indexOf('GT')
       if (gtIndex === 0) {
         for (const sample of this.samples) {
           const val = rest[i++]!
