@@ -280,26 +280,42 @@ export default class VCFParser {
   /**
    * Parse a VCF line into an object like
    *
-   * ```ts
-   * interface Variant {
-   *   CHROM: string
-   *   POS: number
-   *   ID: string[]
-   *   REF: string
-   *   ALT: string[]
-   *   QUAL: number[]
-   *   FILTER: string[]
-   *   INFO: unknown[]
-   *   SAMPLES: () => Record<string,unknown[]>
-   *   GENOTYPES: () => Record<string,string>
+   * ```json
+   * {
+   *   CHROM: 'contigA',
+   *   POS: 3000,
+   *   ID: ['rs17883296'],
+   *   REF: 'G',
+   *   ALT: ['T', 'A'],
+   *   QUAL: 100,
+   *   FILTER: 'PASS',
+   *   INFO: {
+   *     NS: [3],
+   *     DP: [14],
+   *     AF: [0.5],
+   *     DB: true,
+   *     XYZ: ['5'],
+   *   },
+   *   SAMPLES: () => ({
+   *     HG00096: {
+   *       GT: ['0|0'],
+   *       AP: ['0.000', '0.000'],
+   *     }
+   *   }),
+   *   GENOTYPES: () => ({
+   *     HG00096: '0|0'
+   *   })
    * }
    * ```
    *
-   * SAMPLES is a function that can be invoked. the long list of samples from
-   * 1000 genotypes is not parsed eagerly, and is only parsed when SAMPLES or
-   * GENOTYPES is invoked. The SAMPLES function gives all info about the
-   * samples, while the GENOTYPES function only extracts the raw GT string if
-   * it exists, for potentially optimized parsing by programs that need it
+   * SAMPLES and GENOTYPES methods are functions instead of static data fields
+   * because it avoids parsing the potentially long list of samples from e.g.
+   * 1000 genotypes data unless requested.
+   *
+   * The SAMPLES function gives all info about the samples
+   *
+   * The GENOTYPES function only extracts the raw GT string if it exists, for
+   * potentially optimized parsing by programs that need it
    *
    * @param {string} line - A string of a line from a VCF
    */

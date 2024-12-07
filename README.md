@@ -13,7 +13,7 @@ High performance Variant Call Format (VCF) parser in pure JavaScript.
 This module is best used when combined with some easy way of retrieving the
 header and individual lines from a VCF, like the `@gmod/tabix` module.
 
-```javascript
+```typescript
 import { TabixIndexedFile } from '@gmod/tabix'
 
 // with import
@@ -37,7 +37,7 @@ async function doStuff() {
 
 If you want to stream a VCF file, you can alternatively use something like this
 
-```javascript
+```typescript
 const fs = require('fs')
 const VCF = require('@gmod/vcf').default
 const { createGunzip } = require('zlib')
@@ -80,7 +80,7 @@ contigA	3000	rs17883296	G	T,A	100	PASS	NS=3;DP=14;AF=0.5;DB;XYZ=5	GT:AP	0|0:0.00
 
 The `variant` object returned by `parseLine()` would be
 
-```javascript
+```typescript
 {
   CHROM: 'contigA',
   POS: 3000,
@@ -99,18 +99,29 @@ The `variant` object returned by `parseLine()` would be
 }
 ```
 
-The `variant` object will also have a lazy attribute called "`SAMPLES`" that
-will not be evaluated unless it is called. This can save time if you only want
-the variant information and not the sample-specific information, especially if
-your VCF has a lot of samples in it. In the above case the `variant.SAMPLES`
-object would look like
+The `variant` object will also has two methods called "`SAMPLES()`" and
+"`GENOTYPES()`" that will not be evaluated unless it is called.
 
-```javascript
+This can save time if you only want the variant information and not the
+sample-specific information, especially if your VCF has a lot of samples in it.
+
+In the above case the `variant.SAMPLES()` object would look like
+
+```typescript
 {
   HG00096: {
     GT: ['0|0'],
     AP: ['0.000', '0.000'],
   },
+}
+```
+
+whil the `variant.GENOTYPES()` object would look like this (only extracts the GT
+as a raw string)
+
+```typescript
+{
+  HG00096: '0|0'
 }
 ```
 
@@ -121,7 +132,7 @@ using the header metadata. For example, if there is a header line like
 ##INFO=<ID=ABC,Number=2,Type=Integer,Description="A description">
 ```
 
-the parser will expect any INFO entry ABC to be an array of two integers, so it
+The parser will expect any INFO entry ABC to be an array of two integers, so it
 would convert `ABC=12,20` to `{ ABC: [12, 20] }`. Each INFO entry value will be
 an array unless `Type=Flag` is specified, in which case it will be `true`. If no
 metadata can be found for the entry, it will assume `Number=1` and
@@ -148,7 +159,7 @@ VCF with this header:
 
 you can access the VCF's header metadata like (some output omitted for clarity):
 
-```javascript
+```typescript
 > console.log(vcfParser.getMetadata())
 { INFO:
    { AA:
@@ -198,7 +209,7 @@ you can access the VCF's header metadata like (some output omitted for clarity):
 
 A list of sample names is also available in the `samples` attribute of the parser object:
 
-```javascript
+```typescript
 > console.log(vcfParser.samples)
 [ 'HG00096' ]
 ```
@@ -211,6 +222,7 @@ automatically but it is now a helper function
 ```js
 import { parseBreakend } from '@gmod/vcf'
 parseBreakend('C[2:321682[')
+
 // output
 //
 //     {
@@ -304,26 +316,42 @@ Returns **any** An object, string, or number, depending on the filtering
 
 Parse a VCF line into an object like
 
-```ts
-interface Variant {
-  CHROM: string
-  POS: number
-  ID: string[]
-  REF: string
-  ALT: string[]
-  QUAL: number[]
-  FILTER: string[]
-  INFO: unknown[]
-  SAMPLES: () => Record<string, unknown[]>
-  GENOTYPES: () => Record<string, string>
+```json
+{
+  CHROM: 'contigA',
+  POS: 3000,
+  ID: ['rs17883296'],
+  REF: 'G',
+  ALT: ['T', 'A'],
+  QUAL: 100,
+  FILTER: 'PASS',
+  INFO: {
+    NS: [3],
+    DP: [14],
+    AF: [0.5],
+    DB: true,
+    XYZ: ['5'],
+  },
+  SAMPLES: () => ({
+    HG00096: {
+      GT: ['0|0'],
+      AP: ['0.000', '0.000'],
+    }
+  }),
+  GENOTYPES: () => ({
+    HG00096: '0|0'
+  })
 }
 ```
 
-SAMPLES is a function that can be invoked. the long list of samples from
-1000 genotypes is not parsed eagerly, and is only parsed when SAMPLES or
-GENOTYPES is invoked. The SAMPLES function gives all info about the
-samples, while the GENOTYPES function only extracts the raw GT string if
-it exists, for potentially optimized parsing by programs that need it
+SAMPLES and GENOTYPES methods are functions instead of static data fields
+because it avoids parsing the potentially long list of samples from e.g.
+1000 genotypes data unless requested.
+
+The SAMPLES function gives all info about the samples
+
+The GENOTYPES function only extracts the raw GT string if it exists, for
+potentially optimized parsing by programs that need it
 
 ##### Parameters
 
