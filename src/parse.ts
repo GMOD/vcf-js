@@ -278,11 +278,30 @@ export default class VCFParser {
   }
 
   /**
-   * Parse a VCF line into an object like { CHROM POS ID REF ALT QUAL FILTER
-   * INFO } with SAMPLES optionally included if present in the VCF
+   * Parse a VCF line into an object like
    *
-   * @param {string} line - A string of a line from a VCF. Supports both LF and
-   * CRLF newlines.
+   * ```ts
+   * interface Variant {
+   *   CHROM: string
+   *   POS: number
+   *   ID: string[]
+   *   REF: string
+   *   ALT: string[]
+   *   QUAL: number[]
+   *   FILTER: string[]
+   *   INFO: unknown[]
+   *   SAMPLES: () => Record<string,unknown[]>
+   *   GENOTYPES: () => Record<string,string>
+   * }
+   * ```
+   *
+   * SAMPLES is a function that can be invoked. the long list of samples from
+   * 1000 genotypes is not parsed eagerly, and is only parsed when SAMPLES or
+   * GENOTYPES is invoked. The SAMPLES function gives all info about the
+   * samples, while the GENOTYPES function only extracts the raw GT string if
+   * it exists, for potentially optimized parsing by programs that need it
+   *
+   * @param {string} line - A string of a line from a VCF
    */
   parseLine(line: string) {
     let currChar = 0

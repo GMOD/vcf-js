@@ -302,10 +302,29 @@ Returns **any** An object, string, or number, depending on the filtering
 
 #### parseLine
 
-Parse a VCF line into an object like { CHROM POS ID REF ALT QUAL FILTER
-INFO } with SAMPLES optionally included if present in the VCF
+Parse a VCF line into an object like
+
+```ts
+interface Variant {
+  CHROM: string
+  POS: number
+  ID: string[]
+  REF: string
+  ALT: string[]
+  QUAL: number[]
+  FILTER: string[]
+  INFO: unknown[]
+  SAMPLES: () => Record<string, unknown[]>
+  GENOTYPES: () => Record<string, string>
+}
+```
+
+SAMPLES is a function that can be invoked. the long list of samples from
+1000 genotypes is not parsed eagerly, and is only parsed when SAMPLES or
+GENOTYPES is invoked. The SAMPLES function gives all info about the
+samples, while the GENOTYPES function only extracts the raw GT string if
+it exists, for potentially optimized parsing by programs that need it
 
 ##### Parameters
 
-- `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string of a line from a VCF. Supports both LF and
-  CRLF newlines.
+- `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string of a line from a VCF
