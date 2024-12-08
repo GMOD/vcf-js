@@ -345,3 +345,11 @@ test('sample to genotype information', () => {
   expect(VCFParser.getMetadata().META).toMatchSnapshot()
   expect(VCFParser.getMetadata().SAMPLES).toMatchSnapshot()
 })
+
+test('pedigree', () => {
+  const { header } = readVcf('test/data/pedigree.vcf')
+  const VCFParser = new VCF({
+    header,
+  })
+  expect(VCFParser.getMetadata()).toMatchSnapshot()
+})

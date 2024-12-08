@@ -218,10 +218,9 @@ exports[`can get metadata from the header 1`] = `
       "Type": "Integer",
     },
     "DB": {
-      "Description": ""dbSNP membership",
+      "Description": "dbSNP membership, build 129",
       "Number": 0,
       "Type": "Flag",
-      "build 129"": undefined,
     },
     "DBRIPID": {
       "Description": "ID of this element in DBRIP",
@@ -460,10 +459,9 @@ exports[`can get metadata from the header 2`] = `
     "Type": "Integer",
   },
   "DB": {
-    "Description": ""dbSNP membership",
+    "Description": "dbSNP membership, build 129",
     "Number": 0,
     "Type": "Flag",
-    "build 129"": undefined,
   },
   "DBRIPID": {
     "Description": "ID of this element in DBRIP",
@@ -1346,16 +1344,14 @@ exports[`clinvar metadata 1`] = `
       "Type": "Integer",
     },
     "CLNDISDB": {
-      "Description": ""Tag-value pairs of disease database name and identifier submitted for germline classifications",
+      "Description": "Tag-value pairs of disease database name and identifier submitted for germline classifications, e.g. OMIM:NNNNNN",
       "Number": ".",
       "Type": "String",
-      "e.g. OMIM:NNNNNN"": undefined,
     },
     "CLNDISDBINCL": {
-      "Description": ""For included Variant: Tag-value pairs of disease database name and identifier for germline classifications",
+      "Description": "For included Variant: Tag-value pairs of disease database name and identifier for germline classifications, e.g. OMIM:NNNNNN",
       "Number": ".",
       "Type": "String",
-      "e.g. OMIM:NNNNNN"": undefined,
     },
     "CLNDN": {
       "Description": "ClinVar's preferred disease name for the concept specified by disease identifiers in CLNDISDB",
@@ -1368,11 +1364,9 @@ exports[`clinvar metadata 1`] = `
       "Type": "String",
     },
     "CLNHGVS": {
-      "Description": ""Top-level (primary assembly",
+      "Description": "Top-level (primary assembly, alt, or patch) HGVS expression.",
       "Number": ".",
       "Type": "String",
-      "alt": undefined,
-      "or patch) HGVS expression."": undefined,
     },
     "CLNREVSTAT": {
       "Description": "ClinVar review status of germline classification for the Variation ID",
@@ -1537,16 +1531,14 @@ exports[`clinvar metadata 1`] = `
       "Type": "String",
     },
     "ONCDISDB": {
-      "Description": ""Tag-value pairs of disease database name and identifier submitted for oncogenicity classifications",
+      "Description": "Tag-value pairs of disease database name and identifier submitted for oncogenicity classifications, e.g. MedGen:NNNNNN",
       "Number": ".",
       "Type": "String",
-      "e.g. MedGen:NNNNNN"": undefined,
     },
     "ONCDISDBINCL": {
-      "Description": ""For included variant: Tag-value pairs of disease database name and identifier for oncogenicity classifications",
+      "Description": "For included variant: Tag-value pairs of disease database name and identifier for oncogenicity classifications, e.g. OMIM:NNNNNN",
       "Number": ".",
       "Type": "String",
-      "e.g. OMIM:NNNNNN"": undefined,
     },
     "ONCDN": {
       "Description": "ClinVar's preferred disease name for the concept specified by disease identifiers in ONCDISDB",
@@ -1594,16 +1586,14 @@ exports[`clinvar metadata 1`] = `
       "Type": "String",
     },
     "SCIDISDB": {
-      "Description": ""Tag-value pairs of disease database name and identifier submitted for somatic clinial impact classifications",
+      "Description": "Tag-value pairs of disease database name and identifier submitted for somatic clinial impact classifications, e.g. MedGen:NNNNNN",
       "Number": ".",
       "Type": "String",
-      "e.g. MedGen:NNNNNN"": undefined,
     },
     "SCIDISDBINCL": {
-      "Description": ""For included variant: Tag-value pairs of disease database name and identifier for somatic clinical impact classifications",
+      "Description": "For included variant: Tag-value pairs of disease database name and identifier for somatic clinical impact classifications, e.g. OMIM:NNNNNN",
       "Number": ".",
       "Type": "String",
-      "e.g. OMIM:NNNNNN"": undefined,
     },
     "SCIDN": {
       "Description": "ClinVar's preferred disease name for the concept specified by disease identifiers in SCIDISDB",
@@ -1711,6 +1701,359 @@ exports[`parses a line with mix of multiple breakends and non breakends 1`] = `
   "QUAL": 6,
   "REF": "C",
   "SAMPLES": [Function],
+}
+`;
+
+exports[`pedigree 1`] = `
+{
+  "ALT": {
+    "*": {
+      "Description": "Represents any possible alternative allele at this location",
+    },
+    "CNV": {
+      "Description": "Copy number variable region (may be both deletion and duplication)",
+    },
+    "DEL": {
+      "Description": "Deletion relative to the reference",
+    },
+    "DEL:ME": {
+      "Description": "Deletion of mobile element relative to the reference",
+    },
+    "DUP": {
+      "Description": "Region of elevated copy number relative to the reference",
+    },
+    "DUP:TANDEM": {
+      "Description": "Tandem duplication",
+    },
+    "INS": {
+      "Description": "Insertion of novel sequence relative to the reference",
+    },
+    "INS:ME": {
+      "Description": "Insertion of a mobile element relative to the reference",
+    },
+    "INV": {
+      "Description": "Inversion of reference sequence",
+    },
+    "NON_REF": {
+      "Description": "Represents any possible alternative allele at this location",
+    },
+  },
+  "FILTER": {
+    "PASS": {
+      "Description": "Passed all filters",
+    },
+  },
+  "FORMAT": {
+    "AD": {
+      "Description": "Read depth for each allele",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADF": {
+      "Description": "Read depth for each allele on the forward strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADR": {
+      "Description": "Read depth for each allele on the reverse strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "DP": {
+      "Description": "Read depth",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "EC": {
+      "Description": "Expected alternate allele counts",
+      "Number": "A",
+      "Type": "Integer",
+    },
+    "FT": {
+      "Description": "Filter indicating if this genotype was "called"",
+      "Number": 1,
+      "Type": "String",
+    },
+    "GL": {
+      "Description": "Genotype likelihoods",
+      "Number": "G",
+      "Type": "Float",
+    },
+    "GP": {
+      "Description": "Genotype posterior probabilities",
+      "Number": "G",
+      "Type": "Float",
+    },
+    "GQ": {
+      "Description": "Conditional genotype quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "GT": {
+      "Description": "Genotype",
+      "Number": 1,
+      "Type": "String",
+    },
+    "HQ": {
+      "Description": "Haplotype quality",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "MQ": {
+      "Description": "RMS mapping quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PL": {
+      "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+      "Number": "G",
+      "Type": "Integer",
+    },
+    "PQ": {
+      "Description": "Phasing quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PS": {
+      "Description": "Phase set",
+      "Number": 1,
+      "Type": "Integer",
+    },
+  },
+  "INFO": {
+    "1000G": {
+      "Description": "1000 Genomes membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "AA": {
+      "Description": "Ancestral allele",
+      "Number": 1,
+      "Type": "String",
+    },
+    "AC": {
+      "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
+      "Number": "A",
+      "Type": "Integer",
+    },
+    "AD": {
+      "Description": "Total read depth for each allele",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADF": {
+      "Description": "Read depth for each allele on the forward strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADR": {
+      "Description": "Read depth for each allele on the reverse strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "AF": {
+      "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+      "Number": "A",
+      "Type": "Float",
+    },
+    "AN": {
+      "Description": "Total number of alleles in called genotypes",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "BKPTID": {
+      "Description": "ID of the assembled alternate allele in the assembly file",
+      "Type": "String",
+    },
+    "BQ": {
+      "Description": "RMS base quality",
+      "Number": 1,
+      "Type": "Float",
+    },
+    "CICN": {
+      "Description": "Confidence interval around copy number for the segment",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CICNADJ": {
+      "Description": "Confidence interval around copy number for the adjacency",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "CIEND": {
+      "Description": "Confidence interval around END for imprecise variants",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CIGAR": {
+      "Description": "Cigar string describing how to align an alternate allele to the reference allele",
+      "Number": 1,
+      "Type": "Float",
+    },
+    "CILEN": {
+      "Description": "Confidence interval around the inserted material between breakend",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CIPOS": {
+      "Description": "Confidence interval around POS for imprecise variants",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CN": {
+      "Description": "Copy number of segment containing breakend",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "CNADJ": {
+      "Description": "Copy number of adjacency",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "DB": {
+      "Description": "dbSNP membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "DBRIPID": {
+      "Description": "ID of this element in DBRIP",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DBVARID": {
+      "Description": "ID of this element in DBVAR",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DGVID": {
+      "Description": "ID of this element in Database of Genomic Variation",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DP": {
+      "Description": "combined depth across samples",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "DPADJ": {
+      "Description": "Read Depth of adjacency",
+      "Type": "Integer",
+    },
+    "END": {
+      "Description": "End position (for use with symbolic alleles)",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "EVENT": {
+      "Description": "ID of event associated to breakend",
+      "Number": 1,
+      "Type": "String",
+    },
+    "H2": {
+      "Description": "HapMap2 membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "H3": {
+      "Description": "HapMap3 membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "HOMLEN": {
+      "Description": "Length of base pair identical micro-homology at event breakpoints",
+      "Type": "Integer",
+    },
+    "HOMSEQ": {
+      "Description": "Sequence of base pair identical micro-homology at event breakpoints",
+      "Type": "String",
+    },
+    "IMPRECISE": {
+      "Description": "Imprecise structural variation",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "MATEID": {
+      "Description": "ID of mate breakends",
+      "Number": null,
+      "Type": "String",
+    },
+    "MEINFO": {
+      "Description": "Mobile element info of the form NAME,START,END,POLARITY",
+      "Number": 4,
+      "Type": "String",
+    },
+    "METRANS": {
+      "Description": "Mobile element transduction info of the form CHR,START,END,POLARITY",
+      "Number": 4,
+      "Type": "String",
+    },
+    "MQ": {
+      "Description": "RMS mapping quality",
+      "Number": 1,
+      "Type": null,
+    },
+    "MQ0": {
+      "Description": "Number of MAPQ == 0 reads",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "NOVEL": {
+      "Description": "Indicates a novel structural variation",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "NS": {
+      "Description": "Number of samples with data",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PARID": {
+      "Description": "ID of partner breakend",
+      "Number": 1,
+      "Type": "String",
+    },
+    "SB": {
+      "Description": "Strand bias",
+      "Number": 4,
+      "Type": "Integer",
+    },
+    "SOMATIC": {
+      "Description": "Somatic mutation (for cancer genomics)",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "SVLEN": {
+      "Description": "Difference in length between REF and ALT alleles",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "SVTYPE": {
+      "Description": "Type of structural variant",
+      "Number": 1,
+      "Type": "String",
+    },
+    "VALIDATED": {
+      "Description": "Validated by follow-up experiment",
+      "Number": 0,
+      "Type": "Flag",
+    },
+  },
+  "PEDIGREE": {
+    "ChildID": {
+      "Father": "FatherID",
+      "Mother": "MotherID",
+    },
+    "SampleID": {
+      "Name_1": "Ancestor_1",
+      "Name_2": "Ancestor_N",
+    },
+    "SomaticNonTumour": {
+      "Original": "GermlineID",
+    },
+    "TumourSample": {
+      "Original": "GermlineID",
+    },
+  },
 }
 `;
 
