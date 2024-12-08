@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`array in values 1`] = `
+{
+  "ID": "Assay",
+  "Number": ".",
+  "Type": "String",
+  "Values": [
+    "WholeGenome",
+    "Exome",
+  ],
+}
+`;
+
+exports[`quoted string with comma in description 1`] = `
+{
+  "Description": "dbSNP membership, build 129",
+  "ID": "DB",
+  "Number": "0",
+  "Type": "Flag",
+}
+`;

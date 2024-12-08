@@ -1,0 +1,5 @@
+##PEDIGREE=<ID=TumourSample,Original=GermlineID>
+##PEDIGREE=<ID=SomaticNonTumour,Original=GermlineID>
+##PEDIGREE=<ID=ChildID,Father=FatherID,Mother=MotherID>
+##PEDIGREE=<ID=SampleID,Name_1=Ancestor_1,Name_2=Ancestor_N>
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO

@@ -1,3 +1,4 @@
+import { parseMetaString } from './parseMetaString'
 import vcfReserved from './vcfReserved'
 
 function decodeURIComponentNoThrow(uri: string) {
@@ -35,7 +36,7 @@ export default class VCFParser {
     if (!header.length) {
       throw new Error('empty header received')
     }
-    const headerLines = header.split(/[\r\n]+/).filter(line => line)
+    const headerLines = header.split(/[\r\n]+/).filter(Boolean)
     if (!headerLines.length) {
       throw new Error('no non-empty header lines specified')
     }
@@ -129,7 +130,7 @@ export default class VCFParser {
         genotypes[sample] = rest[i++]!
       }
     } else {
-      const gtIndex = formatSplit.findIndex(f => f === 'GT')
+      const gtIndex = formatSplit.indexOf('GT')
       if (gtIndex === 0) {
         for (const sample of this.samples) {
           const val = rest[i++]!
@@ -171,7 +172,15 @@ export default class VCFParser {
         this.metadata[r] = {}
       }
       const [id, keyVals] = this.parseStructuredMetaVal(metaVal)
-      ;(this.metadata[r] as Record<string, unknown>)[id] = keyVals
+      if (id) {
+        // if there is an ID field in the <> metadata
+        // e.g. ##INFO=<ID=AF_ESP,...>
+        ;(this.metadata[r] as Record<string, unknown>)[id] = keyVals
+      } else {
+        // if there is not an ID field in the <> metadata
+        // e.g. ##ID=<Description="ClinVar Variation ID">
+        this.metadata[r] = keyVals
+      }
     } else {
       this.metadata[r] = metaVal
     }
@@ -187,8 +196,8 @@ export default class VCFParser {
    * and 2) an object with the other key-value pairs in the metadata
    */
   private parseStructuredMetaVal(metaVal: string) {
-    const keyVals = this.parseKeyValue(metaVal.replace(/^<|>$/g, ''), ',')
-    const id = keyVals.ID as string
+    const keyVals = parseMetaString(metaVal)
+    const id = keyVals.ID!
     delete keyVals.ID
     if ('Number' in keyVals) {
       if (!Number.isNaN(Number(keyVals.Number))) {
@@ -219,68 +228,9 @@ export default class VCFParser {
   }
 
   /**
-   * Sometimes VCFs have key-value strings that allow the separator within the
-   * value if it's in quotes, like:
-   * 'ID=DB,Number=0,Type=Flag,Description="dbSNP membership, build 129"'
-   *
-   * Parse this at a low level since we can't just split at "," (or whatever
-   * separator). Above line would be parsed to: {ID: 'DB', Number: '0', Type:
-   * 'Flag', Description: 'dbSNP membership, build 129'}
-   */
-  private parseKeyValue(str: string, pairSeparator = ';') {
-    const data = {} as Record<string, unknown>
-    let currKey = ''
-    let currValue = ''
-
-    // states:
-    // 1: read key to = or pair sep
-    // 2: read value to sep or quote
-    // 3: read value to quote
-    let state = 1
-    for (const s of str) {
-      if (state === 1) {
-        // read key to = or pair sep
-        if (s === '=') {
-          state = 2
-        } else if (s !== pairSeparator) {
-          currKey += s
-        } else if (currValue === '') {
-          data[currKey] = undefined
-          currKey = ''
-        }
-      } else if (state === 2) {
-        // read value to pair sep or quote
-        if (s === pairSeparator) {
-          data[currKey] = currValue
-          currKey = ''
-          currValue = ''
-          state = 1
-        } else if (s === '"') {
-          state = 3
-        } else {
-          currValue += s
-        }
-      } else if (state === 3) {
-        // read value to quote
-        if (s !== '"') {
-          currValue += s
-        } else {
-          state = 2
-        }
-      }
-    }
-    if (state === 2 || state === 3) {
-      data[currKey] = currValue
-    } else if (state === 1) {
-      data[currKey] = undefined
-    }
-    return data
-  }
-
-  /**
    * Parse a VCF line into an object like
    *
-   * ```json
+   * ```typescript
    * {
    *   CHROM: 'contigA',
    *   POS: 3000,
@@ -350,7 +300,12 @@ export default class VCFParser {
     const info =
       fields[7] === undefined || fields[7] === '.'
         ? {}
-        : this.parseKeyValue(fields[7])
+        : Object.fromEntries(
+            fields[7].split(';').map(r => {
+              const ret = r.split('=')
+              return [ret[0], ret[1]]
+            }),
+          )
 
     for (const key of Object.keys(info)) {
       const items = (info[key] as string | undefined)

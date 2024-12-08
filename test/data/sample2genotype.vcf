@@ -1,0 +1,11 @@
+##fileformat=VCFv4.1
+##fileDate=2024-12-01
+##source=ClinVar
+##reference=GRCh37
+##META=<ID=Assay,Type=String,Number=.,Values=[WholeGenome, Exome]>
+##META=<ID=Disease,Type=String,Number=.,Values=[None, Cancer]>
+##META=<ID=Ethnicity,Type=String,Number=.,Values=[AFR, CEU, ASN, MEX]>
+##META=<ID=Tissue,Type=String,Number=.,Values=[Blood, Breast, Colon, Lung, ?]>
+##SAMPLE=<ID=Sample1,Assay=WholeGenome,Ethnicity=AFR,Disease=None,Description="Patient germline genome from unaffected",DOI=url>
+##SAMPLE=<ID=Sample2,Assay=Exome,Ethnicity=CEU,Disease=Cancer,Tissue=Breast,Description="European patient exome from breast cancer">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
