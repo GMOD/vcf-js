@@ -302,27 +302,28 @@ export default class VCFParser {
         ? {}
         : Object.fromEntries(
             fields[7].split(';').map(r => {
-              const ret = r.split('=')
-              return [ret[0], ret[1]]
+              const [key, val] = r.split('=')
+
+              const items = val
+                ?.split(',')
+                .map(val => (val === '.' ? undefined : val))
+                .map(f => (f && hasDecode ? decodeURIComponentNoThrow(f) : f))
+              const itemType = this.getMetadata('INFO', key!, 'Type')
+              if (itemType === 'Integer' || itemType === 'Float') {
+                return [
+                  key,
+                  items?.map(val =>
+                    val === undefined ? undefined : Number(val),
+                  ),
+                ]
+              } else if (itemType === 'Flag') {
+                return [key, true]
+              } else {
+                // ?? true interpret as flag if undefined
+                return [key, items ?? true]
+              }
             }),
           )
-
-    for (const key of Object.keys(info)) {
-      const items = (info[key] as string | undefined)
-        ?.split(',')
-        .map(val => (val === '.' ? undefined : val))
-        .map(f => (f && hasDecode ? decodeURIComponentNoThrow(f) : f))
-      const itemType = this.getMetadata('INFO', key, 'Type')
-      if (itemType === 'Integer' || itemType === 'Float') {
-        info[key] = items?.map(val =>
-          val === undefined ? undefined : Number(val),
-        )
-      } else if (itemType === 'Flag') {
-        info[key] = true
-      } else {
-        info[key] = items
-      }
-    }
 
     return {
       CHROM: chrom,

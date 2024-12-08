@@ -131,7 +131,6 @@ test('can parse a line from the VCF spec Y chrom (haploid))', () => {
   const VCFParser = new VCF({
     header,
   })
-  console.log({ lines })
   const variant = VCFParser.parseLine(lines[0])
   const variant2 = VCFParser.parseLine(lines[1])
   expect(variant).toMatchSnapshot()
@@ -259,4 +258,40 @@ test('pedigree', () => {
     header,
   })
   expect(VCFParser.getMetadata()).toMatchSnapshot()
+})
+
+//https://github.com/samtools/hts-specs/blob/master/examples/vcf/sv44.vcf
+test('x vcf44 spec', () => {
+  const { header, lines } = readVcf('test/data/vcf44_spec.vcf')
+  const VCFParser = new VCF({
+    header,
+  })
+  expect(VCFParser.getMetadata()).toMatchSnapshot()
+  expect(
+    lines.map(l => {
+      const entry = VCFParser.parseLine(l)
+      return {
+        ...entry,
+        SAMPLES: entry.SAMPLES(),
+      }
+    }),
+  ).toMatchSnapshot()
+})
+
+//https://github.com/samtools/hts-specs/blob/master/examples/vcf/simple.vcf
+test('x simple spec', () => {
+  const { header, lines } = readVcf('test/data/simple.vcf')
+  const VCFParser = new VCF({
+    header,
+  })
+  expect(VCFParser.getMetadata()).toMatchSnapshot()
+  expect(
+    lines.map(l => {
+      const entry = VCFParser.parseLine(l)
+      return {
+        ...entry,
+        SAMPLES: entry.SAMPLES(),
+      }
+    }),
+  ).toMatchSnapshot()
 })

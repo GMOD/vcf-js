@@ -2766,8 +2766,8 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "rs118266897",
     ],
     "INFO": {
-      "0,14": undefined,
-      "112": undefined,
+      "0,14": true,
+      "112": true,
       "AF": [
         0.5,
       ],
@@ -2775,7 +2775,7 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "NS": [
         3,
       ],
-      "PG2.1": undefined,
+      "PG2.1": true,
     },
     "POS": 80465,
     "QUAL": 29,
@@ -2793,8 +2793,8 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "rs118269296",
     ],
     "INFO": {
-      "0,14": undefined,
-      "112": undefined,
+      "0,14": true,
+      "112": true,
       "AF": [
         0.5,
       ],
@@ -2802,7 +2802,7 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "NS": [
         3,
       ],
-      "PG2.1": undefined,
+      "PG2.1": true,
     },
     "POS": 84818,
     "QUAL": 29,
@@ -2820,8 +2820,8 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "rs118218236",
     ],
     "INFO": {
-      "0,14": undefined,
-      "112": undefined,
+      "0,14": true,
+      "112": true,
       "AF": [
         0.5,
       ],
@@ -2829,7 +2829,7 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "NS": [
         3,
       ],
-      "PG2.1": undefined,
+      "PG2.1": true,
     },
     "POS": 95414,
     "QUAL": 29,
@@ -2847,8 +2847,8 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "rs118264755",
     ],
     "INFO": {
-      "0,14": undefined,
-      "112": undefined,
+      "0,14": true,
+      "112": true,
       "AF": [
         0.5,
       ],
@@ -2856,7 +2856,7 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "NS": [
         3,
       ],
-      "PG2.1": undefined,
+      "PG2.1": true,
     },
     "POS": 231384,
     "QUAL": 29,
@@ -2874,8 +2874,8 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "rs118223336",
     ],
     "INFO": {
-      "0,14": undefined,
-      "112": undefined,
+      "0,14": true,
+      "112": true,
       "AF": [
         6.5,
       ],
@@ -2883,7 +2883,7 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "NS": [
         3,
       ],
-      "PG2.1": undefined,
+      "PG2.1": true,
     },
     "POS": 236429,
     "QUAL": 29,
@@ -2901,8 +2901,8 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "rs118217257",
     ],
     "INFO": {
-      "0,14": undefined,
-      "112": undefined,
+      "0,14": true,
+      "112": true,
       "AF": [
         0.5,
       ],
@@ -2910,12 +2910,1340 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
       "NS": [
         3,
       ],
-      "PG2.1": undefined,
+      "PG2.1": true,
     },
     "POS": 245378,
     "QUAL": 29,
     "REF": "R",
     "SAMPLES": [Function],
+  },
+]
+`;
+
+exports[`x simple spec 1`] = `
+{
+  "ALT": {
+    "*": {
+      "Description": "Represents any possible alternative allele at this location",
+    },
+    "CNV": {
+      "Description": "Copy number variable region (may be both deletion and duplication)",
+    },
+    "DEL": {
+      "Description": "Deletion relative to the reference",
+    },
+    "DEL:ME": {
+      "Description": "Deletion of mobile element relative to the reference",
+    },
+    "DUP": {
+      "Description": "Region of elevated copy number relative to the reference",
+    },
+    "DUP:TANDEM": {
+      "Description": "Tandem duplication",
+    },
+    "INS": {
+      "Description": "Insertion of novel sequence relative to the reference",
+    },
+    "INS:ME": {
+      "Description": "Insertion of a mobile element relative to the reference",
+    },
+    "INV": {
+      "Description": "Inversion of reference sequence",
+    },
+    "NON_REF": {
+      "Description": "Represents any possible alternative allele at this location",
+    },
+  },
+  "FILTER": {
+    "PASS": {
+      "Description": "Passed all filters",
+    },
+    "q10": {
+      "Description": "Quality below 10",
+    },
+    "s50": {
+      "Description": "Less than 50% of samples have data",
+    },
+  },
+  "FORMAT": {
+    "AD": {
+      "Description": "Read depth for each allele",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADF": {
+      "Description": "Read depth for each allele on the forward strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADR": {
+      "Description": "Read depth for each allele on the reverse strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "DP": {
+      "Description": "Read Depth",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "EC": {
+      "Description": "Expected alternate allele counts",
+      "Number": "A",
+      "Type": "Integer",
+    },
+    "FT": {
+      "Description": "Filter indicating if this genotype was "called"",
+      "Number": 1,
+      "Type": "String",
+    },
+    "GL": {
+      "Description": "Genotype likelihoods",
+      "Number": "G",
+      "Type": "Float",
+    },
+    "GP": {
+      "Description": "Genotype posterior probabilities",
+      "Number": "G",
+      "Type": "Float",
+    },
+    "GQ": {
+      "Description": "Genotype Quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "GT": {
+      "Description": "Genotype",
+      "Number": 1,
+      "Type": "String",
+    },
+    "HQ": {
+      "Description": "Haplotype Quality",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "MQ": {
+      "Description": "RMS mapping quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PL": {
+      "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+      "Number": "G",
+      "Type": "Integer",
+    },
+    "PQ": {
+      "Description": "Phasing quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PS": {
+      "Description": "Phase set",
+      "Number": 1,
+      "Type": "Integer",
+    },
+  },
+  "INFO": {
+    "1000G": {
+      "Description": "1000 Genomes membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "AA": {
+      "Description": "Ancestral Allele",
+      "Number": 1,
+      "Type": "String",
+    },
+    "AC": {
+      "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
+      "Number": "A",
+      "Type": "Integer",
+    },
+    "AD": {
+      "Description": "Total read depth for each allele",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADF": {
+      "Description": "Read depth for each allele on the forward strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADR": {
+      "Description": "Read depth for each allele on the reverse strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "AF": {
+      "Description": "Allele Frequency",
+      "Number": "A",
+      "Type": "Float",
+    },
+    "AN": {
+      "Description": "Total number of alleles in called genotypes",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "BKPTID": {
+      "Description": "ID of the assembled alternate allele in the assembly file",
+      "Type": "String",
+    },
+    "BQ": {
+      "Description": "RMS base quality",
+      "Number": 1,
+      "Type": "Float",
+    },
+    "CICN": {
+      "Description": "Confidence interval around copy number for the segment",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CICNADJ": {
+      "Description": "Confidence interval around copy number for the adjacency",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "CIEND": {
+      "Description": "Confidence interval around END for imprecise variants",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CIGAR": {
+      "Description": "Cigar string describing how to align an alternate allele to the reference allele",
+      "Number": 1,
+      "Type": "Float",
+    },
+    "CILEN": {
+      "Description": "Confidence interval around the inserted material between breakend",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CIPOS": {
+      "Description": "Confidence interval around POS for imprecise variants",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CN": {
+      "Description": "Copy number of segment containing breakend",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "CNADJ": {
+      "Description": "Copy number of adjacency",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "DB": {
+      "Description": "dbSNP membership, build 129",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "DBRIPID": {
+      "Description": "ID of this element in DBRIP",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DBVARID": {
+      "Description": "ID of this element in DBVAR",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DGVID": {
+      "Description": "ID of this element in Database of Genomic Variation",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DP": {
+      "Description": "Total Depth",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "DPADJ": {
+      "Description": "Read Depth of adjacency",
+      "Type": "Integer",
+    },
+    "END": {
+      "Description": "End position (for use with symbolic alleles)",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "EVENT": {
+      "Description": "ID of event associated to breakend",
+      "Number": 1,
+      "Type": "String",
+    },
+    "H2": {
+      "Description": "HapMap2 membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "H3": {
+      "Description": "HapMap3 membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "HOMLEN": {
+      "Description": "Length of base pair identical micro-homology at event breakpoints",
+      "Type": "Integer",
+    },
+    "HOMSEQ": {
+      "Description": "Sequence of base pair identical micro-homology at event breakpoints",
+      "Type": "String",
+    },
+    "IMPRECISE": {
+      "Description": "Imprecise structural variation",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "MATEID": {
+      "Description": "ID of mate breakends",
+      "Number": null,
+      "Type": "String",
+    },
+    "MEINFO": {
+      "Description": "Mobile element info of the form NAME,START,END,POLARITY",
+      "Number": 4,
+      "Type": "String",
+    },
+    "METRANS": {
+      "Description": "Mobile element transduction info of the form CHR,START,END,POLARITY",
+      "Number": 4,
+      "Type": "String",
+    },
+    "MQ": {
+      "Description": "RMS mapping quality",
+      "Number": 1,
+      "Type": null,
+    },
+    "MQ0": {
+      "Description": "Number of MAPQ == 0 reads",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "NOVEL": {
+      "Description": "Indicates a novel structural variation",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "NS": {
+      "Description": "Number of Samples With Data",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PARID": {
+      "Description": "ID of partner breakend",
+      "Number": 1,
+      "Type": "String",
+    },
+    "SB": {
+      "Description": "Strand bias",
+      "Number": 4,
+      "Type": "Integer",
+    },
+    "SOMATIC": {
+      "Description": "Somatic mutation (for cancer genomics)",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "SVLEN": {
+      "Description": "Difference in length between REF and ALT alleles",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "SVTYPE": {
+      "Description": "Type of structural variant",
+      "Number": 1,
+      "Type": "String",
+    },
+    "VALIDATED": {
+      "Description": "Validated by follow-up experiment",
+      "Number": 0,
+      "Type": "Flag",
+    },
+  },
+  "contig": {
+    "20": {
+      "assembly": "B36",
+      "length": "62435964",
+      "md5": "f126cdf8a6e0c7f379d618ff66beb2da",
+      "species": "Homo sapiens",
+      "taxonomy": "x",
+    },
+  },
+  "fileDate": "20090805",
+  "fileformat": "VCFv4.3",
+  "phasing": "partial",
+  "reference": "file:///seq/references/1000GenomesPilot-NCBI36.fasta",
+  "source": "myImputationProgramV3.1",
+}
+`;
+
+exports[`x simple spec 2`] = `
+[
+  {
+    "ALT": [
+      "A",
+    ],
+    "CHROM": "20",
+    "FILTER": "PASS",
+    "GENOTYPES": [Function],
+    "ID": [
+      "rs6054257",
+    ],
+    "INFO": {
+      "AF": [
+        0.5,
+      ],
+      "DB": true,
+      "DP": [
+        14,
+      ],
+      "H2": true,
+      "NS": [
+        3,
+      ],
+    },
+    "POS": 14370,
+    "QUAL": 29,
+    "REF": "G",
+    "SAMPLES": {
+      "NA00001": {
+        "DP": [
+          1,
+        ],
+        "GQ": [
+          48,
+        ],
+        "GT": [
+          "0|0",
+        ],
+        "HQ": [
+          51,
+          51,
+        ],
+      },
+      "NA00002": {
+        "DP": [
+          8,
+        ],
+        "GQ": [
+          48,
+        ],
+        "GT": [
+          "1|0",
+        ],
+        "HQ": [
+          51,
+          51,
+        ],
+      },
+      "NA00003": {
+        "DP": [
+          5,
+        ],
+        "GQ": [
+          43,
+        ],
+        "GT": [
+          "1/1",
+        ],
+        "HQ": [
+          undefined,
+          undefined,
+        ],
+      },
+    },
+  },
+  {
+    "ALT": [
+      "A",
+    ],
+    "CHROM": "20",
+    "FILTER": [
+      "q10",
+    ],
+    "GENOTYPES": [Function],
+    "ID": undefined,
+    "INFO": {
+      "AF": [
+        0.017,
+      ],
+      "DP": [
+        11,
+      ],
+      "NS": [
+        3,
+      ],
+    },
+    "POS": 17330,
+    "QUAL": 3,
+    "REF": "T",
+    "SAMPLES": {
+      "NA00001": {
+        "DP": [
+          3,
+        ],
+        "GQ": [
+          49,
+        ],
+        "GT": [
+          "0|0",
+        ],
+        "HQ": [
+          58,
+          50,
+        ],
+      },
+      "NA00002": {
+        "DP": [
+          5,
+        ],
+        "GQ": [
+          3,
+        ],
+        "GT": [
+          "0|1",
+        ],
+        "HQ": [
+          65,
+          3,
+        ],
+      },
+      "NA00003": {
+        "DP": [
+          3,
+        ],
+        "GQ": [
+          41,
+        ],
+        "GT": [
+          "0/0",
+        ],
+      },
+    },
+  },
+  {
+    "ALT": [
+      "G",
+      "T",
+    ],
+    "CHROM": "20",
+    "FILTER": "PASS",
+    "GENOTYPES": [Function],
+    "ID": [
+      "rs6040355",
+    ],
+    "INFO": {
+      "AA": [
+        "T",
+      ],
+      "AF": [
+        0.333,
+        0.667,
+      ],
+      "DB": true,
+      "DP": [
+        10,
+      ],
+      "NS": [
+        2,
+      ],
+    },
+    "POS": 1110696,
+    "QUAL": 67,
+    "REF": "A",
+    "SAMPLES": {
+      "NA00001": {
+        "DP": [
+          6,
+        ],
+        "GQ": [
+          21,
+        ],
+        "GT": [
+          "1|2",
+        ],
+        "HQ": [
+          23,
+          27,
+        ],
+      },
+      "NA00002": {
+        "DP": [
+          0,
+        ],
+        "GQ": [
+          2,
+        ],
+        "GT": [
+          "2|1",
+        ],
+        "HQ": [
+          18,
+          2,
+        ],
+      },
+      "NA00003": {
+        "DP": [
+          4,
+        ],
+        "GQ": [
+          35,
+        ],
+        "GT": [
+          "2/2",
+        ],
+      },
+    },
+  },
+  {
+    "ALT": undefined,
+    "CHROM": "20",
+    "FILTER": "PASS",
+    "GENOTYPES": [Function],
+    "ID": undefined,
+    "INFO": {
+      "AA": [
+        "T",
+      ],
+      "DP": [
+        13,
+      ],
+      "NS": [
+        3,
+      ],
+    },
+    "POS": 1230237,
+    "QUAL": 47,
+    "REF": "T",
+    "SAMPLES": {
+      "NA00001": {
+        "DP": [
+          7,
+        ],
+        "GQ": [
+          54,
+        ],
+        "GT": [
+          "0|0",
+        ],
+        "HQ": [
+          56,
+          60,
+        ],
+      },
+      "NA00002": {
+        "DP": [
+          4,
+        ],
+        "GQ": [
+          48,
+        ],
+        "GT": [
+          "0|0",
+        ],
+        "HQ": [
+          51,
+          51,
+        ],
+      },
+      "NA00003": {
+        "DP": [
+          2,
+        ],
+        "GQ": [
+          61,
+        ],
+        "GT": [
+          "0/0",
+        ],
+      },
+    },
+  },
+  {
+    "ALT": [
+      "G",
+      "GTCT",
+    ],
+    "CHROM": "20",
+    "FILTER": "PASS",
+    "GENOTYPES": [Function],
+    "ID": [
+      "microsat1",
+    ],
+    "INFO": {
+      "AA": [
+        "G",
+      ],
+      "DP": [
+        9,
+      ],
+      "NS": [
+        3,
+      ],
+    },
+    "POS": 1234567,
+    "QUAL": 50,
+    "REF": "GTC",
+    "SAMPLES": {
+      "NA00001": {
+        "DP": [
+          4,
+        ],
+        "GQ": [
+          35,
+        ],
+        "GT": [
+          "0/1",
+        ],
+      },
+      "NA00002": {
+        "DP": [
+          2,
+        ],
+        "GQ": [
+          17,
+        ],
+        "GT": [
+          "0/2",
+        ],
+      },
+      "NA00003": {
+        "DP": [
+          3,
+        ],
+        "GQ": [
+          40,
+        ],
+        "GT": [
+          "1/1",
+        ],
+      },
+    },
+  },
+]
+`;
+
+exports[`x vcf44 spec 1`] = `
+{
+  "ALT": {
+    "*": {
+      "Description": "Represents any possible alternative allele at this location",
+    },
+    "CNV": {
+      "Description": "Copy number variable region",
+    },
+    "DEL": {
+      "Description": "Deletion",
+    },
+    "DEL:ME": {
+      "Description": "Deletion of mobile element relative to the reference",
+    },
+    "DUP": {
+      "Description": "Duplication",
+    },
+    "DUP:TANDEM": {
+      "Description": "Tandem Duplication",
+    },
+    "INS": {
+      "Description": "Insertion",
+    },
+    "INS:ME": {
+      "Description": "Insertion of a mobile element relative to the reference",
+    },
+    "INV": {
+      "Description": "Inversion",
+    },
+    "NON_REF": {
+      "Description": "Represents any possible alternative allele at this location",
+    },
+  },
+  "FILTER": {
+    "PASS": {
+      "Description": "Passed all filters",
+    },
+  },
+  "FORMAT": {
+    "AD": {
+      "Description": "Read depth for each allele",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADF": {
+      "Description": "Read depth for each allele on the forward strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADR": {
+      "Description": "Read depth for each allele on the reverse strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "DP": {
+      "Description": "Read depth",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "EC": {
+      "Description": "Expected alternate allele counts",
+      "Number": "A",
+      "Type": "Integer",
+    },
+    "FT": {
+      "Description": "Filter indicating if this genotype was "called"",
+      "Number": 1,
+      "Type": "String",
+    },
+    "GL": {
+      "Description": "Genotype likelihoods",
+      "Number": "G",
+      "Type": "Float",
+    },
+    "GP": {
+      "Description": "Genotype posterior probabilities",
+      "Number": "G",
+      "Type": "Float",
+    },
+    "GQ": {
+      "Description": "Conditional genotype quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "GT": {
+      "Description": "Genotype",
+      "Number": 1,
+      "Type": "String",
+    },
+    "HQ": {
+      "Description": "Haplotype quality",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "MQ": {
+      "Description": "RMS mapping quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PL": {
+      "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+      "Number": "G",
+      "Type": "Integer",
+    },
+    "PQ": {
+      "Description": "Phasing quality",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PS": {
+      "Description": "Phase set",
+      "Number": 1,
+      "Type": "Integer",
+    },
+  },
+  "INFO": {
+    "1000G": {
+      "Description": "1000 Genomes membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "AA": {
+      "Description": "Ancestral allele",
+      "Number": 1,
+      "Type": "String",
+    },
+    "AC": {
+      "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
+      "Number": "A",
+      "Type": "Integer",
+    },
+    "AD": {
+      "Description": "Total read depth for each allele",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADF": {
+      "Description": "Read depth for each allele on the forward strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "ADR": {
+      "Description": "Read depth for each allele on the reverse strand",
+      "Number": "R",
+      "Type": "Integer",
+    },
+    "AF": {
+      "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
+      "Number": "A",
+      "Type": "Float",
+    },
+    "AN": {
+      "Description": "Total number of alleles in called genotypes",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "BKPTID": {
+      "Description": "ID of the assembled alternate allele in the assembly file",
+      "Type": "String",
+    },
+    "BQ": {
+      "Description": "RMS base quality",
+      "Number": 1,
+      "Type": "Float",
+    },
+    "CICN": {
+      "Description": "Confidence interval around copy number for the segment",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CICNADJ": {
+      "Description": "Confidence interval around copy number for the adjacency",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "CIEND": {
+      "Description": "Confidence interval around END for imprecise variants",
+      "Number": 2,
+      "Type": "Integer",
+    },
+    "CIGAR": {
+      "Description": "Cigar string describing how to align an alternate allele to the reference allele",
+      "Number": 1,
+      "Type": "Float",
+    },
+    "CILEN": {
+      "Description": "Confidence interval for the SVLEN field",
+      "Number": ".",
+      "Type": "Integer",
+    },
+    "CIPOS": {
+      "Description": "Confidence interval around POS for symbolic structural variants",
+      "Number": ".",
+      "Type": "Integer",
+    },
+    "CN": {
+      "Description": "Copy number of segment containing breakend",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "CNADJ": {
+      "Description": "Copy number of adjacency",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "DB": {
+      "Description": "dbSNP membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "DBRIPID": {
+      "Description": "ID of this element in DBRIP",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DBVARID": {
+      "Description": "ID of this element in DBVAR",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DGVID": {
+      "Description": "ID of this element in Database of Genomic Variation",
+      "Number": 1,
+      "Type": "String",
+    },
+    "DP": {
+      "Description": "combined depth across samples",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "DPADJ": {
+      "Description": "Read Depth of adjacency",
+      "Type": "Integer",
+    },
+    "END": {
+      "Description": "End position of the longest variant described in this record",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "EVENT": {
+      "Description": "ID of associated event",
+      "Number": "A",
+      "Type": "String",
+    },
+    "EVENTTYPE": {
+      "Description": "Type of associated event",
+      "Number": "A",
+      "Type": "String",
+    },
+    "H2": {
+      "Description": "HapMap2 membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "H3": {
+      "Description": "HapMap3 membership",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "HOMLEN": {
+      "Description": "Length of base pair identical micro-homology at event breakpoints",
+      "Type": "Integer",
+    },
+    "HOMSEQ": {
+      "Description": "Sequence of base pair identical micro-homology at event breakpoints",
+      "Type": "String",
+    },
+    "IMPRECISE": {
+      "Description": "Imprecise structural variation",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "MATEID": {
+      "Description": "ID of mate breakend",
+      "Number": "A",
+      "Type": "String",
+    },
+    "MEINFO": {
+      "Description": "Mobile element info of the form NAME,START,END,POLARITY",
+      "Number": 4,
+      "Type": "String",
+    },
+    "METRANS": {
+      "Description": "Mobile element transduction info of the form CHR,START,END,POLARITY",
+      "Number": 4,
+      "Type": "String",
+    },
+    "MQ": {
+      "Description": "RMS mapping quality",
+      "Number": 1,
+      "Type": null,
+    },
+    "MQ0": {
+      "Description": "Number of MAPQ == 0 reads",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "NOVEL": {
+      "Description": "Indicates a novel structural variation",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "NS": {
+      "Description": "Number of samples with data",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "PARID": {
+      "Description": "ID of partner breakend",
+      "Number": 1,
+      "Type": "String",
+    },
+    "SB": {
+      "Description": "Strand bias",
+      "Number": 4,
+      "Type": "Integer",
+    },
+    "SOMATIC": {
+      "Description": "Somatic mutation (for cancer genomics)",
+      "Number": 0,
+      "Type": "Flag",
+    },
+    "SVCLAIM": {
+      "Description": "Claim made by the structural variant call. Valid values are D, J, DJ for abundance, adjacency and both respectively",
+      "Number": "A",
+      "Type": "String",
+    },
+    "SVLEN": {
+      "Description": "Length of structural variant",
+      "Number": "A",
+      "Type": "Integer",
+    },
+    "SVTYPE": {
+      "Description": "Type of structural variant",
+      "Number": 1,
+      "Type": "String",
+    },
+    "VALIDATED": {
+      "Description": "Validated by follow-up experiment",
+      "Number": 0,
+      "Type": "Flag",
+    },
+  },
+  "contig": {
+    "chrA": {
+      "length": "1000000",
+    },
+  },
+  "custom_header_field_containing_chr_seq": "ATGCGAAAAAAATGT",
+  "fileformat": "VCFv4.4",
+}
+`;
+
+exports[`x vcf44 spec 2`] = `
+[
+  {
+    "ALT": [
+      "T",
+    ],
+    "CHROM": "chrA",
+    "FILTER": undefined,
+    "GENOTYPES": [Function],
+    "ID": undefined,
+    "INFO": {
+      "EVENT": [
+        "DEL_seq",
+      ],
+    },
+    "POS": 2,
+    "QUAL": undefined,
+    "REF": "TGC",
+    "SAMPLES": {
+      "sample": {
+        "GT": [
+          "0/1",
+        ],
+      },
+    },
+  },
+  {
+    "ALT": [
+      "<DEL>",
+    ],
+    "CHROM": "chrA",
+    "FILTER": undefined,
+    "GENOTYPES": [Function],
+    "ID": undefined,
+    "INFO": {
+      "END": [
+        4,
+      ],
+      "EVENT": [
+        "DEL_symbolic",
+      ],
+      "SVCLAIM": [
+        "DJ",
+      ],
+      "SVLEN": [
+        2,
+      ],
+    },
+    "POS": 2,
+    "QUAL": undefined,
+    "REF": "T",
+    "SAMPLES": {
+      "sample": {
+        "GT": [
+          "0/1",
+        ],
+      },
+    },
+  },
+  {
+    "ALT": [
+      "T[chrA:5[",
+    ],
+    "CHROM": "chrA",
+    "FILTER": undefined,
+    "GENOTYPES": [Function],
+    "ID": [
+      "delbp1",
+    ],
+    "INFO": {
+      "EVENT": [
+        "DEL_split_bp_cn",
+      ],
+      "MATEID": [
+        "delbp2",
+      ],
+    },
+    "POS": 2,
+    "QUAL": undefined,
+    "REF": "T",
+    "SAMPLES": {
+      "sample": {
+        "GT": [
+          "0/1",
+        ],
+      },
+    },
+  },
+  {
+    "ALT": [
+      "]chrA:2]A",
+    ],
+    "CHROM": "chrA",
+    "FILTER": undefined,
+    "GENOTYPES": [Function],
+    "ID": [
+      "delbp2",
+    ],
+    "INFO": {
+      "EVENT": [
+        "DEL_split_bp_cn",
+      ],
+      "MATEID": [
+        "delbp1",
+      ],
+    },
+    "POS": 2,
+    "QUAL": undefined,
+    "REF": "A",
+    "SAMPLES": {
+      "sample": {
+        "GT": [
+          "0/1",
+        ],
+      },
+    },
+  },
+  {
+    "ALT": [
+      "<DEL>",
+    ],
+    "CHROM": "chrA",
+    "FILTER": undefined,
+    "GENOTYPES": [Function],
+    "ID": undefined,
+    "INFO": {
+      "END": [
+        4,
+      ],
+      "EVENT": [
+        "DEL_split_bp_cn",
+      ],
+      "SVCLAIM": [
+        "D",
+      ],
+      "SVLEN": [
+        2,
+      ],
+    },
+    "POS": 2,
+    "QUAL": undefined,
+    "REF": "T",
+    "SAMPLES": {
+      "sample": {
+        "GT": [
+          "0/1",
+        ],
+      },
+    },
+  },
+  {
+    "ALT": [
+      "GAAA",
+    ],
+    "CHROM": "chrA",
+    "FILTER": undefined,
+    "GENOTYPES": [Function],
+    "ID": undefined,
+    "INFO": {
+      "EVENT": [
+        "homology_seq",
+      ],
+    },
+    "POS": 5,
+    "QUAL": undefined,
+    "REF": "G",
+    "SAMPLES": {
+      "sample": {
+        "GT": [
+          "1/1",
+        ],
+      },
+    },
+  },
+  {
+    "ALT": [
+      "<DUP>",
+    ],
+    "CHROM": "chrA",
+    "FILTER": undefined,
+    "GENOTYPES": [Function],
+    "ID": undefined,
+    "INFO": {
+      "CIPOS": [
+        0,
+        5,
+      ],
+      "END": [
+        8,
+      ],
+      "EVENT": [
+        "homology_dup",
+      ],
+      "SVLEN": [
+        3,
+      ],
+    },
+    "POS": 5,
+    "QUAL": undefined,
+    "REF": "G",
+    "SAMPLES": {
+      "sample": {
+        "GT": [
+          "1/1",
+        ],
+      },
+    },
+  },
+  {
+    "ALT": [
+      "<INS>",
+    ],
+    "CHROM": "chrA",
+    "FILTER": undefined,
+    "GENOTYPES": [Function],
+    "ID": undefined,
+    "INFO": {
+      "CILEN": [
+        -50,
+        50,
+      ],
+      "CIPOS": [
+        -10,
+        10,
+      ],
+      "END": [
+        14,
+      ],
+      "IMPRECISE": true,
+      "SVLEN": [
+        100,
+      ],
+    },
+    "POS": 14,
+    "QUAL": undefined,
+    "REF": "T",
+    "SAMPLES": {
+      "sample": {
+        "GT": [
+          "0/1",
+        ],
+      },
+    },
+  },
+  {
+    "ALT": [
+      ".CCCCCCG",
+    ],
+    "CHROM": "chrA",
+    "FILTER": undefined,
+    "GENOTYPES": [Function],
+    "ID": undefined,
+    "INFO": {
+      "EVENT": [
+        "single_breakend",
+      ],
+    },
+    "POS": 14,
+    "QUAL": undefined,
+    "REF": "G",
+    "SAMPLES": {
+      "sample": {
+        "GT": [
+          "0/1",
+        ],
+      },
+    },
   },
 ]
 `;
