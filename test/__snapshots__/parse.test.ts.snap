@@ -674,88 +674,6 @@ exports[`can parse a line from the VCF spec 2`] = `
 }
 `;
 
-exports[`can parse a line from the VCF spec 3`] = `
-{
-  "ALT": [
-    "<DEL>",
-  ],
-  "CHROM": "8",
-  "FILTER": "PASS",
-  "GENOTYPES": [Function],
-  "ID": [
-    "28329_0",
-  ],
-  "INFO": {
-    "AF": [
-      0.971429,
-    ],
-    "CHR2": [
-      "8",
-    ],
-    "END": [
-      17709148,
-    ],
-    "Kurtosis_quant_start": [
-      "20.524521",
-    ],
-    "Kurtosis_quant_stop": [
-      "3.925926",
-    ],
-    "PRECISE": true,
-    "RE": [
-      34,
-    ],
-    "STD_quant_start": [
-      "0.000000",
-    ],
-    "STD_quant_stop": [
-      "0.000000",
-    ],
-    "STRANDS": [
-      "+-",
-    ],
-    "STRANDS2": [
-      "20",
-      "14",
-      "20",
-      "14",
-    ],
-    "SUPTYPE": [
-      "AL",
-    ],
-    "SVLEN": [
-      33,
-    ],
-    "SVMETHOD": [
-      "Snifflesv1.0.3",
-    ],
-    "SVTYPE": [
-      "DEL",
-    ],
-  },
-  "POS": 17709115,
-  "QUAL": undefined,
-  "REF": "N",
-  "SAMPLES": [Function],
-}
-`;
-
-exports[`can parse a line from the VCF spec 4`] = `
-{
-  "/seq/schatz/fritz/sv-paper/real/Nanopore_NA12878/mapped/ngm_Nanopore_human_ngmlr-0.2.3_mapped.bam": {
-    "DR": [
-      1,
-    ],
-    "DV": [
-      34,
-    ],
-    "GT": [
-      "1/1",
-    ],
-  },
-}
-`;
-
 exports[`can parse a line from the VCF spec Y chrom (haploid)) 1`] = `
 {
   "ALT": [
@@ -2335,6 +2253,88 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "SAMPLES": [Function],
   },
 ]
+`;
+
+exports[`sniffles vcf 1`] = `
+{
+  "ALT": [
+    "<DEL>",
+  ],
+  "CHROM": "8",
+  "FILTER": "PASS",
+  "GENOTYPES": [Function],
+  "ID": [
+    "28329_0",
+  ],
+  "INFO": {
+    "AF": [
+      0.971429,
+    ],
+    "CHR2": [
+      "8",
+    ],
+    "END": [
+      17709148,
+    ],
+    "Kurtosis_quant_start": [
+      "20.524521",
+    ],
+    "Kurtosis_quant_stop": [
+      "3.925926",
+    ],
+    "PRECISE": true,
+    "RE": [
+      34,
+    ],
+    "STD_quant_start": [
+      "0.000000",
+    ],
+    "STD_quant_stop": [
+      "0.000000",
+    ],
+    "STRANDS": [
+      "+-",
+    ],
+    "STRANDS2": [
+      "20",
+      "14",
+      "20",
+      "14",
+    ],
+    "SUPTYPE": [
+      "AL",
+    ],
+    "SVLEN": [
+      33,
+    ],
+    "SVMETHOD": [
+      "Snifflesv1.0.3",
+    ],
+    "SVTYPE": [
+      "DEL",
+    ],
+  },
+  "POS": 17709115,
+  "QUAL": undefined,
+  "REF": "N",
+  "SAMPLES": [Function],
+}
+`;
+
+exports[`sniffles vcf 2`] = `
+{
+  "/seq/schatz/fritz/sv-paper/real/Nanopore_NA12878/mapped/ngm_Nanopore_human_ngmlr-0.2.3_mapped.bam": {
+    "DR": [
+      1,
+    ],
+    "DV": [
+      34,
+    ],
+    "GT": [
+      "1/1",
+    ],
+  },
+}
 `;
 
 exports[`snippet from VCF 4.3 spec 1`] = `
