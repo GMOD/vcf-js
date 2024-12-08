@@ -1,3 +1,4 @@
+import { parseMetaString } from './parseMetaString'
 import vcfReserved from './vcfReserved'
 
 function decodeURIComponentNoThrow(uri: string) {
@@ -171,7 +172,15 @@ export default class VCFParser {
         this.metadata[r] = {}
       }
       const [id, keyVals] = this.parseStructuredMetaVal(metaVal)
-      ;(this.metadata[r] as Record<string, unknown>)[id] = keyVals
+      if (id) {
+        // if there is an ID field in the <> metadata
+        // e.g. ##INFO=<ID=AF_ESP,...>
+        ;(this.metadata[r] as Record<string, unknown>)[id] = keyVals
+      } else {
+        // if there is not an ID field in the <> metadata
+        // e.g. ##ID=<Description="ClinVar Variation ID">
+        this.metadata[r] = keyVals
+      }
     } else {
       this.metadata[r] = metaVal
     }
@@ -187,8 +196,8 @@ export default class VCFParser {
    * and 2) an object with the other key-value pairs in the metadata
    */
   private parseStructuredMetaVal(metaVal: string) {
-    const keyVals = this.parseKeyValue(metaVal.replace(/^<|>$/g, ''), ',')
-    const id = keyVals.ID as string
+    const keyVals = parseMetaString(metaVal)
+    const id = keyVals.ID!
     delete keyVals.ID
     if ('Number' in keyVals) {
       if (!Number.isNaN(Number(keyVals.Number))) {
@@ -280,7 +289,7 @@ export default class VCFParser {
   /**
    * Parse a VCF line into an object like
    *
-   * ```json
+   * ```typescript
    * {
    *   CHROM: 'contigA',
    *   POS: 3000,

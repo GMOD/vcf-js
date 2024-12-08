@@ -96,34 +96,26 @@ The `variant` object returned by `parseLine()` would be
     DB: true,
     XYZ: ['5'],
   },
+  SAMPLES: () => ({
+    HG00096: {
+      GT: ['0|0'],
+      AP: ['0.000', '0.000'],
+    },
+  }),
+  GENOTYPES: () => ({
+    HG00096: '0|0',
+  }),
 }
 ```
 
-The `variant` object will also has two methods called "`SAMPLES()`" and
-"`GENOTYPES()`" that will not be evaluated unless it is called.
+The `variant.SAMPLES()` and `variant.GENOTYPES()` are functions because it does not
+try to eagerly parse all the genotype data, so will only do so when you call
+either of these which can save time especially if your VCF has a lot of samples
+in it.
 
-This can save time if you only want the variant information and not the
-sample-specific information, especially if your VCF has a lot of samples in it.
-
-In the above case the `variant.SAMPLES()` object would look like
-
-```typescript
-{
-  HG00096: {
-    GT: ['0|0'],
-    AP: ['0.000', '0.000'],
-  },
-}
-```
-
-whil the `variant.GENOTYPES()` object would look like this (only extracts the GT
-as a raw string)
-
-```typescript
-{
-  HG00096: '0|0'
-}
-```
+The `variant.SAMPLES()` function parses out the FORMAT fields, while
+`variant.GENOTYPES()` returns just the genotypes string which can be faster if
+that is the only information you are interested in
 
 The parser will try to convert the values in INFO and FORMAT to the proper types
 using the header metadata. For example, if there is a header line like
@@ -316,7 +308,7 @@ Returns **any** An object, string, or number, depending on the filtering
 
 Parse a VCF line into an object like
 
-```json
+```typescript
 {
   CHROM: 'contigA',
   POS: 3000,

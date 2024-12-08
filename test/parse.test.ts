@@ -253,18 +253,12 @@ test('can parse breakends', () => {
 
 // from https://github.com/GMOD/jbrowse/issues/1358
 test('vcf lines with weird info field and missing format/genotypes', () => {
+  const { header, lines } = readVcf(
+    'test/data/weird_info_and_missing_format.vcf',
+  )
   const VCFParser = new VCF({
-    header: `#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tBAMs/caudaus.sorted.sam`,
+    header,
   })
-  const lines =
-    `lcl|Scaffald_1\t80465\trs118266897\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
-lcl|Scaffald_1\t84818\trs118269296\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
-lcl|Scaffald_1\t95414\trs118218236\tW\tT\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
-lcl|Scaffald_1\t231384\trs118264755\tR\tA\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1
-lcl|Scaffald_1\t236429\trs118223336\tR\tG\t29\tPASS\tNS=3;0,14;AF=6.5;DB;112;PG2.1
-lcl|Scaffald_1\t245378\trs118217257\tR\tG\t29\tPASS\tNS=3;0,14;AF=0.5;DB;112;PG2.1`.split(
-      '\n',
-    )
 
   expect(lines.map(line => VCFParser.parseLine(line))).toMatchSnapshot()
 })
@@ -333,4 +327,21 @@ test('parse breakend on symbolic alleles', () => {
 
 test('parse breakend on thing that looks like symbolic allele but is actually a feature', () => {
   expect(parseBreakend('<INV>C')).toMatchSnapshot()
+})
+
+test('clinvar metadata', () => {
+  const { header } = readVcf('test/data/clinvar.header.vcf')
+  const VCFParser = new VCF({
+    header,
+  })
+  expect(VCFParser.getMetadata()).toMatchSnapshot()
+})
+
+test('sample to genotype information', () => {
+  const { header } = readVcf('test/data/sample2genotype.vcf')
+  const VCFParser = new VCF({
+    header,
+  })
+  expect(VCFParser.getMetadata().META).toMatchSnapshot()
+  expect(VCFParser.getMetadata().SAMPLES).toMatchSnapshot()
 })

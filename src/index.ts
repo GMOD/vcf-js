@@ -1,5 +1,3 @@
-
-
 export interface Breakend {
   Join: string
   Replacement: string
@@ -42,7 +40,7 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
       return {
         Join: 'right',
         SingleBreakend: true,
-        Replacement: breakendString.slice(0, - 1),
+        Replacement: breakendString.slice(0, -1),
       }
     } else if (breakendString.startsWith('<')) {
       const res = /<(.*)>(.*)/.exec(breakendString)
@@ -77,8 +75,6 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
   return undefined
 }
 
-
-
 export type { Variant } from './parse'
 
-export {default} from './parse'
+export { default } from './parse'
