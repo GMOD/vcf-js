@@ -108,8 +108,8 @@ The `variant` object returned by `parseLine()` would be
 }
 ```
 
-The `variant.SAMPLES()` and `variant.GENOTYPES()` are functions because it does not
-try to eagerly parse all the genotype data, so will only do so when you call
+The `variant.SAMPLES()` and `variant.GENOTYPES()` are functions because it does
+not try to eagerly parse all the genotype data, so will only do so when you call
 either of these which can save time especially if your VCF has a lot of samples
 in it.
 
@@ -125,13 +125,11 @@ using the header metadata. For example, if there is a header line like
 ```
 
 The parser will expect any INFO entry ABC to be an array of two integers, so it
-would convert `ABC=12,20` to `{ ABC: [12, 20] }`. Each INFO entry value will be
-an array unless `Type=Flag` is specified, in which case it will be `true`. If no
-metadata can be found for the entry, it will assume `Number=1` and
-`Type=String`.
+would convert `ABC=12,20` to `{ ABC: [12, 20] }`.
 
-_NOTE: the vcf specification allows percent-encoded characters. this library
-does not decode them, an end-use library can call url-decode methods_
+Each INFO entry value will be an array unless `Type=Flag` is specified, in which
+case it will be `true`. If no metadata can be found for the entry, it will
+assume `Number=1` and `Type=String`.
 
 Some fields are pre-defined by the
 [VCF spec](https://samtools.github.io/hts-specs/VCFv4.3.pdf), which is why in
@@ -199,7 +197,8 @@ you can access the VCF's header metadata like (some output omitted for clarity):
 1
 ```
 
-A list of sample names is also available in the `samples` attribute of the parser object:
+A list of sample names is also available in the `samples` attribute of the
+parser object:
 
 ```typescript
 > console.log(vcfParser.samples)
@@ -285,22 +284,27 @@ Class representing a VCF parser, instantiated with the VCF header.
 
 #### Parameters
 
-- `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
+- `args`
+  **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
 
-  - `args.header` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The VCF header. Supports both LF and CRLF
-    newlines. (optional, default `''`)
-  - `args.strict` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether to parse in strict mode or not
-    (default true) (optional, default `true`)
+  - `args.header`
+    **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**
+    The VCF header. Supports both LF and CRLF newlines. (optional, default `''`)
+  - `args.strict`
+    **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)**
+    Whether to parse in strict mode or not (default true) (optional, default
+    `true`)
 
 #### getMetadata
 
-Get metadata filtered by the elements in args. For example, can pass
-('INFO', 'DP') to only get info on an metadata tag that was like
-"##INFO=\<ID=DP,...>"
+Get metadata filtered by the elements in args. For example, can pass ('INFO',
+'DP') to only get info on an metadata tag that was like "##INFO=\<ID=DP,...>"
 
 ##### Parameters
 
-- `args` **...[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** List of metadata filter strings.
+- `args`
+  **...[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**
+  List of metadata filter strings.
 
 Returns **any** An object, string, or number, depending on the filtering
 
@@ -337,8 +341,8 @@ Parse a VCF line into an object like
 ```
 
 SAMPLES and GENOTYPES methods are functions instead of static data fields
-because it avoids parsing the potentially long list of samples from e.g.
-1000 genotypes data unless requested.
+because it avoids parsing the potentially long list of samples from e.g. 1000
+genotypes data unless requested.
 
 The SAMPLES function gives all info about the samples
 
@@ -347,4 +351,6 @@ potentially optimized parsing by programs that need it
 
 ##### Parameters
 
-- `line` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** A string of a line from a VCF
+- `line`
+  **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**
+  A string of a line from a VCF
