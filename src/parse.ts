@@ -228,65 +228,6 @@ export default class VCFParser {
   }
 
   /**
-   * Sometimes VCFs have key-value strings that allow the separator within the
-   * value if it's in quotes, like:
-   * 'ID=DB,Number=0,Type=Flag,Description="dbSNP membership, build 129"'
-   *
-   * Parse this at a low level since we can't just split at "," (or whatever
-   * separator). Above line would be parsed to: {ID: 'DB', Number: '0', Type:
-   * 'Flag', Description: 'dbSNP membership, build 129'}
-   */
-  private parseKeyValue(str: string, pairSeparator = ';') {
-    const data = {} as Record<string, unknown>
-    let currKey = ''
-    let currValue = ''
-
-    // states:
-    // 1: read key to = or pair sep
-    // 2: read value to sep or quote
-    // 3: read value to quote
-    let state = 1
-    for (const s of str) {
-      if (state === 1) {
-        // read key to = or pair sep
-        if (s === '=') {
-          state = 2
-        } else if (s !== pairSeparator) {
-          currKey += s
-        } else if (currValue === '') {
-          data[currKey] = undefined
-          currKey = ''
-        }
-      } else if (state === 2) {
-        // read value to pair sep or quote
-        if (s === pairSeparator) {
-          data[currKey] = currValue
-          currKey = ''
-          currValue = ''
-          state = 1
-        } else if (s === '"') {
-          state = 3
-        } else {
-          currValue += s
-        }
-      } else if (state === 3) {
-        // read value to quote
-        if (s !== '"') {
-          currValue += s
-        } else {
-          state = 2
-        }
-      }
-    }
-    if (state === 2 || state === 3) {
-      data[currKey] = currValue
-    } else if (state === 1) {
-      data[currKey] = undefined
-    }
-    return data
-  }
-
-  /**
    * Parse a VCF line into an object like
    *
    * ```typescript
@@ -359,7 +300,12 @@ export default class VCFParser {
     const info =
       fields[7] === undefined || fields[7] === '.'
         ? {}
-        : this.parseKeyValue(fields[7])
+        : Object.fromEntries(
+            fields[7].split(';').map(r => {
+              const ret = r.split('=')
+              return [ret[0], ret[1]]
+            }),
+          )
 
     for (const key of Object.keys(info)) {
       const items = (info[key] as string | undefined)
