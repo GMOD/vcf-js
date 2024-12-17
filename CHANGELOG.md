@@ -1,3 +1,7 @@
+## [6.0.1](https://github.com/GMOD/vcf-js/compare/v6.0.0...v6.0.1) (2024-12-17)
+
+
+
 # [6.0.0](https://github.com/GMOD/vcf-js/compare/v5.0.10...v6.0.0) (2024-11-30)
 
 - Changes the default Variant object to have a SAMPLES() function call instead
