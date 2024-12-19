@@ -75,6 +75,6 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
   return undefined
 }
 
-export type { Variant } from './parse'
+export type { Variant } from './parse.ts'
 
-export { default } from './parse'
+export { default } from './parse.ts'
