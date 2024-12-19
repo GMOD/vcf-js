@@ -1,5 +1,5 @@
-import { parseMetaString } from './parseMetaString'
-import vcfReserved from './vcfReserved'
+import { parseMetaString } from './parseMetaString.ts'
+import vcfReserved from './vcfReserved.ts'
 
 function decodeURIComponentNoThrow(uri: string) {
   try {
