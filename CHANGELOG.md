@@ -1,3 +1,7 @@
+## [6.0.5](https://github.com/GMOD/vcf-js/compare/v6.0.4...v6.0.5) (2025-01-16)
+
+
+
 ## [6.0.4](https://github.com/GMOD/vcf-js/compare/v6.0.3...v6.0.4) (2025-01-16)
 
 
