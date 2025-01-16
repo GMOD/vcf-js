@@ -4,12 +4,8 @@
   "description": "High performance streaming Variant Call Format (VCF) parser in pure JavaScript",
   "type": "module",
   "exports": {
-    "import": {
-      "import": "./esm/index.js"
-    },
-    "require": {
-      "require": "./dist/index.js"
-    }
+    "import": "./esm/index.js",
+    "require": "./dist/index.js"
   },
   "repository": "github:GMOD/vcf-js",
   "author": {
