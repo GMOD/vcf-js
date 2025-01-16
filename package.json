@@ -3,13 +3,12 @@
   "version": "6.0.5",
   "description": "High performance streaming Variant Call Format (VCF) parser in pure JavaScript",
   "type": "module",
+  "types": "./dist/index.d.ts",
   "exports": {
     "import": {
-      "types": "./esm/index.d.ts",
       "import": "./esm/index.js"
     },
     "require": {
-      "types": "./dist/index.d.ts",
       "require": "./dist/index.js"
     }
   },
