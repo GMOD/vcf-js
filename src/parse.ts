@@ -290,6 +290,7 @@ export default class VCFParser {
     const alt = ALT === '.' ? undefined : ALT!.split(',')
     const qual = QUAL === '.' ? undefined : +QUAL!
     const filter = FILTER === '.' ? undefined : FILTER!.split(';')
+    const format = fields[8]
 
     if (this.strict && !fields[7]) {
       throw new Error(
@@ -335,6 +336,7 @@ export default class VCFParser {
         filter && filter.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
       ID: id,
       QUAL: qual,
+      FORMAT: format,
       SAMPLES: () => this.parseSamples(fields[8] ?? '', rest),
       GENOTYPES: () => this.parseGenotypesOnly(fields[8] ?? '', rest),
     }
