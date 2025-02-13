@@ -37,11 +37,16 @@ function customSplit(str: string) {
   return result
 }
 
+function splitFirst(str: string, split: string) {
+  const index = str.indexOf(split)
+  return [str.slice(0, index), str.slice(index + 1)]
+}
+
 export function parseMetaString(metaString: string) {
   const inside = metaString.replace(/^<|>$/g, '')
   return Object.fromEntries(
     customSplit(inside).map(f => {
-      const [key, val] = f.split('=').map(f => f.trim())
+      const [key, val] = splitFirst(f, '=')
       if (val && val.startsWith('[') && val.endsWith(']')) {
         return [
           key,

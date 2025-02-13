@@ -12,6 +12,15 @@ exports[`array in values 1`] = `
 }
 `;
 
+exports[`equals in description 1`] = `
+{
+  "Description": "Allelic Probability, P(Allele=1|Haplotype)",
+  "ID": "AP",
+  "Number": "2",
+  "Type": "Float",
+}
+`;
+
 exports[`quoted string with comma in description 1`] = `
 {
   "Description": "dbSNP membership, build 129",

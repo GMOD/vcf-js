@@ -19,3 +19,11 @@ test('quoted string with comma in description', () => {
     ),
   ).toMatchSnapshot()
 })
+
+test('equals in description', () => {
+  expect(
+    parseMetaString(
+      '<ID=AP,Number=2,Type=Float,Description="Allelic Probability, P(Allele=1|Haplotype)">',
+    ),
+  ).toMatchSnapshot()
+})
