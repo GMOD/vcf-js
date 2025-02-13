@@ -295,3 +295,11 @@ test('x simple spec', () => {
     }),
   ).toMatchSnapshot()
 })
+
+test('pedigree', () => {
+  const { header } = readVcf('test/data/pedigree.vcf')
+  const VCFParser = new VCF({
+    header,
+  })
+  expect(VCFParser.getMetadata()).toMatchSnapshot()
+})
