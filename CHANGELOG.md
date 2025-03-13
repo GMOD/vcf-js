@@ -1,34 +1,18 @@
 ## [6.0.8](https://github.com/GMOD/vcf-js/compare/v6.0.7...v6.0.8) (2025-02-13)
 
-
-
 ## [6.0.7](https://github.com/GMOD/vcf-js/compare/v6.0.6...v6.0.7) (2025-01-29)
-
-
 
 ## [6.0.6](https://github.com/GMOD/vcf-js/compare/v6.0.5...v6.0.6) (2025-01-16)
 
-
-
 ## [6.0.5](https://github.com/GMOD/vcf-js/compare/v6.0.4...v6.0.5) (2025-01-16)
-
-
 
 ## [6.0.4](https://github.com/GMOD/vcf-js/compare/v6.0.3...v6.0.4) (2025-01-16)
 
-
-
 ## [6.0.3](https://github.com/GMOD/vcf-js/compare/v6.0.2...v6.0.3) (2025-01-16)
-
-
 
 ## [6.0.2](https://github.com/GMOD/vcf-js/compare/v6.0.1...v6.0.2) (2025-01-07)
 
-
-
 ## [6.0.1](https://github.com/GMOD/vcf-js/compare/v6.0.0...v6.0.1) (2024-12-17)
-
-
 
 # [6.0.0](https://github.com/GMOD/vcf-js/compare/v5.0.10...v6.0.0) (2024-11-30)
 

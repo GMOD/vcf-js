@@ -5,7 +5,7 @@
 // https://stackoverflow.com/a/18893443/2129219, and asked it to add support
 // for square brackets
 //
-// the result was this function
+// it undid the regex into serial logic and the result was this function
 function customSplit(str: string) {
   const result = []
   let current = ''
