@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parse genotypes 1`] = `
+{
+  "h1": "./.",
+  "h2": "./.",
+}
+`;
+
+exports[`parse genotypes 2`] = `
+{
+  "h1": "./.",
+  "h2": "./.",
+}
+`;
+
+exports[`parse genotypes 3`] = `
+{
+  "h1": "./.",
+  "h2": "./.",
+}
+`;
