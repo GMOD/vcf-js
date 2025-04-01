@@ -1,3 +1,4 @@
+import { parseGenotypesOnly } from './parseGenotypesOnly.ts'
 import { parseMetaString } from './parseMetaString.ts'
 import vcfReserved from './vcfReserved.ts'
 
@@ -117,38 +118,6 @@ export default class VCFParser {
         }
       }
     }
-    return genotypes
-  }
-
-  private parseGenotypesOnly(format: string, prerest: string) {
-    const rest = prerest.split('\t')
-    const genotypes = {} as Record<string, string>
-    let i = 0
-    const formatSplit = format.split(':')
-    if (formatSplit.length === 1) {
-      for (const sample of this.samples) {
-        genotypes[sample] = rest[i++]!
-      }
-    } else {
-      const gtIndex = formatSplit.indexOf('GT')
-      if (gtIndex === 0) {
-        for (const sample of this.samples) {
-          const val = rest[i++]!
-          const idx = val.indexOf(':')
-          if (idx !== -1) {
-            genotypes[sample] = val.slice(0, idx)
-          } else {
-            console.warn('unknown')
-          }
-        }
-      } else {
-        for (const sample of this.samples) {
-          const val = rest[i++]!.split(':')
-          genotypes[sample] = val[gtIndex]!
-        }
-      }
-    }
-
     return genotypes
   }
 
@@ -338,7 +307,7 @@ export default class VCFParser {
       QUAL: qual,
       FORMAT: format,
       SAMPLES: () => this.parseSamples(fields[8] ?? '', rest),
-      GENOTYPES: () => this.parseGenotypesOnly(fields[8] ?? '', rest),
+      GENOTYPES: () => parseGenotypesOnly(fields[8] ?? '', rest, this.samples),
     }
   }
 }
