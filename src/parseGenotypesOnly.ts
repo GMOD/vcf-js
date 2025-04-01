@@ -16,8 +16,9 @@ export function parseGenotypesOnly(
       const gtIndex = formatSplit.indexOf('GT')
       if (gtIndex === 0) {
         for (const sample of samples) {
-          const idx = rest[i++]!.indexOf(':')
-          genotypes[sample] = idx !== -1 ? rest[i++]!.slice(0, idx) : rest[i++]!
+          const val = rest[i++]!
+          const idx = val.indexOf(':')
+          genotypes[sample] = idx !== -1 ? val.slice(0, idx) : val
         }
       } else {
         for (const sample of samples) {
