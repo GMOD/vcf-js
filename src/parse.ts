@@ -90,10 +90,7 @@ export default class VCFParser {
   }
 
   private parseSamples(format: string, prerest: string) {
-    const genotypes = {} as Record<
-      string,
-      Record<string, (string | number | undefined)[] | undefined>
-    >
+    const genotypes = {} as Record<string, Record<string, (string | number)[]>>
     if (format) {
       const rest = prerest.split('\t')
       const formatKeys = format.split(':')
