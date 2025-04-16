@@ -107,14 +107,9 @@ export default class VCFParser {
         const columns = rest[i]!.split(':')
         for (let j = 0; j < columns.length; j++) {
           const val = columns[j]!
-          genotypes[sample][formatKeys[j]!] =
-            val === '' || val === '.'
-              ? undefined
-              : val
-                  .split(',')
-                  .map(ent =>
-                    ent === '.' ? undefined : isNumberType[j] ? +ent : ent,
-                  )
+          genotypes[sample][formatKeys[j]!] = val
+            .split(',')
+            .map(ent => (ent === '.' ? ent : isNumberType[j] ? +ent : ent))
         }
       }
     }
@@ -125,8 +120,7 @@ export default class VCFParser {
    * Parse a VCF metadata line (i.e. a line that starts with "##") and add its
    * properties to the object.
    *
-   * @param {string} line - A line from the VCF. Supports both LF and CRLF
-   * newlines.
+   * @param line - A line from the VCF. Supports both LF and CRLF newlines.
    */
   private parseMetadata(line: string) {
     const match = /^##(.+?)=(.*)/.exec(line.trim())
@@ -159,10 +153,10 @@ export default class VCFParser {
    * Parse a VCF header structured meta string (i.e. a meta value that starts
    * with "<ID=...")
    *
-   * @param {string} metaVal - The VCF metadata value
+   * @param metaVal - The VCF metadata value
    *
-   * @returns {Array} - Array with two entries, 1) a string of the metadata ID
-   * and 2) an object with the other key-value pairs in the metadata
+   * @returns Array with two entries, 1) a string of the metadata ID and 2) an
+   * object with the other key-value pairs in the metadata
    */
   private parseStructuredMetaVal(metaVal: string) {
     const keyVals = parseMetaString(metaVal)
@@ -181,9 +175,9 @@ export default class VCFParser {
    * ('INFO', 'DP') to only get info on an metadata tag that was like
    * "##INFO=<ID=DP,...>"
    *
-   * @param  {...string} args - List of metadata filter strings.
+   * @param  args - List of metadata filter strings.
    *
-   * @returns {any} An object, string, or number, depending on the filtering
+   * @returns An object, string, or number, depending on the filtering
    */
   getMetadata(...args: string[]) {
     let filteredMetadata: any = this.metadata
@@ -273,21 +267,17 @@ export default class VCFParser {
         : Object.fromEntries(
             fields[7].split(';').map(r => {
               const [key, val] = r.split('=')
-
               const items = val
                 ?.split(',')
-                .map(val => (val === '.' ? undefined : val))
                 .map(f => (f && hasDecode ? decodeURIComponentNoThrow(f) : f))
               const itemType = this.getMetadata('INFO', key!, 'Type')
               if (itemType === 'Integer' || itemType === 'Float') {
                 return [
                   key,
-                  items?.map(val =>
-                    val === undefined ? undefined : Number(val),
-                  ),
+                  items?.map(val => (val === '.' ? '.' : Number(val))),
                 ]
               } else if (itemType === 'Flag') {
-                return [key, true]
+                return [key, val === '.' ? '.' : true]
               } else {
                 // ?? true interpret as flag if undefined
                 return [key, items ?? true]
