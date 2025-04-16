@@ -98,11 +98,13 @@ export default class VCFParser {
         const r = this.getMetadata('FORMAT', key, 'Type')
         return r === 'Integer' || r === 'Float'
       })
-      for (let i = 0; i < this.samples.length; i++) {
+      const len = this.samples.length
+      for (let i = 0; i < len; i++) {
         const sample = this.samples[i]!
         genotypes[sample] = {}
         const columns = rest[i]!.split(':')
-        for (let j = 0; j < columns.length; j++) {
+        const len2 = columns.length
+        for (let j = 0; j < len2; j++) {
           const val = columns[j]!
           genotypes[sample][formatKeys[j]!] = val
             .split(',')
