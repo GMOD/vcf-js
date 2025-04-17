@@ -98,6 +98,7 @@ export default class VCFParser {
         const r = this.getMetadata('FORMAT', key, 'Type')
         return r === 'Integer' || r === 'Float'
       })
+
       const len = this.samples.length
       for (let i = 0; i < len; i++) {
         const sample = this.samples[i]!

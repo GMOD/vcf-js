@@ -669,7 +669,7 @@ exports[`can parse a line from the VCF spec 2`] = `
     ],
     "HQ": [
       ".",
-      NaN,
+      ".",
     ],
   },
 }
@@ -969,8 +969,7 @@ exports[`can parse a line with minimal entries 2`] = `
   },
   "NA00003": {
     "GT": [
-      ".
-",
+      ".",
     ],
   },
 }
