@@ -668,8 +668,8 @@ exports[`can parse a line from the VCF spec 2`] = `
       "1/1",
     ],
     "HQ": [
-      undefined,
-      NaN,
+      ".",
+      ".",
     ],
   },
 }
@@ -800,24 +800,56 @@ exports[`can parse a line from the VCF spec Y chrom (haploid)) 2`] = `
     ],
   },
   "HG00103": {
-    "CN": undefined,
-    "CNL": undefined,
-    "CNP": undefined,
-    "CNQ": undefined,
-    "GP": undefined,
-    "GQ": undefined,
-    "GT": undefined,
-    "PL": undefined,
+    "CN": [
+      ".",
+    ],
+    "CNL": [
+      ".",
+    ],
+    "CNP": [
+      ".",
+    ],
+    "CNQ": [
+      ".",
+    ],
+    "GP": [
+      ".",
+    ],
+    "GQ": [
+      ".",
+    ],
+    "GT": [
+      ".",
+    ],
+    "PL": [
+      ".",
+    ],
   },
   "HG001055": {
-    "CN": undefined,
-    "CNL": undefined,
-    "CNP": undefined,
-    "CNQ": undefined,
-    "GP": undefined,
-    "GQ": undefined,
-    "GT": undefined,
-    "PL": undefined,
+    "CN": [
+      ".",
+    ],
+    "CNL": [
+      ".",
+    ],
+    "CNP": [
+      ".",
+    ],
+    "CNQ": [
+      ".",
+    ],
+    "GP": [
+      ".",
+    ],
+    "GQ": [
+      ".",
+    ],
+    "GT": [
+      ".",
+    ],
+    "PL": [
+      ".",
+    ],
   },
 }
 `;
@@ -898,7 +930,9 @@ exports[`can parse a line from the VCF spec Y chrom (haploid)) 4`] = `
     ],
   },
   "HG001055": {
-    "GT": undefined,
+    "GT": [
+      ".",
+    ],
   },
 }
 `;
@@ -924,15 +958,18 @@ exports[`can parse a line with minimal entries 1`] = `
 exports[`can parse a line with minimal entries 2`] = `
 {
   "NA00001": {
-    "GT": undefined,
+    "GT": [
+      ".",
+    ],
   },
   "NA00002": {
-    "GT": undefined,
+    "GT": [
+      ".",
+    ],
   },
   "NA00003": {
     "GT": [
-      ".
-",
+      ".",
     ],
   },
 }
@@ -2897,8 +2934,8 @@ exports[`snippet from VCF 4.3 spec 2`] = `
         "1/1",
       ],
       "HQ": [
-        undefined,
-        undefined,
+        ".",
+        ".",
       ],
     },
   },
@@ -3730,8 +3767,8 @@ exports[`x simple spec 2`] = `
           "1/1",
         ],
         "HQ": [
-          undefined,
-          undefined,
+          ".",
+          ".",
         ],
       },
     },

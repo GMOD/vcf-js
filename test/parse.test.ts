@@ -62,7 +62,7 @@ test('can get metadata from the header', () => {
 test('can parse a line from the VCF spec', () => {
   const VCFParser = makeParser()
   const variant = VCFParser.parseLine(
-    '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.\n',
+    '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.',
   )
   expect(variant).toMatchSnapshot()
   expect(variant.SAMPLES()).toMatchSnapshot()
@@ -71,7 +71,7 @@ test('can parse a line from the VCF spec', () => {
 test('can parse a line with minimal entries', () => {
   const VCFParser = makeParser()
   const variant = VCFParser.parseLine(
-    '20\t14370\t.\tG\tA\t.\t.\t.\tGT:GQ:DP:HQ\t.\t.\t.\n',
+    '20\t14370\t.\tG\tA\t.\t.\t.\tGT:GQ:DP:HQ\t.\t.\t.',
   )
   expect(variant).toMatchSnapshot()
   expect(variant.SAMPLES()).toMatchSnapshot()

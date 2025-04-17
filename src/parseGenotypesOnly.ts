@@ -5,25 +5,27 @@ export function parseGenotypesOnly(
 ) {
   const rest = prerest.split('\t')
   const genotypes = {} as Record<string, string>
-  let i = 0
+  const len = samples.length
   if (format.includes('GT')) {
-    const formatSplit = format.split(':')
-    if (formatSplit.length === 1) {
-      for (const sample of samples) {
-        genotypes[sample] = rest[i++]!
+    if (format === 'GT') {
+      for (let i = 0; i < len; i++) {
+        genotypes[samples[i]!] = rest[i]!
       }
     } else {
-      const gtIndex = formatSplit.indexOf('GT')
-      if (gtIndex === 0) {
-        for (const sample of samples) {
-          const val = rest[i++]!
-          const idx = val.indexOf(':')
-          genotypes[sample] = idx !== -1 ? val.slice(0, idx) : val
+      if (format.startsWith('GT')) {
+        for (let i = 0; i < len; i++) {
+          const idx = rest[i]!.indexOf(':')
+          genotypes[samples[i]!] =
+            idx !== -1 ? rest[i]!.slice(0, idx) : rest[i]!
         }
       } else {
-        for (const sample of samples) {
-          const val = rest[i++]!.split(':')
-          genotypes[sample] = val[gtIndex]!
+        // according to vcf spec, GT should be first, so shouldn't even get
+        // here, but just added to beware
+        const formatSplit = format.split(':')
+        const gtIndex = formatSplit.indexOf('GT')
+        for (let i = 0; i < len; i++) {
+          const val = rest[i]!.split(':')
+          genotypes[samples[i]!] = val[gtIndex]!
         }
       }
     }
