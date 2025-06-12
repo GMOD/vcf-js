@@ -1,8 +1,10 @@
 import eslint from '@eslint/js'
 import eslintPluginUnicorn from 'eslint-plugin-unicorn'
+import { defineConfig } from 'eslint/config'
+import importPlugin from 'eslint-plugin-import'
 import tseslint from 'typescript-eslint'
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: ['esm/**/*', 'dist/**/*', '*.js', '*.mjs', 'example/*'],
   },
@@ -18,11 +20,24 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   ...tseslint.configs.stylisticTypeChecked,
   ...tseslint.configs.strictTypeChecked,
-  eslintPluginUnicorn.configs['flat/recommended'],
+  importPlugin.flatConfigs.recommended,
+  eslintPluginUnicorn.configs.recommended,
   {
     rules: {
       curly: 'error',
-
+      'no-console': [
+        'warn',
+        {
+          allow: ['error', 'warn'],
+        },
+      ],
+      'spaced-comment': [
+        'error',
+        'always',
+        {
+          markers: ['/'],
+        },
+      ],
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -86,6 +101,24 @@ export default tseslint.config(
       'unicorn/prefer-at': 'off',
       'unicorn/prefer-structured-clone': 'off',
       'unicorn/prefer-string-replace-all': 'off',
+
+      'import/no-unresolved': 'off',
+      'import/order': [
+        'error',
+        {
+          named: true,
+          'newlines-between': 'always',
+          alphabetize: {
+            order: 'asc',
+          },
+          groups: [
+            'builtin',
+            ['external', 'internal'],
+            ['parent', 'sibling', 'index', 'object'],
+            'type',
+          ],
+        },
+      ],
     },
   },
 )

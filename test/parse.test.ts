@@ -1,5 +1,7 @@
-import { test, expect } from 'vitest'
 import fs from 'fs'
+
+import { expect, test } from 'vitest'
+
 import VCF, { parseBreakend } from '../src'
 
 const readVcf = (file: string) => {
@@ -260,7 +262,7 @@ test('pedigree', () => {
   expect(VCFParser.getMetadata()).toMatchSnapshot()
 })
 
-//https://github.com/samtools/hts-specs/blob/master/examples/vcf/sv44.vcf
+// https://github.com/samtools/hts-specs/blob/master/examples/vcf/sv44.vcf
 test('x vcf44 spec', () => {
   const { header, lines } = readVcf('test/data/vcf44_spec.vcf')
   const VCFParser = new VCF({
@@ -278,7 +280,7 @@ test('x vcf44 spec', () => {
   ).toMatchSnapshot()
 })
 
-//https://github.com/samtools/hts-specs/blob/master/examples/vcf/simple.vcf
+// https://github.com/samtools/hts-specs/blob/master/examples/vcf/simple.vcf
 test('x simple spec', () => {
   const { header, lines } = readVcf('test/data/simple.vcf')
   const VCFParser = new VCF({

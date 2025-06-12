@@ -1,4 +1,5 @@
-import { test, expect } from 'vitest'
+import { expect, test } from 'vitest'
+
 import { parseGenotypesOnly } from '../src/parseGenotypesOnly'
 
 test('parse genotypes', () => {
