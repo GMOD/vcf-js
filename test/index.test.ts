@@ -1,6 +1,7 @@
-import { parseBreakend, Breakend } from '../src'
-import { describe, it } from 'node:test'
 import { deepStrictEqual, strictEqual, throws } from 'node:assert'
+import { describe, it } from 'node:test'
+
+import { Breakend, parseBreakend } from '../src'
 
 describe('testBreakend', () => {
   it('can parse breakends', () => {

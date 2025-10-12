@@ -1,6 +1,7 @@
-import { test } from 'node:test'
-import { strictEqual, deepStrictEqual, ok, throws } from 'node:assert'
 import fs from 'fs'
+import { deepStrictEqual, ok, strictEqual, throws } from 'node:assert'
+import { test } from 'node:test'
+
 import VCF, { parseBreakend } from '../src'
 
 const readVcf = (file: string) => {
@@ -340,7 +341,7 @@ test('pedigree', async () => {
   ok(VCFParser.getMetadata())
 })
 
-//https://github.com/samtools/hts-specs/blob/master/examples/vcf/sv44.vcf
+// https://github.com/samtools/hts-specs/blob/master/examples/vcf/sv44.vcf
 test('x vcf44 spec', async () => {
   const { header, lines } = readVcf('test/data/vcf44_spec.vcf')
   const VCFParser = new VCF({
@@ -360,7 +361,7 @@ test('x vcf44 spec', async () => {
   ok(parsedLines.every(line => line !== undefined))
 })
 
-//https://github.com/samtools/hts-specs/blob/master/examples/vcf/simple.vcf
+// https://github.com/samtools/hts-specs/blob/master/examples/vcf/simple.vcf
 test('x simple spec', async () => {
   const { header, lines } = readVcf('test/data/simple.vcf')
   const VCFParser = new VCF({

@@ -55,6 +55,7 @@
     "@typescript-eslint/parser": "^8.8.1",
     "documentation": "^14.0.1",
     "eslint": "^9.7.0",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-unicorn": "^59.0.0",
     "prettier": "^3.2.4",
     "rimraf": "^6.0.1",

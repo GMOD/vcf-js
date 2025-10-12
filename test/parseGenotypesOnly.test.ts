@@ -1,5 +1,6 @@
-import { test } from 'node:test'
 import { deepEqual } from 'node:assert'
+import { test } from 'node:test'
+
 import { parseGenotypesOnly } from '../src/parseGenotypesOnly'
 
 test('parse genotypes', async () => {

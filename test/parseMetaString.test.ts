@@ -1,5 +1,6 @@
-import { test } from 'node:test'
 import { deepEqual, deepStrictEqual } from 'node:assert'
+import { test } from 'node:test'
+
 import { parseMetaString } from '../src/parseMetaString'
 
 test('array in values', async () => {
