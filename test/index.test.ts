@@ -1,5 +1,4 @@
-import { deepStrictEqual, strictEqual, throws } from 'node:assert'
-import { describe, it } from 'node:test'
+import { describe, expect, it } from 'vitest'
 
 import { Breakend, parseBreakend } from '../src'
 
@@ -63,15 +62,15 @@ describe('testBreakend', () => {
       ],
     ] as [string, Breakend][]
     breakendsAndParsed.forEach(([breakend, parsedBreakend]) => {
-      deepStrictEqual(parseBreakend(breakend), parsedBreakend)
+      expect(parseBreakend(breakend)).toEqual(parsedBreakend)
     })
   })
 
   it('throws on invalid breakend', () => {
-    throws(() => parseBreakend('[13:123457['), /Invalid breakend/)
+    expect(() => parseBreakend('[13:123457[')).toThrow(/Invalid breakend/)
   })
 
   it('returns "undefined" for non-breakend', () => {
-    strictEqual(parseBreakend('A'), undefined)
+    expect(parseBreakend('A')).toBeUndefined()
   })
 })
