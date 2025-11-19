@@ -346,7 +346,7 @@ export default class VCFParser {
       INFO: info,
       REF: ref,
       FILTER:
-        filter && filter.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
+        filter?.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
       ID: id,
       QUAL: qual,
       FORMAT: format,
