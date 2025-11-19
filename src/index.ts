@@ -6,21 +6,25 @@ export interface Breakend {
   SingleBreakend?: boolean
 }
 
+const ANGLE_BRACKET_START_REGEX = /<(.*)>(.*)/
+const ANGLE_BRACKET_END_REGEX = /(.*)<(.*)>/
+
 export function parseBreakend(breakendString: string): Breakend | undefined {
-  const tokens = breakendString.split(/[[\]]/)
-  if (tokens.length > 1) {
-    const MateDirection = breakendString.includes('[') ? 'right' : 'left'
+  const firstChar = breakendString[0]
+  const lastChar = breakendString[breakendString.length - 1]
+
+  if (firstChar === '[' || firstChar === ']' || lastChar === '[' || lastChar === ']') {
+    const tokens = breakendString.split(/[[\]]/)
+    const MateDirection = breakendString.indexOf('[') !== -1 ? 'right' : 'left'
     let Join
     let Replacement
     let MatePosition
     for (const tok of tokens) {
       if (tok) {
-        if (tok.includes(':')) {
-          // this is the remote location
+        if (tok.indexOf(':') !== -1) {
           MatePosition = tok
           Join = Replacement ? 'right' : 'left'
         } else {
-          // this is the local alteration
           Replacement = tok
         }
       }
@@ -29,49 +33,56 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
       throw new Error(`Invalid breakend: ${breakendString}`)
     }
     return { MatePosition, Join, Replacement, MateDirection }
-  } else {
-    if (breakendString.startsWith('.')) {
-      return {
-        Join: 'left',
-        SingleBreakend: true,
-        Replacement: breakendString.slice(1),
-      }
-    } else if (breakendString.endsWith('.')) {
-      return {
-        Join: 'right',
-        SingleBreakend: true,
-        Replacement: breakendString.slice(0, -1),
-      }
-    } else if (breakendString.startsWith('<')) {
-      const res = /<(.*)>(.*)/.exec(breakendString)
-      if (!res) {
-        throw new Error(`failed to parse ${breakendString}`)
-      }
-      const Replacement = res[2]
-      return Replacement
-        ? {
-            Join: 'left',
-            Replacement,
-            MateDirection: 'right',
-            MatePosition: `<${res[1]!}>:1`,
-          }
-        : undefined
-    } else if (breakendString.includes('<')) {
-      const res = /(.*)<(.*)>/.exec(breakendString)
-      if (!res) {
-        throw new Error(`failed to parse ${breakendString}`)
-      }
-      const Replacement = res[1]
-      return Replacement
-        ? {
-            Join: 'right',
-            Replacement,
-            MateDirection: 'right',
-            MatePosition: `<${res[2]!}>:1`,
-          }
-        : undefined
+  }
+
+  if (firstChar === '.') {
+    return {
+      Join: 'left',
+      SingleBreakend: true,
+      Replacement: breakendString.slice(1),
     }
   }
+
+  if (lastChar === '.') {
+    return {
+      Join: 'right',
+      SingleBreakend: true,
+      Replacement: breakendString.slice(0, -1),
+    }
+  }
+
+  if (firstChar === '<') {
+    const res = ANGLE_BRACKET_START_REGEX.exec(breakendString)
+    if (!res) {
+      throw new Error(`failed to parse ${breakendString}`)
+    }
+    const Replacement = res[2]
+    return Replacement
+      ? {
+          Join: 'left',
+          Replacement,
+          MateDirection: 'right',
+          MatePosition: `<${res[1]!}>:1`,
+        }
+      : undefined
+  }
+
+  if (breakendString.indexOf('<') !== -1) {
+    const res = ANGLE_BRACKET_END_REGEX.exec(breakendString)
+    if (!res) {
+      throw new Error(`failed to parse ${breakendString}`)
+    }
+    const Replacement = res[1]
+    return Replacement
+      ? {
+          Join: 'right',
+          Replacement,
+          MateDirection: 'right',
+          MatePosition: `<${res[2]!}>:1`,
+        }
+      : undefined
+  }
+
   return undefined
 }
 

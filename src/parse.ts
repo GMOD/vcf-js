@@ -43,14 +43,12 @@ export default class VCFParser {
     }
 
     this.strict = strict
-    this.metadata = JSON.parse(
-      JSON.stringify({
-        INFO: vcfReserved.InfoFields,
-        FORMAT: vcfReserved.GenotypeFields,
-        ALT: vcfReserved.AltTypes,
-        FILTER: vcfReserved.FilterTypes,
-      }),
-    )
+    this.metadata = {
+      INFO: { ...vcfReserved.InfoFields },
+      FORMAT: { ...vcfReserved.GenotypeFields },
+      ALT: { ...vcfReserved.AltTypes },
+      FILTER: { ...vcfReserved.FilterTypes },
+    }
 
     let lastLine: string | undefined
     headerLines.forEach(line => {
@@ -101,21 +99,34 @@ export default class VCFParser {
         const r = this.getMetadata('FORMAT', key, 'Type')
         return r === 'Integer' || r === 'Float'
       })
+      const numKeys = formatKeys.length
       for (let i = 0; i < this.samples.length; i++) {
         const sample = this.samples[i]!
-        genotypes[sample] = {}
-        const columns = rest[i]!.split(':')
-        for (let j = 0; j < columns.length; j++) {
-          const val = columns[j]!
-          genotypes[sample][formatKeys[j]!] =
-            val === '' || val === '.'
-              ? undefined
-              : val
-                  .split(',')
-                  .map(ent =>
-                    ent === '.' ? undefined : isNumberType[j] ? +ent : ent,
-                  )
+        const sampleData: Record<
+          string,
+          (string | number | undefined)[] | undefined
+        > = {}
+        const sampleStr = rest[i]!
+        let colStart = 0
+        let colIdx = 0
+
+        for (let j = 0; j <= sampleStr.length; j++) {
+          if (j === sampleStr.length || sampleStr[j] === ':') {
+            const val = sampleStr.slice(colStart, j)
+            if (val === '' || val === '.') {
+              sampleData[formatKeys[colIdx]!] = undefined
+            } else {
+              const items = val.split(',')
+              sampleData[formatKeys[colIdx]!] = isNumberType[colIdx]
+                ? items.map(ent => (ent === '.' ? undefined : +ent))
+                : items.map(ent => (ent === '.' ? undefined : ent))
+            }
+            colStart = j + 1
+            colIdx += 1
+            if (colIdx >= numKeys) break
+          }
         }
+        genotypes[sample] = sampleData
       }
     }
     return genotypes
@@ -240,17 +251,16 @@ export default class VCFParser {
    */
   parseLine(line: string) {
     let currChar = 0
-    for (let currField = 0; currChar < line.length; currChar += 1) {
+    let tabCount = 0
+    while (currChar < line.length && tabCount < 9) {
       if (line[currChar] === '\t') {
-        currField += 1
+        tabCount += 1
       }
-      if (currField === 9) {
-        // reached genotypes, rest of fields are evaluated lazily
-        break
-      }
+      currChar += 1
     }
-    const fields = line.slice(0, currChar).split('\t')
-    const rest = line.slice(currChar + 1)
+    const splitPos = tabCount === 9 ? currChar - 1 : currChar
+    const fields = line.slice(0, splitPos).split('\t')
+    const rest = line.slice(splitPos + 1)
     const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
     const chrom = CHROM
     const pos = +POS!
@@ -266,34 +276,42 @@ export default class VCFParser {
         "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
       )
     }
-    const hasDecode = fields[7]?.includes('%')
     const info =
       fields[7] === undefined || fields[7] === '.'
         ? {}
-        : Object.fromEntries(
-            fields[7].split(';').map(r => {
-              const [key, val] = r.split('=')
+        : (() => {
+            const result: Record<string, any> = {}
+            const hasDecode = fields[7]!.includes('%')
+            const infoPairs = fields[7]!.split(';')
+            for (const pair of infoPairs) {
+              const eqIdx = pair.indexOf('=')
+              const key = eqIdx === -1 ? pair : pair.slice(0, eqIdx)
+              const val = eqIdx === -1 ? undefined : pair.slice(eqIdx + 1)
+              const itemType = this.getMetadata('INFO', key, 'Type')
 
-              const items = val
-                ?.split(',')
-                .map(val => (val === '.' ? undefined : val))
-                .map(f => (f && hasDecode ? decodeURIComponentNoThrow(f) : f))
-              const itemType = this.getMetadata('INFO', key!, 'Type')
-              if (itemType === 'Integer' || itemType === 'Float') {
-                return [
-                  key,
-                  items?.map(val =>
-                    val === undefined ? undefined : Number(val),
-                  ),
-                ]
-              } else if (itemType === 'Flag') {
-                return [key, true]
+              if (itemType === 'Flag') {
+                result[key] = true
+              } else if (!val) {
+                result[key] = true
               } else {
-                // ?? true interpret as flag if undefined
-                return [key, items ?? true]
+                const rawItems = val.split(',')
+                const items = hasDecode
+                  ? rawItems.map(v =>
+                      v === '.' ? undefined : decodeURIComponentNoThrow(v),
+                    )
+                  : rawItems.map(v => (v === '.' ? undefined : v))
+
+                if (itemType === 'Integer' || itemType === 'Float') {
+                  result[key] = items.map(v =>
+                    v === undefined ? undefined : Number(v),
+                  )
+                } else {
+                  result[key] = items
+                }
               }
-            }),
-          )
+            }
+            return result
+          })()
 
     return {
       CHROM: chrom,
