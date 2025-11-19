@@ -8,6 +8,7 @@ export default defineConfig(
   {
     ignores: [
       'analyze-profile.cjs',
+      'benchmark/*',
       'esm-optimized/*',
       'esm-master/*',
       'esm/**/*',
