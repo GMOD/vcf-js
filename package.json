@@ -35,6 +35,7 @@
     "test": "vitest",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0",
     "docs": "documentation readme src/parse.ts --section=API  --shallow",
+    "format": "prettier --write .",
     "postdocs": "prettier --write README.md",
     "clean": "rimraf dist esm",
     "build:esm": "tsc --target es2020 --outDir esm",

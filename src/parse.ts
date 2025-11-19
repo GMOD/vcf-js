@@ -87,6 +87,58 @@ export default class VCFParser {
     this.samples = fields.slice(9)
   }
 
+  private parseInfo(infoStr: string) {
+    const result: Record<string, any> = {}
+    const hasDecode = infoStr.includes('%')
+    const infoPairs = infoStr.split(';')
+    const infoMeta = this.metadata.INFO as Record<string, any>
+    const pairsLen = infoPairs.length
+
+    for (let i = 0; i < pairsLen; i++) {
+      const pair = infoPairs[i]!
+      const eqIdx = pair.indexOf('=')
+      const key = eqIdx === -1 ? pair : pair.slice(0, eqIdx)
+      const val = eqIdx === -1 ? undefined : pair.slice(eqIdx + 1)
+      const itemType = infoMeta[key]?.Type
+
+      if (itemType === 'Flag') {
+        result[key] = true
+      } else if (!val) {
+        result[key] = true
+      } else {
+        const isNumber = itemType === 'Integer' || itemType === 'Float'
+        const rawItems = val.split(',')
+        const itemsLen = rawItems.length
+
+        if (hasDecode) {
+          const items: (string | number | undefined)[] = []
+          for (let j = 0; j < itemsLen; j++) {
+            const v = rawItems[j]!
+            if (v === '.') {
+              items.push(undefined)
+            } else {
+              const decoded = decodeURIComponentNoThrow(v)
+              items.push(isNumber ? Number(decoded) : decoded)
+            }
+          }
+          result[key] = items
+        } else {
+          const items: (string | number | undefined)[] = []
+          for (let j = 0; j < itemsLen; j++) {
+            const v = rawItems[j]!
+            if (v === '.') {
+              items.push(undefined)
+            } else {
+              items.push(isNumber ? Number(v) : v)
+            }
+          }
+          result[key] = items
+        }
+      }
+    }
+    return result
+  }
+
   private parseSamples(format: string, prerest: string) {
     const genotypes = {} as Record<
       string,
@@ -95,23 +147,26 @@ export default class VCFParser {
     if (format) {
       const rest = prerest.split('\t')
       const formatKeys = format.split(':')
+      const formatMeta = this.metadata.FORMAT as Record<string, any>
       const isNumberType = formatKeys.map(key => {
-        const r = this.getMetadata('FORMAT', key, 'Type')
+        const r = formatMeta[key]?.Type
         return r === 'Integer' || r === 'Float'
       })
       const numKeys = formatKeys.length
-      for (let i = 0; i < this.samples.length; i++) {
+      const samplesLen = this.samples.length
+      for (let i = 0; i < samplesLen; i++) {
         const sample = this.samples[i]!
         const sampleData: Record<
           string,
           (string | number | undefined)[] | undefined
         > = {}
         const sampleStr = rest[i]!
+        const sampleStrLen = sampleStr.length
         let colStart = 0
         let colIdx = 0
 
-        for (let j = 0; j <= sampleStr.length; j++) {
-          if (j === sampleStr.length || sampleStr[j] === ':') {
+        for (let j = 0; j <= sampleStrLen; j++) {
+          if (j === sampleStrLen || sampleStr[j] === ':') {
             const val = sampleStr.slice(colStart, j)
             if (val === '' || val === '.') {
               sampleData[formatKeys[colIdx]!] = undefined
@@ -123,7 +178,9 @@ export default class VCFParser {
             }
             colStart = j + 1
             colIdx += 1
-            if (colIdx >= numKeys) break
+            if (colIdx >= numKeys) {
+              break
+            }
           }
         }
         genotypes[sample] = sampleData
@@ -198,8 +255,9 @@ export default class VCFParser {
    */
   getMetadata(...args: string[]) {
     let filteredMetadata: any = this.metadata
-    for (const arg of args) {
-      filteredMetadata = filteredMetadata[arg]
+    const argsLen = args.length
+    for (let i = 0; i < argsLen; i++) {
+      filteredMetadata = filteredMetadata[args[i]!]
       if (!filteredMetadata) {
         return filteredMetadata
       }
@@ -279,39 +337,7 @@ export default class VCFParser {
     const info =
       fields[7] === undefined || fields[7] === '.'
         ? {}
-        : (() => {
-            const result: Record<string, any> = {}
-            const hasDecode = fields[7]!.includes('%')
-            const infoPairs = fields[7]!.split(';')
-            for (const pair of infoPairs) {
-              const eqIdx = pair.indexOf('=')
-              const key = eqIdx === -1 ? pair : pair.slice(0, eqIdx)
-              const val = eqIdx === -1 ? undefined : pair.slice(eqIdx + 1)
-              const itemType = this.getMetadata('INFO', key, 'Type')
-
-              if (itemType === 'Flag') {
-                result[key] = true
-              } else if (!val) {
-                result[key] = true
-              } else {
-                const rawItems = val.split(',')
-                const items = hasDecode
-                  ? rawItems.map(v =>
-                      v === '.' ? undefined : decodeURIComponentNoThrow(v),
-                    )
-                  : rawItems.map(v => (v === '.' ? undefined : v))
-
-                if (itemType === 'Integer' || itemType === 'Float') {
-                  result[key] = items.map(v =>
-                    v === undefined ? undefined : Number(v),
-                  )
-                } else {
-                  result[key] = items
-                }
-              }
-            }
-            return result
-          })()
+        : this.parseInfo(fields[7])
 
     return {
       CHROM: chrom,

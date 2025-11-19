@@ -11,8 +11,10 @@ function customSplit(str: string) {
   let current = ''
   let inQuotes = false
   let inBrackets = false
+  const strLen = str.length
 
-  for (const char of str) {
+  for (let i = 0; i < strLen; i++) {
+    const char = str[i]!
     if (char === '"') {
       inQuotes = !inQuotes
       current += char

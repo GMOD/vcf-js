@@ -20,13 +20,15 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
     lastChar === ']'
   ) {
     const tokens = breakendString.split(/[[\]]/)
-    const MateDirection = breakendString.indexOf('[') !== -1 ? 'right' : 'left'
+    const MateDirection = breakendString.includes('[') ? 'right' : 'left'
     let Join
     let Replacement
     let MatePosition
-    for (const tok of tokens) {
+    const tokensLen = tokens.length
+    for (let i = 0; i < tokensLen; i++) {
+      const tok = tokens[i]!
       if (tok) {
-        if (tok.indexOf(':') !== -1) {
+        if (tok.includes(':')) {
           MatePosition = tok
           Join = Replacement ? 'right' : 'left'
         } else {
@@ -72,7 +74,7 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
       : undefined
   }
 
-  if (breakendString.indexOf('<') !== -1) {
+  if (breakendString.includes('<')) {
     const res = ANGLE_BRACKET_END_REGEX.exec(breakendString)
     if (!res) {
       throw new Error(`failed to parse ${breakendString}`)
