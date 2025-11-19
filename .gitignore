@@ -68,4 +68,6 @@ typings/
 esm-master
 esm-optimized
 esm
+
 *.cpuprofile
+*-results.*
