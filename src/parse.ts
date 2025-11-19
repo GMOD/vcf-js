@@ -51,7 +51,8 @@ export default class VCFParser {
     }
 
     let lastLine: string | undefined
-    headerLines.forEach(line => {
+    for (let i = 0; i < headerLines.length; i++) {
+      const line = headerLines[i]!
       if (!line.startsWith('#')) {
         throw new Error(`Bad line in header:\n${line}`)
       } else if (line.startsWith('##')) {
@@ -59,7 +60,7 @@ export default class VCFParser {
       } else {
         lastLine = line
       }
-    })
+    }
 
     if (!lastLine) {
       throw new Error('No format line found in header')
@@ -148,10 +149,11 @@ export default class VCFParser {
       const rest = prerest.split('\t')
       const formatKeys = format.split(':')
       const formatMeta = this.metadata.FORMAT as Record<string, any>
-      const isNumberType = formatKeys.map(key => {
-        const r = formatMeta[key]?.Type
-        return r === 'Integer' || r === 'Float'
-      })
+      const isNumberType: boolean[] = []
+      for (let i = 0; i < formatKeys.length; i++) {
+        const r = formatMeta[formatKeys[i]!]?.Type
+        isNumberType.push(r === 'Integer' || r === 'Float')
+      }
       const numKeys = formatKeys.length
       const samplesLen = this.samples.length
       for (let i = 0; i < samplesLen; i++) {
@@ -172,9 +174,19 @@ export default class VCFParser {
               sampleData[formatKeys[colIdx]!] = undefined
             } else {
               const items = val.split(',')
-              sampleData[formatKeys[colIdx]!] = isNumberType[colIdx]
-                ? items.map(ent => (ent === '.' ? undefined : +ent))
-                : items.map(ent => (ent === '.' ? undefined : ent))
+              const result: (string | number | undefined)[] = []
+              if (isNumberType[colIdx]) {
+                for (let k = 0; k < items.length; k++) {
+                  const ent = items[k]!
+                  result.push(ent === '.' ? undefined : +ent)
+                }
+              } else {
+                for (let k = 0; k < items.length; k++) {
+                  const ent = items[k]!
+                  result.push(ent === '.' ? undefined : ent)
+                }
+              }
+              sampleData[formatKeys[colIdx]!] = result
             }
             colStart = j + 1
             colIdx += 1
@@ -345,8 +357,7 @@ export default class VCFParser {
       ALT: alt,
       INFO: info,
       REF: ref,
-      FILTER:
-        filter?.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
+      FILTER: filter?.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
       ID: id,
       QUAL: qual,
       FORMAT: format,

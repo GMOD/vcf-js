@@ -46,22 +46,23 @@ function splitFirst(str: string, split: string) {
 
 export function parseMetaString(metaString: string) {
   const inside = metaString.replace(/^<|>$/g, '')
-  return Object.fromEntries(
-    customSplit(inside).map(f => {
-      const [key, val] = splitFirst(f, '=')
-      if (val && val.startsWith('[') && val.endsWith(']')) {
-        return [
-          key,
-          val
-            .slice(1, -1)
-            .split(',')
-            .map(f => f.trim()),
-        ]
-      } else if (val && val.startsWith('"') && val.endsWith('"')) {
-        return [key, val.slice(1, -1)]
-      } else {
-        return [key, val?.replaceAll(/^"|"$/g, '')]
+  const parts = customSplit(inside)
+  const entries: [string, any][] = []
+  for (let i = 0; i < parts.length; i++) {
+    const f = parts[i]!
+    const [key, val] = splitFirst(f, '=')
+    if (val && val.startsWith('[') && val.endsWith(']')) {
+      const items = val.slice(1, -1).split(',')
+      const trimmed: string[] = []
+      for (let j = 0; j < items.length; j++) {
+        trimmed.push(items[j]!.trim())
       }
-    }),
-  )
+      entries.push([key, trimmed])
+    } else if (val && val.startsWith('"') && val.endsWith('"')) {
+      entries.push([key, val.slice(1, -1)])
+    } else {
+      entries.push([key, val?.replaceAll(/^"|"$/g, '')])
+    }
+  }
+  return Object.fromEntries(entries)
 }

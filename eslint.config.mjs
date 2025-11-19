@@ -66,6 +66,7 @@ export default defineConfig(
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/prefer-for-of': 'off',
 
       'unicorn/no-new-array': 'off',
       'unicorn/no-empty-file': 'off',
