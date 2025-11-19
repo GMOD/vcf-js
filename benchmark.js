@@ -38,7 +38,7 @@ function runBenchmark(vcfModule, label) {
         label,
         durationMs,
         lineCount,
-        avg
+        avg,
       })
     })
 
@@ -49,7 +49,9 @@ function runBenchmark(vcfModule, label) {
 async function main() {
   if (!process.argv[2]) {
     console.error('Usage: node benchmark.js <vcf.gz file>')
-    console.error('Example: node benchmark.js /home/cdiesh/data/1kg.chr1.subset.vcf.gz')
+    console.error(
+      'Example: node benchmark.js /home/cdiesh/data/1kg.chr1.subset.vcf.gz',
+    )
     process.exit(1)
   }
 
@@ -85,7 +87,10 @@ async function main() {
   const masterResult = await runBenchmark(require(masterPath), 'master')
 
   console.log('Running benchmark with OPTIMIZED version...')
-  const optimizedResult = await runBenchmark(require(optimizedPath), 'optimized')
+  const optimizedResult = await runBenchmark(
+    require(optimizedPath),
+    'optimized',
+  )
 
   // Display results
   console.log()
@@ -102,17 +107,28 @@ async function main() {
   console.log(`  Avg value: ${optimizedResult.avg.toFixed(2)}`)
   console.log()
 
-  const speedup = ((masterResult.durationMs - optimizedResult.durationMs) / masterResult.durationMs * 100)
+  const speedup =
+    ((masterResult.durationMs - optimizedResult.durationMs) /
+      masterResult.durationMs) *
+    100
   const faster = optimizedResult.durationMs < masterResult.durationMs
 
   console.log('Summary:')
   console.log('--------')
   if (faster) {
-    console.log(`✅ Optimized version is ${Math.abs(speedup).toFixed(2)}% FASTER`)
-    console.log(`   (${masterResult.durationMs.toFixed(2)} ms → ${optimizedResult.durationMs.toFixed(2)} ms)`)
+    console.log(
+      `✅ Optimized version is ${Math.abs(speedup).toFixed(2)}% FASTER`,
+    )
+    console.log(
+      `   (${masterResult.durationMs.toFixed(2)} ms → ${optimizedResult.durationMs.toFixed(2)} ms)`,
+    )
   } else {
-    console.log(`⚠️  Optimized version is ${Math.abs(speedup).toFixed(2)}% SLOWER`)
-    console.log(`   (${masterResult.durationMs.toFixed(2)} ms → ${optimizedResult.durationMs.toFixed(2)} ms)`)
+    console.log(
+      `⚠️  Optimized version is ${Math.abs(speedup).toFixed(2)}% SLOWER`,
+    )
+    console.log(
+      `   (${masterResult.durationMs.toFixed(2)} ms → ${optimizedResult.durationMs.toFixed(2)} ms)`,
+    )
   }
 }
 

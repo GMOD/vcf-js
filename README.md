@@ -286,7 +286,6 @@ Class representing a VCF parser, instantiated with the VCF header.
 
 - `args`
   **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
-
   - `args.header`
     **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**
     The VCF header. Supports both LF and CRLF newlines. (optional, default `''`)

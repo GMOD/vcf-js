@@ -13,7 +13,12 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
   const firstChar = breakendString[0]
   const lastChar = breakendString[breakendString.length - 1]
 
-  if (firstChar === '[' || firstChar === ']' || lastChar === '[' || lastChar === ']') {
+  if (
+    firstChar === '[' ||
+    firstChar === ']' ||
+    lastChar === '[' ||
+    lastChar === ']'
+  ) {
     const tokens = breakendString.split(/[[\]]/)
     const MateDirection = breakendString.indexOf('[') !== -1 ? 'right' : 'left'
     let Join
