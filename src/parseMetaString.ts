@@ -56,11 +56,11 @@ export function parseMetaString(metaString: string) {
       for (let j = 0; j < items.length; j++) {
         items[j] = items[j]!.trim()
       }
-      entries.push([key, items])
+      entries.push([key!, items])
     } else if (val && val.startsWith('"') && val.endsWith('"')) {
-      entries.push([key, val.slice(1, -1)])
+      entries.push([key!, val.slice(1, -1)])
     } else {
-      entries.push([key, val])
+      entries.push([key!, val])
     }
   }
   return Object.fromEntries(entries)
