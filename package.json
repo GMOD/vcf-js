@@ -53,7 +53,7 @@
     "@types/node": "^22.10.1",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
     "@typescript-eslint/parser": "^8.8.1",
-    "@vitest/coverage-v8": "^4.0.10",
+    "@vitest/coverage-v8": "^4.0.12",
     "documentation": "^14.0.1",
     "eslint": "^9.7.0",
     "eslint-plugin-import": "^2.32.0",
@@ -63,7 +63,7 @@
     "standard-changelog": "^7.0.1",
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.8.1",
-    "vitest": "^4.0.10"
+    "vitest": "^4.0.12"
   },
   "keywords": [
     "vcf",
