@@ -18,7 +18,9 @@ export function parseGenotypesOnly(
   prerest: string,
   samples: string[],
 ) {
-  const genotypes = {} as Record<string, string>
+  // this was benchmarked to be slightly faster in most cases with larger
+  // sample sizes
+  const genotypes = Object.create(null) as Record<string, string>
 
   const samplesLen = samples.length
   const prerestLen = prerest.length
