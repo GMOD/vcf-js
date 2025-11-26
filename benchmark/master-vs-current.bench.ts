@@ -1,58 +1,14 @@
+import { readFileSync } from 'node:fs'
 import { bench, describe } from 'vitest'
-import { parseGenotypesOnly as currentVersion } from '../src/parseGenotypesOnly'
 
-function parseGenotypesOnlyMaster(
-  format: string,
-  prerest: string,
-  samples: string[],
-) {
-  const genotypes = {} as Record<string, string>
-  const gtIdx = format.indexOf('GT')
-  if (gtIdx === -1) {
-    return genotypes
-  }
+import { parseGenotypesOnly as branch1Fn } from '../esm_branch1/parseGenotypesOnly.js'
+import { parseGenotypesOnly as branch2Fn } from '../esm_branch2/parseGenotypesOnly.js'
 
-  const rest = prerest.split('\t')
-  let i = 0
-
-  if (format.length === 2) {
-    for (const sample of samples) {
-      genotypes[sample] = rest[i++]!
-    }
-  } else if (gtIdx === 0) {
-    for (const sample of samples) {
-      const val = rest[i++]!
-      const colonIdx = val.indexOf(':')
-      genotypes[sample] = colonIdx !== -1 ? val.slice(0, colonIdx) : val
-    }
-  } else {
-    let colonCount = 0
-    for (let j = 0; j < gtIdx; j++) {
-      if (format[j] === ':') colonCount++
-    }
-    for (const sample of samples) {
-      const val = rest[i++]!
-      let colons = 0
-      let start = 0
-      for (let j = 0; j <= val.length; j++) {
-        if (j === val.length || val[j] === ':') {
-          if (colons === colonCount) {
-            genotypes[sample] = val.slice(start, j)
-            break
-          }
-          colons++
-          start = j + 1
-        }
-      }
-    }
-  }
-
-  return genotypes
-}
+const branch1Name = readFileSync('esm_branch1/branchname.txt', 'utf8').trim()
+const branch2Name = readFileSync('esm_branch2/branchname.txt', 'utf8').trim()
 
 function generateTestData(numSamples: number, format: string) {
   const samples = Array.from({ length: numSamples }, (_, i) => `SAMPLE_${i}`)
-
   let genotypeData: string
   if (format === 'GT') {
     genotypeData = Array.from({ length: numSamples }, () => '0/1').join('\t')
@@ -67,246 +23,52 @@ function generateTestData(numSamples: number, format: string) {
   } else {
     genotypeData = Array.from({ length: numSamples }, () => '0/1').join('\t')
   }
-
   return { samples, genotypeData, format }
 }
 
-describe('10 samples - GT only', () => {
-  const { samples, genotypeData, format } = generateTestData(10, 'GT')
+function benchParseGenotypes(
+  name: string,
+  numSamples: number,
+  format: string,
+  opts?: { iterations?: number; warmupIterations?: number },
+) {
+  const { samples, genotypeData } = generateTestData(numSamples, format)
 
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
+  describe(name, () => {
+    bench(
+      branch1Name,
+      () => {
+        branch1Fn(format, genotypeData, samples)
+      },
+      opts,
+    )
+    bench(
+      branch2Name,
+      () => {
+        branch2Fn(format, genotypeData, samples)
+      },
+      opts,
+    )
+  })
+}
 
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
+const formats = ['GT', 'GT:DP:GQ', 'DP:GQ:GT'] as const
 
-describe('10 samples - GT:DP:GQ', () => {
-  const { samples, genotypeData, format } = generateTestData(10, 'GT:DP:GQ')
-
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
-
-describe('10 samples - DP:GQ:GT', () => {
-  const { samples, genotypeData, format } = generateTestData(10, 'DP:GQ:GT')
-
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
-
-describe('100 samples - GT only', () => {
-  const { samples, genotypeData, format } = generateTestData(100, 'GT')
-
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
-
-describe('100 samples - GT:DP:GQ', () => {
-  const { samples, genotypeData, format } = generateTestData(100, 'GT:DP:GQ')
-
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
-
-describe('100 samples - DP:GQ:GT', () => {
-  const { samples, genotypeData, format } = generateTestData(100, 'DP:GQ:GT')
-
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
-
-describe('1000 samples - GT only', () => {
-  const { samples, genotypeData, format } = generateTestData(1000, 'GT')
-
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
-
-describe('1000 samples - GT:DP:GQ', () => {
-  const { samples, genotypeData, format } = generateTestData(1000, 'GT:DP:GQ')
-
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
-
-describe('1000 samples - DP:GQ:GT', () => {
-  const { samples, genotypeData, format } = generateTestData(1000, 'DP:GQ:GT')
-
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
-
-describe('5000 samples - GT only', () => {
-  const { samples, genotypeData, format } = generateTestData(5000, 'GT')
-
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
-
-describe('5000 samples - GT:DP:GQ', () => {
-  const { samples, genotypeData, format } = generateTestData(5000, 'GT:DP:GQ')
-
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
-
-describe('5000 samples - DP:GQ:GT', () => {
-  const { samples, genotypeData, format } = generateTestData(5000, 'DP:GQ:GT')
-
-  bench(
-    'master',
-    () => {
-      parseGenotypesOnlyMaster(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-
-  bench(
-    'current',
-    () => {
-      currentVersion(format, genotypeData, samples)
-    },
-    { time: 1000 },
-  )
-})
+for (const format of formats) {
+  benchParseGenotypes(`10 samples - ${format}`, 10, format, {
+    iterations: 5000,
+    warmupIterations: 500,
+  })
+  benchParseGenotypes(`100 samples - ${format}`, 100, format, {
+    iterations: 2000,
+    warmupIterations: 200,
+  })
+  benchParseGenotypes(`1000 samples - ${format}`, 1000, format, {
+    iterations: 500,
+    warmupIterations: 50,
+  })
+  benchParseGenotypes(`5000 samples - ${format}`, 5000, format, {
+    iterations: 100,
+    warmupIterations: 10,
+  })
+}
