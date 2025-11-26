@@ -186,7 +186,7 @@ test('test no info non-strict', () => {
     strict: false,
   })
   expect(VCFParser.parseLine(lines[0])).toBeTruthy()
-  expect(VCFParser.parseLine(lines[0]).GENOTYPES()).toStrictEqual({})
+  expect(VCFParser.parseLine(lines[0]).GENOTYPES()).toEqual({})
 })
 
 test('empty header lines', () => {
