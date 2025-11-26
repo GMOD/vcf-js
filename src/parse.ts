@@ -43,17 +43,16 @@ export default class VCFParser {
     }
 
     this.strict = strict
-    this.metadata = JSON.parse(
-      JSON.stringify({
-        INFO: vcfReserved.InfoFields,
-        FORMAT: vcfReserved.GenotypeFields,
-        ALT: vcfReserved.AltTypes,
-        FILTER: vcfReserved.FilterTypes,
-      }),
-    )
+    this.metadata = {
+      INFO: { ...vcfReserved.InfoFields },
+      FORMAT: { ...vcfReserved.GenotypeFields },
+      ALT: { ...vcfReserved.AltTypes },
+      FILTER: { ...vcfReserved.FilterTypes },
+    }
 
     let lastLine: string | undefined
-    headerLines.forEach(line => {
+    for (let i = 0; i < headerLines.length; i++) {
+      const line = headerLines[i]!
       if (!line.startsWith('#')) {
         throw new Error(`Bad line in header:\n${line}`)
       } else if (line.startsWith('##')) {
@@ -61,7 +60,7 @@ export default class VCFParser {
       } else {
         lastLine = line
       }
-    })
+    }
 
     if (!lastLine) {
       throw new Error('No format line found in header')
@@ -89,6 +88,58 @@ export default class VCFParser {
     this.samples = fields.slice(9)
   }
 
+  private parseInfo(infoStr: string) {
+    const result: Record<string, any> = {}
+    const hasDecode = infoStr.includes('%')
+    const infoPairs = infoStr.split(';')
+    const infoMeta = this.metadata.INFO as Record<string, any>
+    const pairsLen = infoPairs.length
+
+    for (let i = 0; i < pairsLen; i++) {
+      const pair = infoPairs[i]!
+      const eqIdx = pair.indexOf('=')
+      const key = eqIdx === -1 ? pair : pair.slice(0, eqIdx)
+      const val = eqIdx === -1 ? undefined : pair.slice(eqIdx + 1)
+      const itemType = infoMeta[key]?.Type
+
+      if (itemType === 'Flag') {
+        result[key] = true
+      } else if (!val) {
+        result[key] = true
+      } else {
+        const isNumber = itemType === 'Integer' || itemType === 'Float'
+        const rawItems = val.split(',')
+        const itemsLen = rawItems.length
+
+        if (hasDecode) {
+          const items: (string | number | undefined)[] = []
+          for (let j = 0; j < itemsLen; j++) {
+            const v = rawItems[j]!
+            if (v === '.') {
+              items.push(undefined)
+            } else {
+              const decoded = decodeURIComponentNoThrow(v)
+              items.push(isNumber ? Number(decoded) : decoded)
+            }
+          }
+          result[key] = items
+        } else {
+          const items: (string | number | undefined)[] = []
+          for (let j = 0; j < itemsLen; j++) {
+            const v = rawItems[j]!
+            if (v === '.') {
+              items.push(undefined)
+            } else {
+              items.push(isNumber ? Number(v) : v)
+            }
+          }
+          result[key] = items
+        }
+      }
+    }
+    return result
+  }
+
   private parseSamples(format: string, prerest: string) {
     const genotypes = {} as Record<
       string,
@@ -97,25 +148,54 @@ export default class VCFParser {
     if (format) {
       const rest = prerest.split('\t')
       const formatKeys = format.split(':')
-      const isNumberType = formatKeys.map(key => {
-        const r = this.getMetadata('FORMAT', key, 'Type')
-        return r === 'Integer' || r === 'Float'
-      })
-      for (let i = 0; i < this.samples.length; i++) {
+      const formatMeta = this.metadata.FORMAT as Record<string, any>
+      const isNumberType: boolean[] = []
+      for (let i = 0; i < formatKeys.length; i++) {
+        const r = formatMeta[formatKeys[i]!]?.Type
+        isNumberType.push(r === 'Integer' || r === 'Float')
+      }
+      const numKeys = formatKeys.length
+      const samplesLen = this.samples.length
+      for (let i = 0; i < samplesLen; i++) {
         const sample = this.samples[i]!
-        genotypes[sample] = {}
-        const columns = rest[i]!.split(':')
-        for (let j = 0; j < columns.length; j++) {
-          const val = columns[j]!
-          genotypes[sample][formatKeys[j]!] =
-            val === '' || val === '.'
-              ? undefined
-              : val
-                  .split(',')
-                  .map(ent =>
-                    ent === '.' ? undefined : isNumberType[j] ? +ent : ent,
-                  )
+        const sampleData: Record<
+          string,
+          (string | number | undefined)[] | undefined
+        > = {}
+        const sampleStr = rest[i]!
+        const sampleStrLen = sampleStr.length
+        let colStart = 0
+        let colIdx = 0
+
+        for (let j = 0; j <= sampleStrLen; j++) {
+          if (j === sampleStrLen || sampleStr[j] === ':') {
+            const val = sampleStr.slice(colStart, j)
+            if (val === '' || val === '.') {
+              sampleData[formatKeys[colIdx]!] = undefined
+            } else {
+              const items = val.split(',')
+              const result: (string | number | undefined)[] = []
+              if (isNumberType[colIdx]) {
+                for (let k = 0; k < items.length; k++) {
+                  const ent = items[k]!
+                  result.push(ent === '.' ? undefined : +ent)
+                }
+              } else {
+                for (let k = 0; k < items.length; k++) {
+                  const ent = items[k]!
+                  result.push(ent === '.' ? undefined : ent)
+                }
+              }
+              sampleData[formatKeys[colIdx]!] = result
+            }
+            colStart = j + 1
+            colIdx += 1
+            if (colIdx >= numKeys) {
+              break
+            }
+          }
         }
+        genotypes[sample] = sampleData
       }
     }
     return genotypes
@@ -187,8 +267,9 @@ export default class VCFParser {
    */
   getMetadata(...args: string[]) {
     let filteredMetadata: any = this.metadata
-    for (const arg of args) {
-      filteredMetadata = filteredMetadata[arg]
+    const argsLen = args.length
+    for (let i = 0; i < argsLen; i++) {
+      filteredMetadata = filteredMetadata[args[i]!]
       if (!filteredMetadata) {
         return filteredMetadata
       }
@@ -240,17 +321,16 @@ export default class VCFParser {
    */
   parseLine(line: string) {
     let currChar = 0
-    for (let currField = 0; currChar < line.length; currChar += 1) {
+    let tabCount = 0
+    while (currChar < line.length && tabCount < 9) {
       if (line[currChar] === '\t') {
-        currField += 1
+        tabCount += 1
       }
-      if (currField === 9) {
-        // reached genotypes, rest of fields are evaluated lazily
-        break
-      }
+      currChar += 1
     }
-    const fields = line.slice(0, currChar).split('\t')
-    const rest = line.slice(currChar + 1)
+    const splitPos = tabCount === 9 ? currChar - 1 : currChar
+    const fields = line.slice(0, splitPos).split('\t')
+    const rest = line.slice(splitPos + 1)
     const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
     const chrom = CHROM
     const pos = +POS!
@@ -266,34 +346,10 @@ export default class VCFParser {
         "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
       )
     }
-    const hasDecode = fields[7]?.includes('%')
     const info =
       fields[7] === undefined || fields[7] === '.'
         ? {}
-        : Object.fromEntries(
-            fields[7].split(';').map(r => {
-              const [key, val] = r.split('=')
-
-              const items = val
-                ?.split(',')
-                .map(val => (val === '.' ? undefined : val))
-                .map(f => (f && hasDecode ? decodeURIComponentNoThrow(f) : f))
-              const itemType = this.getMetadata('INFO', key!, 'Type')
-              if (itemType === 'Integer' || itemType === 'Float') {
-                return [
-                  key,
-                  items?.map(val =>
-                    val === undefined ? undefined : Number(val),
-                  ),
-                ]
-              } else if (itemType === 'Flag') {
-                return [key, true]
-              } else {
-                // ?? true interpret as flag if undefined
-                return [key, items ?? true]
-              }
-            }),
-          )
+        : this.parseInfo(fields[7])
 
     return {
       CHROM: chrom,
@@ -301,8 +357,7 @@ export default class VCFParser {
       ALT: alt,
       INFO: info,
       REF: ref,
-      FILTER:
-        filter && filter.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
+      FILTER: filter?.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
       ID: id,
       QUAL: qual,
       FORMAT: format,

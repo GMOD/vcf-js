@@ -64,4 +64,11 @@ typings/
 # next.js build output
 .next
 *.swp
+
+esm-master
+esm-optimized
 esm
+
+*.cpuprofile
+*-results.*
+esm_*/
