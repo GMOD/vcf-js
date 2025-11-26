@@ -53,22 +53,11 @@ function benchParseGenotypes(
 }
 
 const formats = ['GT', 'GT:DP:GQ', 'DP:GQ:GT'] as const
+const sampleCounts = [10, 100, 1000, 5000] as const
+const opts = { iterations: 1000, warmupIterations: 100 }
 
 for (const format of formats) {
-  benchParseGenotypes(`10 samples - ${format}`, 10, format, {
-    iterations: 5000,
-    warmupIterations: 500,
-  })
-  benchParseGenotypes(`100 samples - ${format}`, 100, format, {
-    iterations: 2000,
-    warmupIterations: 200,
-  })
-  benchParseGenotypes(`1000 samples - ${format}`, 1000, format, {
-    iterations: 500,
-    warmupIterations: 50,
-  })
-  benchParseGenotypes(`5000 samples - ${format}`, 5000, format, {
-    iterations: 100,
-    warmupIterations: 10,
-  })
+  for (const numSamples of sampleCounts) {
+    benchParseGenotypes(`${numSamples} samples - ${format}`, numSamples, format, opts)
+  }
 }
