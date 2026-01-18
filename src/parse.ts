@@ -1,15 +1,8 @@
-import { parseGenotypesOnly } from './parseGenotypesOnly.ts'
 import { parseMetaString } from './parseMetaString.ts'
+import { Variant } from './Variant.ts'
 import vcfReserved from './vcfReserved.ts'
 
-function decodeURIComponentNoThrow(uri: string) {
-  try {
-    return decodeURIComponent(uri)
-  } catch (_e) {
-    // avoid throwing exception on a failure to decode URI component
-    return uri
-  }
-}
+export { Variant } from './Variant.ts'
 
 /**
  * Class representing a VCF parser, instantiated with the VCF header.
@@ -27,13 +20,7 @@ export default class VCFParser {
   public strict: boolean
   public samples: string[]
 
-  constructor({
-    header,
-    strict = true,
-  }: {
-    header: string
-    strict?: boolean
-  }) {
+  constructor({ header, strict = true }: { header: string; strict?: boolean }) {
     if (!header.length) {
       throw new Error('empty header received')
     }
@@ -86,119 +73,6 @@ export default class VCFParser {
       throw new Error(`VCF column headers not correct:\n${lastLine}`)
     }
     this.samples = fields.slice(9)
-  }
-
-  private parseInfo(infoStr: string) {
-    const result: Record<string, any> = {}
-    const hasDecode = infoStr.includes('%')
-    const infoPairs = infoStr.split(';')
-    const infoMeta = this.metadata.INFO as Record<string, any>
-    const pairsLen = infoPairs.length
-
-    for (let i = 0; i < pairsLen; i++) {
-      const pair = infoPairs[i]!
-      const eqIdx = pair.indexOf('=')
-      const key = eqIdx === -1 ? pair : pair.slice(0, eqIdx)
-      const val = eqIdx === -1 ? undefined : pair.slice(eqIdx + 1)
-      const itemType = infoMeta[key]?.Type
-
-      if (itemType === 'Flag') {
-        result[key] = true
-      } else if (!val) {
-        result[key] = true
-      } else {
-        const isNumber = itemType === 'Integer' || itemType === 'Float'
-        const rawItems = val.split(',')
-        const itemsLen = rawItems.length
-
-        if (hasDecode) {
-          const items: (string | number | undefined)[] = []
-          for (let j = 0; j < itemsLen; j++) {
-            const v = rawItems[j]!
-            if (v === '.') {
-              items.push(undefined)
-            } else {
-              const decoded = decodeURIComponentNoThrow(v)
-              items.push(isNumber ? Number(decoded) : decoded)
-            }
-          }
-          result[key] = items
-        } else {
-          const items: (string | number | undefined)[] = []
-          for (let j = 0; j < itemsLen; j++) {
-            const v = rawItems[j]!
-            if (v === '.') {
-              items.push(undefined)
-            } else {
-              items.push(isNumber ? Number(v) : v)
-            }
-          }
-          result[key] = items
-        }
-      }
-    }
-    return result
-  }
-
-  private parseSamples(format: string, prerest: string) {
-    const genotypes = {} as Record<
-      string,
-      Record<string, (string | number | undefined)[] | undefined>
-    >
-    if (format) {
-      const rest = prerest.split('\t')
-      const formatKeys = format.split(':')
-      const formatMeta = this.metadata.FORMAT as Record<string, any>
-      const isNumberType: boolean[] = []
-      for (let i = 0; i < formatKeys.length; i++) {
-        const r = formatMeta[formatKeys[i]!]?.Type
-        isNumberType.push(r === 'Integer' || r === 'Float')
-      }
-      const numKeys = formatKeys.length
-      const samplesLen = this.samples.length
-      for (let i = 0; i < samplesLen; i++) {
-        const sample = this.samples[i]!
-        const sampleData: Record<
-          string,
-          (string | number | undefined)[] | undefined
-        > = {}
-        const sampleStr = rest[i]!
-        const sampleStrLen = sampleStr.length
-        let colStart = 0
-        let colIdx = 0
-
-        for (let j = 0; j <= sampleStrLen; j++) {
-          if (j === sampleStrLen || sampleStr[j] === ':') {
-            const val = sampleStr.slice(colStart, j)
-            if (val === '' || val === '.') {
-              sampleData[formatKeys[colIdx]!] = undefined
-            } else {
-              const items = val.split(',')
-              const result: (string | number | undefined)[] = []
-              if (isNumberType[colIdx]) {
-                for (let k = 0; k < items.length; k++) {
-                  const ent = items[k]!
-                  result.push(ent === '.' ? undefined : +ent)
-                }
-              } else {
-                for (let k = 0; k < items.length; k++) {
-                  const ent = items[k]!
-                  result.push(ent === '.' ? undefined : ent)
-                }
-              }
-              sampleData[formatKeys[colIdx]!] = result
-            }
-            colStart = j + 1
-            colIdx += 1
-            if (colIdx >= numKeys) {
-              break
-            }
-          }
-        }
-        genotypes[sample] = sampleData
-      }
-    }
-    return genotypes
   }
 
   /**
@@ -278,93 +152,21 @@ export default class VCFParser {
   }
 
   /**
-   * Parse a VCF line into an object like
+   * Parse a VCF line into a Variant object.
    *
-   * ```typescript
-   * {
-   *   CHROM: 'contigA',
-   *   POS: 3000,
-   *   ID: ['rs17883296'],
-   *   REF: 'G',
-   *   ALT: ['T', 'A'],
-   *   QUAL: 100,
-   *   FILTER: 'PASS',
-   *   INFO: {
-   *     NS: [3],
-   *     DP: [14],
-   *     AF: [0.5],
-   *     DB: true,
-   *     XYZ: ['5'],
-   *   },
-   *   SAMPLES: () => ({
-   *     HG00096: {
-   *       GT: ['0|0'],
-   *       AP: ['0.000', '0.000'],
-   *     }
-   *   }),
-   *   GENOTYPES: () => ({
-   *     HG00096: '0|0'
-   *   })
-   * }
-   * ```
-   *
-   * SAMPLES and GENOTYPES methods are functions instead of static data fields
-   * because it avoids parsing the potentially long list of samples from e.g.
-   * 1000 genotypes data unless requested.
-   *
-   * The SAMPLES function gives all info about the samples
-   *
-   * The GENOTYPES function only extracts the raw GT string if it exists, for
-   * potentially optimized parsing by programs that need it
+   * The returned Variant has SAMPLES() and GENOTYPES() methods which are
+   * lazily evaluated to avoid parsing the potentially long list of samples from
+   * e.g. 1000 genotypes data unless requested.
    *
    * @param {string} line - A string of a line from a VCF
    */
   parseLine(line: string) {
-    let currChar = 0
-    let tabCount = 0
-    while (currChar < line.length && tabCount < 9) {
-      if (line[currChar] === '\t') {
-        tabCount += 1
-      }
-      currChar += 1
-    }
-    const splitPos = tabCount === 9 ? currChar - 1 : currChar
-    const fields = line.slice(0, splitPos).split('\t')
-    const rest = line.slice(splitPos + 1)
-    const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
-    const chrom = CHROM
-    const pos = +POS!
-    const id = ID === '.' ? undefined : ID!.split(';')
-    const ref = REF
-    const alt = ALT === '.' ? undefined : ALT!.split(',')
-    const qual = QUAL === '.' ? undefined : +QUAL!
-    const filter = FILTER === '.' ? undefined : FILTER!.split(';')
-    const format = fields[8]
-
-    if (this.strict && !fields[7]) {
-      throw new Error(
-        "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
-      )
-    }
-    const info =
-      fields[7] === undefined || fields[7] === '.'
-        ? {}
-        : this.parseInfo(fields[7])
-
-    return {
-      CHROM: chrom,
-      POS: pos,
-      ALT: alt,
-      INFO: info,
-      REF: ref,
-      FILTER: filter?.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter,
-      ID: id,
-      QUAL: qual,
-      FORMAT: format,
-      SAMPLES: () => this.parseSamples(fields[8] ?? '', rest),
-      GENOTYPES: () => parseGenotypesOnly(fields[8] ?? '', rest, this.samples),
-    }
+    return new Variant(
+      line,
+      this.metadata.INFO as Record<string, { Type?: string }>,
+      this.metadata.FORMAT as Record<string, { Type?: string }>,
+      this.samples,
+      this.strict,
+    )
   }
 }
-
-export type Variant = ReturnType<VCFParser['parseLine']>

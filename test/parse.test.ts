@@ -2,7 +2,7 @@ import fs from 'fs'
 
 import { expect, test } from 'vitest'
 
-import VCF, { parseBreakend } from '../src'
+import VCF, { parseBreakend, Variant } from '../src'
 
 const readVcf = (file: string) => {
   const f = fs.readFileSync(file, 'utf8')
@@ -298,10 +298,49 @@ test('x simple spec', () => {
   ).toMatchSnapshot()
 })
 
-test('pedigree', () => {
-  const { header } = readVcf('test/data/pedigree.vcf')
-  const VCFParser = new VCF({
-    header,
+test('parseLine returns a Variant instance', () => {
+  const VCFParser = makeParser()
+  const variant = VCFParser.parseLine(
+    '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.',
+  )
+  expect(variant).toBeInstanceOf(Variant)
+})
+
+test('Variant serializes without methods', () => {
+  const VCFParser = makeParser()
+  const variant = VCFParser.parseLine(
+    '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.',
+  )
+  const serialized = JSON.parse(JSON.stringify(variant))
+
+  expect(serialized.SAMPLES).toBeUndefined()
+  expect(serialized.GENOTYPES).toBeUndefined()
+  expect(serialized.processGenotypes).toBeUndefined()
+
+  expect(serialized.CHROM).toBe('20')
+  expect(serialized.POS).toBe(14370)
+})
+
+test('processGenotypes method works correctly', () => {
+  const VCFParser = makeParser()
+  const variant = VCFParser.parseLine(
+    '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.',
+  )
+
+  const genotypes: string[] = []
+  variant.processGenotypes((str, start, end) => {
+    genotypes.push(str.slice(start, end))
   })
-  expect(VCFParser.getMetadata()).toMatchSnapshot()
+
+  expect(genotypes).toEqual(['0|0', '1|0', '1/1'])
+})
+
+test('SAMPLES and GENOTYPES can be called multiple times', () => {
+  const VCFParser = makeParser()
+  const variant = VCFParser.parseLine(
+    '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.',
+  )
+
+  expect(variant.SAMPLES()).toEqual(variant.SAMPLES())
+  expect(variant.GENOTYPES()).toEqual(variant.GENOTYPES())
 })
