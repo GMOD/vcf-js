@@ -1,5 +1,5 @@
-import { parseMetaString } from './parseMetaString.ts'
 import { Variant } from './Variant.ts'
+import { parseMetaString } from './parseMetaString.ts'
 import vcfReserved from './vcfReserved.ts'
 
 export { Variant } from './Variant.ts'

@@ -601,7 +601,6 @@ exports[`can parse a line from the VCF spec 1`] = `
   "CHROM": "20",
   "FILTER": "PASS",
   "FORMAT": "GT:GQ:DP:HQ",
-  "GENOTYPES": [Function],
   "ID": [
     "rs6054257",
   ],
@@ -621,8 +620,6 @@ exports[`can parse a line from the VCF spec 1`] = `
   "POS": 14370,
   "QUAL": 29,
   "REF": "G",
-  "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -684,7 +681,6 @@ exports[`can parse a line from the VCF spec Y chrom (haploid)) 1`] = `
   "CHROM": "Y",
   "FILTER": "PASS",
   "FORMAT": "GT:CN:CNL:CNP:CNQ:GP:GQ:PL",
-  "GENOTYPES": [Function],
   "ID": [
     "CNV_Y_14483990_15232198",
   ],
@@ -730,8 +726,6 @@ exports[`can parse a line from the VCF spec Y chrom (haploid)) 1`] = `
   "POS": 14483990,
   "QUAL": 100,
   "REF": "C",
-  "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -832,7 +826,6 @@ exports[`can parse a line from the VCF spec Y chrom (haploid)) 3`] = `
   "CHROM": "Y",
   "FILTER": "PASS",
   "FORMAT": "GT",
-  "GENOTYPES": [Function],
   "ID": [
     "rs11575897",
   ],
@@ -878,8 +871,6 @@ exports[`can parse a line from the VCF spec Y chrom (haploid)) 3`] = `
   "POS": 2655180,
   "QUAL": 100,
   "REF": "G",
-  "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -914,14 +905,11 @@ exports[`can parse a line with minimal entries 1`] = `
   "CHROM": "20",
   "FILTER": undefined,
   "FORMAT": "GT:GQ:DP:HQ",
-  "GENOTYPES": [Function],
   "ID": undefined,
   "INFO": {},
   "POS": 14370,
   "QUAL": undefined,
   "REF": "G",
-  "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -951,7 +939,6 @@ exports[`can parse breakends 1`] = `
     "CHROM": "11",
     "FILTER": "PASS",
     "FORMAT": "PR:SR",
-    "GENOTYPES": [Function],
     "ID": [
       "MantaBND:0:2:3:0:0:0:1",
     ],
@@ -982,8 +969,6 @@ exports[`can parse breakends 1`] = `
     "POS": 94975747,
     "QUAL": undefined,
     "REF": "G",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -992,7 +977,6 @@ exports[`can parse breakends 1`] = `
     "CHROM": "11",
     "FILTER": "PASS",
     "FORMAT": "PR",
-    "GENOTYPES": [Function],
     "ID": [
       "MantaDEL:0:1:2:0:0:0",
     ],
@@ -1019,8 +1003,6 @@ exports[`can parse breakends 1`] = `
     "POS": 94975753,
     "QUAL": undefined,
     "REF": "T",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -1029,7 +1011,6 @@ exports[`can parse breakends 1`] = `
     "CHROM": "11",
     "FILTER": "PASS",
     "FORMAT": "PR:SR",
-    "GENOTYPES": [Function],
     "ID": [
       "MantaBND:0:0:1:0:0:0:0",
     ],
@@ -1050,8 +1031,6 @@ exports[`can parse breakends 1`] = `
     "POS": 94987872,
     "QUAL": undefined,
     "REF": "T",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -1592,7 +1571,6 @@ exports[`parses a line with a breakend ALT 1`] = `
   "CHROM": "2",
   "FILTER": "PASS",
   "FORMAT": undefined,
-  "GENOTYPES": [Function],
   "ID": [
     "bnd_W",
   ],
@@ -1604,8 +1582,6 @@ exports[`parses a line with a breakend ALT 1`] = `
   "POS": 321681,
   "QUAL": 6,
   "REF": "G",
-  "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -1619,7 +1595,6 @@ exports[`parses a line with mix of multiple breakends and non breakends 1`] = `
   "CHROM": "13",
   "FILTER": "PASS",
   "FORMAT": undefined,
-  "GENOTYPES": [Function],
   "ID": [
     "bnd_U",
   ],
@@ -1635,365 +1610,10 @@ exports[`parses a line with mix of multiple breakends and non breakends 1`] = `
   "POS": 123456,
   "QUAL": 6,
   "REF": "C",
-  "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
 exports[`pedigree 1`] = `
-{
-  "ALT": {
-    "*": {
-      "Description": "Represents any possible alternative allele at this location",
-    },
-    "CNV": {
-      "Description": "Copy number variable region (may be both deletion and duplication)",
-    },
-    "DEL": {
-      "Description": "Deletion relative to the reference",
-    },
-    "DEL:ME": {
-      "Description": "Deletion of mobile element relative to the reference",
-    },
-    "DUP": {
-      "Description": "Region of elevated copy number relative to the reference",
-    },
-    "DUP:TANDEM": {
-      "Description": "Tandem duplication",
-    },
-    "INS": {
-      "Description": "Insertion of novel sequence relative to the reference",
-    },
-    "INS:ME": {
-      "Description": "Insertion of a mobile element relative to the reference",
-    },
-    "INV": {
-      "Description": "Inversion of reference sequence",
-    },
-    "NON_REF": {
-      "Description": "Represents any possible alternative allele at this location",
-    },
-  },
-  "FILTER": {
-    "PASS": {
-      "Description": "Passed all filters",
-    },
-  },
-  "FORMAT": {
-    "AD": {
-      "Description": "Read depth for each allele",
-      "Number": "R",
-      "Type": "Integer",
-    },
-    "ADF": {
-      "Description": "Read depth for each allele on the forward strand",
-      "Number": "R",
-      "Type": "Integer",
-    },
-    "ADR": {
-      "Description": "Read depth for each allele on the reverse strand",
-      "Number": "R",
-      "Type": "Integer",
-    },
-    "DP": {
-      "Description": "Read depth",
-      "Number": 1,
-      "Type": "Integer",
-    },
-    "EC": {
-      "Description": "Expected alternate allele counts",
-      "Number": "A",
-      "Type": "Integer",
-    },
-    "FT": {
-      "Description": "Filter indicating if this genotype was "called"",
-      "Number": 1,
-      "Type": "String",
-    },
-    "GL": {
-      "Description": "Genotype likelihoods",
-      "Number": "G",
-      "Type": "Float",
-    },
-    "GP": {
-      "Description": "Genotype posterior probabilities",
-      "Number": "G",
-      "Type": "Float",
-    },
-    "GQ": {
-      "Description": "Conditional genotype quality",
-      "Number": 1,
-      "Type": "Integer",
-    },
-    "GT": {
-      "Description": "Genotype",
-      "Number": 1,
-      "Type": "String",
-    },
-    "HQ": {
-      "Description": "Haplotype quality",
-      "Number": 2,
-      "Type": "Integer",
-    },
-    "MQ": {
-      "Description": "RMS mapping quality",
-      "Number": 1,
-      "Type": "Integer",
-    },
-    "PL": {
-      "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
-      "Number": "G",
-      "Type": "Integer",
-    },
-    "PQ": {
-      "Description": "Phasing quality",
-      "Number": 1,
-      "Type": "Integer",
-    },
-    "PS": {
-      "Description": "Phase set",
-      "Number": 1,
-      "Type": "Integer",
-    },
-  },
-  "INFO": {
-    "1000G": {
-      "Description": "1000 Genomes membership",
-      "Number": 0,
-      "Type": "Flag",
-    },
-    "AA": {
-      "Description": "Ancestral allele",
-      "Number": 1,
-      "Type": "String",
-    },
-    "AC": {
-      "Description": "Allele count in genotypes, for each ALT allele, in the same order as listed",
-      "Number": "A",
-      "Type": "Integer",
-    },
-    "AD": {
-      "Description": "Total read depth for each allele",
-      "Number": "R",
-      "Type": "Integer",
-    },
-    "ADF": {
-      "Description": "Read depth for each allele on the forward strand",
-      "Number": "R",
-      "Type": "Integer",
-    },
-    "ADR": {
-      "Description": "Read depth for each allele on the reverse strand",
-      "Number": "R",
-      "Type": "Integer",
-    },
-    "AF": {
-      "Description": "Allele frequency for each ALT allele in the same order as listed (estimated from primary data, not called genotypes)",
-      "Number": "A",
-      "Type": "Float",
-    },
-    "AN": {
-      "Description": "Total number of alleles in called genotypes",
-      "Number": 1,
-      "Type": "Integer",
-    },
-    "BKPTID": {
-      "Description": "ID of the assembled alternate allele in the assembly file",
-      "Type": "String",
-    },
-    "BQ": {
-      "Description": "RMS base quality",
-      "Number": 1,
-      "Type": "Float",
-    },
-    "CICN": {
-      "Description": "Confidence interval around copy number for the segment",
-      "Number": 2,
-      "Type": "Integer",
-    },
-    "CICNADJ": {
-      "Description": "Confidence interval around copy number for the adjacency",
-      "Number": null,
-      "Type": "Integer",
-    },
-    "CIEND": {
-      "Description": "Confidence interval around END for imprecise variants",
-      "Number": 2,
-      "Type": "Integer",
-    },
-    "CIGAR": {
-      "Description": "Cigar string describing how to align an alternate allele to the reference allele",
-      "Number": 1,
-      "Type": "Float",
-    },
-    "CILEN": {
-      "Description": "Confidence interval around the inserted material between breakend",
-      "Number": 2,
-      "Type": "Integer",
-    },
-    "CIPOS": {
-      "Description": "Confidence interval around POS for imprecise variants",
-      "Number": 2,
-      "Type": "Integer",
-    },
-    "CN": {
-      "Description": "Copy number of segment containing breakend",
-      "Number": 1,
-      "Type": "Integer",
-    },
-    "CNADJ": {
-      "Description": "Copy number of adjacency",
-      "Number": null,
-      "Type": "Integer",
-    },
-    "DB": {
-      "Description": "dbSNP membership",
-      "Number": 0,
-      "Type": "Flag",
-    },
-    "DBRIPID": {
-      "Description": "ID of this element in DBRIP",
-      "Number": 1,
-      "Type": "String",
-    },
-    "DBVARID": {
-      "Description": "ID of this element in DBVAR",
-      "Number": 1,
-      "Type": "String",
-    },
-    "DGVID": {
-      "Description": "ID of this element in Database of Genomic Variation",
-      "Number": 1,
-      "Type": "String",
-    },
-    "DP": {
-      "Description": "combined depth across samples",
-      "Number": 1,
-      "Type": "Integer",
-    },
-    "DPADJ": {
-      "Description": "Read Depth of adjacency",
-      "Type": "Integer",
-    },
-    "END": {
-      "Description": "End position (for use with symbolic alleles)",
-      "Number": 1,
-      "Type": "Integer",
-    },
-    "EVENT": {
-      "Description": "ID of event associated to breakend",
-      "Number": 1,
-      "Type": "String",
-    },
-    "H2": {
-      "Description": "HapMap2 membership",
-      "Number": 0,
-      "Type": "Flag",
-    },
-    "H3": {
-      "Description": "HapMap3 membership",
-      "Number": 0,
-      "Type": "Flag",
-    },
-    "HOMLEN": {
-      "Description": "Length of base pair identical micro-homology at event breakpoints",
-      "Type": "Integer",
-    },
-    "HOMSEQ": {
-      "Description": "Sequence of base pair identical micro-homology at event breakpoints",
-      "Type": "String",
-    },
-    "IMPRECISE": {
-      "Description": "Imprecise structural variation",
-      "Number": 0,
-      "Type": "Flag",
-    },
-    "MATEID": {
-      "Description": "ID of mate breakends",
-      "Number": null,
-      "Type": "String",
-    },
-    "MEINFO": {
-      "Description": "Mobile element info of the form NAME,START,END,POLARITY",
-      "Number": 4,
-      "Type": "String",
-    },
-    "METRANS": {
-      "Description": "Mobile element transduction info of the form CHR,START,END,POLARITY",
-      "Number": 4,
-      "Type": "String",
-    },
-    "MQ": {
-      "Description": "RMS mapping quality",
-      "Number": 1,
-      "Type": null,
-    },
-    "MQ0": {
-      "Description": "Number of MAPQ == 0 reads",
-      "Number": 1,
-      "Type": "Integer",
-    },
-    "NOVEL": {
-      "Description": "Indicates a novel structural variation",
-      "Number": 0,
-      "Type": "Flag",
-    },
-    "NS": {
-      "Description": "Number of samples with data",
-      "Number": 1,
-      "Type": "Integer",
-    },
-    "PARID": {
-      "Description": "ID of partner breakend",
-      "Number": 1,
-      "Type": "String",
-    },
-    "SB": {
-      "Description": "Strand bias",
-      "Number": 4,
-      "Type": "Integer",
-    },
-    "SOMATIC": {
-      "Description": "Somatic mutation (for cancer genomics)",
-      "Number": 0,
-      "Type": "Flag",
-    },
-    "SVLEN": {
-      "Description": "Difference in length between REF and ALT alleles",
-      "Number": null,
-      "Type": "Integer",
-    },
-    "SVTYPE": {
-      "Description": "Type of structural variant",
-      "Number": 1,
-      "Type": "String",
-    },
-    "VALIDATED": {
-      "Description": "Validated by follow-up experiment",
-      "Number": 0,
-      "Type": "Flag",
-    },
-  },
-  "PEDIGREE": {
-    "ChildID": {
-      "Father": "FatherID",
-      "Mother": "MotherID",
-    },
-    "SampleID": {
-      "Name_1": "Ancestor_1",
-      "Name_2": "Ancestor_N",
-    },
-    "SomaticNonTumour": {
-      "Original": "GermlineID",
-    },
-    "TumourSample": {
-      "Original": "GermlineID",
-    },
-  },
-}
-`;
-
-exports[`pedigree 2`] = `
 {
   "ALT": {
     "*": {
@@ -2399,7 +2019,6 @@ exports[`shortcut parsing with 1000 genomes 1`] = `
     "CHROM": "Y",
     "FILTER": "PASS",
     "FORMAT": "GT",
-    "GENOTYPES": [Function],
     "ID": [
       "rs11575897",
     ],
@@ -2445,8 +2064,6 @@ exports[`shortcut parsing with 1000 genomes 1`] = `
     "POS": 2655180,
     "QUAL": 100,
     "REF": "G",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2455,7 +2072,6 @@ exports[`shortcut parsing with 1000 genomes 1`] = `
     "CHROM": "Y",
     "FILTER": "PASS",
     "FORMAT": "GT",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "AA": [
@@ -2499,8 +2115,6 @@ exports[`shortcut parsing with 1000 genomes 1`] = `
     "POS": 2655471,
     "QUAL": 100,
     "REF": "A",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -2514,7 +2128,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "CHROM": "2",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "bnd_W",
     ],
@@ -2526,8 +2139,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "POS": 321681,
     "QUAL": 6,
     "REF": "G",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2536,7 +2147,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "CHROM": "2",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "bnd_V",
     ],
@@ -2548,8 +2158,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "POS": 321682,
     "QUAL": 6,
     "REF": "T",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2558,7 +2166,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "CHROM": "13",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "bnd_U",
     ],
@@ -2570,8 +2177,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "POS": 123456,
     "QUAL": 6,
     "REF": "C",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2580,7 +2185,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "CHROM": "13",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "bnd_X",
     ],
@@ -2592,8 +2196,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "POS": 123457,
     "QUAL": 6,
     "REF": "A",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2602,7 +2204,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "CHROM": "17",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "bnd_Y",
     ],
@@ -2614,8 +2215,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "POS": 198982,
     "QUAL": 6,
     "REF": "A",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2624,7 +2223,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "CHROM": "17",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "bnd_Z",
     ],
@@ -2636,8 +2234,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "POS": 198983,
     "QUAL": 6,
     "REF": "C",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -2650,7 +2246,6 @@ exports[`sniffles vcf 1`] = `
   "CHROM": "8",
   "FILTER": "PASS",
   "FORMAT": "GT:DR:DV",
-  "GENOTYPES": [Function],
   "ID": [
     "28329_0",
   ],
@@ -2705,8 +2300,6 @@ exports[`sniffles vcf 1`] = `
   "POS": 17709115,
   "QUAL": undefined,
   "REF": "N",
-  "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -2735,7 +2328,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "CHROM": "20",
     "FILTER": "PASS",
     "FORMAT": "GT:GQ:DP:HQ",
-    "GENOTYPES": [Function],
     "ID": [
       "rs6054257",
     ],
@@ -2755,8 +2347,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "POS": 14370,
     "QUAL": 29,
     "REF": "G",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2767,7 +2357,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
       "q10",
     ],
     "FORMAT": "GT:GQ:DP:HQ",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "AF": [
@@ -2783,8 +2372,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "POS": 17330,
     "QUAL": 3,
     "REF": "T",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2794,7 +2381,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "CHROM": "20",
     "FILTER": "PASS",
     "FORMAT": "GT:GQ:DP:HQ",
-    "GENOTYPES": [Function],
     "ID": [
       "rs6040355",
     ],
@@ -2817,15 +2403,12 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "POS": 1110696,
     "QUAL": 67,
     "REF": "A",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": undefined,
     "CHROM": "20",
     "FILTER": "PASS",
     "FORMAT": "GT:GQ:DP:HQ",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "AA": [
@@ -2841,8 +2424,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "POS": 1230237,
     "QUAL": 47,
     "REF": "T",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2852,7 +2433,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "CHROM": "20",
     "FILTER": "PASS",
     "FORMAT": "GT:GQ:DP",
-    "GENOTYPES": [Function],
     "ID": [
       "microsat1",
     ],
@@ -2870,8 +2450,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "POS": 1234567,
     "QUAL": 50,
     "REF": "GTC",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -3161,7 +2739,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "rs118266897",
     ],
@@ -3180,8 +2757,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "POS": 80465,
     "QUAL": 29,
     "REF": "R",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3190,7 +2765,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "rs118269296",
     ],
@@ -3209,8 +2783,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "POS": 84818,
     "QUAL": 29,
     "REF": "R",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3219,7 +2791,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "rs118218236",
     ],
@@ -3238,8 +2809,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "POS": 95414,
     "QUAL": 29,
     "REF": "W",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3248,7 +2817,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "rs118264755",
     ],
@@ -3267,8 +2835,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "POS": 231384,
     "QUAL": 29,
     "REF": "R",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3277,7 +2843,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "rs118223336",
     ],
@@ -3296,8 +2861,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "POS": 236429,
     "QUAL": 29,
     "REF": "R",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3306,7 +2869,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "CHROM": "lcl|Scaffald_1",
     "FILTER": "PASS",
     "FORMAT": undefined,
-    "GENOTYPES": [Function],
     "ID": [
       "rs118217257",
     ],
@@ -3325,8 +2887,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "POS": 245378,
     "QUAL": 29,
     "REF": "R",
-    "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -3697,7 +3257,6 @@ exports[`x simple spec 2`] = `
     "CHROM": "20",
     "FILTER": "PASS",
     "FORMAT": "GT:GQ:DP:HQ",
-    "GENOTYPES": [Function],
     "ID": [
       "rs6054257",
     ],
@@ -3764,7 +3323,6 @@ exports[`x simple spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3775,7 +3333,6 @@ exports[`x simple spec 2`] = `
       "q10",
     ],
     "FORMAT": "GT:GQ:DP:HQ",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "AF": [
@@ -3834,7 +3391,6 @@ exports[`x simple spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3844,7 +3400,6 @@ exports[`x simple spec 2`] = `
     "CHROM": "20",
     "FILTER": "PASS",
     "FORMAT": "GT:GQ:DP:HQ",
-    "GENOTYPES": [Function],
     "ID": [
       "rs6040355",
     ],
@@ -3910,14 +3465,12 @@ exports[`x simple spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": undefined,
     "CHROM": "20",
     "FILTER": "PASS",
     "FORMAT": "GT:GQ:DP:HQ",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "AA": [
@@ -3976,7 +3529,6 @@ exports[`x simple spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3986,7 +3538,6 @@ exports[`x simple spec 2`] = `
     "CHROM": "20",
     "FILTER": "PASS",
     "FORMAT": "GT:GQ:DP",
-    "GENOTYPES": [Function],
     "ID": [
       "microsat1",
     ],
@@ -4039,7 +3590,6 @@ exports[`x simple spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -4407,7 +3957,6 @@ exports[`x vcf44 spec 2`] = `
     "CHROM": "chrA",
     "FILTER": undefined,
     "FORMAT": "GT",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "EVENT": [
@@ -4424,7 +3973,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4433,7 +3981,6 @@ exports[`x vcf44 spec 2`] = `
     "CHROM": "chrA",
     "FILTER": undefined,
     "FORMAT": "GT",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "END": [
@@ -4459,7 +4006,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4468,7 +4014,6 @@ exports[`x vcf44 spec 2`] = `
     "CHROM": "chrA",
     "FILTER": undefined,
     "FORMAT": "GT",
-    "GENOTYPES": [Function],
     "ID": [
       "delbp1",
     ],
@@ -4490,7 +4035,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4499,7 +4043,6 @@ exports[`x vcf44 spec 2`] = `
     "CHROM": "chrA",
     "FILTER": undefined,
     "FORMAT": "GT",
-    "GENOTYPES": [Function],
     "ID": [
       "delbp2",
     ],
@@ -4521,7 +4064,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4530,7 +4072,6 @@ exports[`x vcf44 spec 2`] = `
     "CHROM": "chrA",
     "FILTER": undefined,
     "FORMAT": "GT",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "END": [
@@ -4556,7 +4097,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4565,7 +4105,6 @@ exports[`x vcf44 spec 2`] = `
     "CHROM": "chrA",
     "FILTER": undefined,
     "FORMAT": "GT",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "EVENT": [
@@ -4582,7 +4121,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4591,7 +4129,6 @@ exports[`x vcf44 spec 2`] = `
     "CHROM": "chrA",
     "FILTER": undefined,
     "FORMAT": "GT",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "CIPOS": [
@@ -4618,7 +4155,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4627,7 +4163,6 @@ exports[`x vcf44 spec 2`] = `
     "CHROM": "chrA",
     "FILTER": undefined,
     "FORMAT": "GT",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "CILEN": [
@@ -4656,7 +4191,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4665,7 +4199,6 @@ exports[`x vcf44 spec 2`] = `
     "CHROM": "chrA",
     "FILTER": undefined,
     "FORMAT": "GT",
-    "GENOTYPES": [Function],
     "ID": undefined,
     "INFO": {
       "EVENT": [
@@ -4682,7 +4215,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
 ]
 `;

@@ -2,7 +2,7 @@ import fs from 'fs'
 
 import { expect, test } from 'vitest'
 
-import VCF, { parseBreakend, Variant } from '../src'
+import VCF, { Variant, parseBreakend } from '../src'
 
 const readVcf = (file: string) => {
   const f = fs.readFileSync(file, 'utf8')
@@ -273,7 +273,7 @@ test('x vcf44 spec', () => {
     lines.map(l => {
       const entry = VCFParser.parseLine(l)
       return {
-        ...entry,
+        ...entry.toJSON(),
         SAMPLES: entry.SAMPLES(),
       }
     }),
@@ -291,7 +291,7 @@ test('x simple spec', () => {
     lines.map(l => {
       const entry = VCFParser.parseLine(l)
       return {
-        ...entry,
+        ...entry.toJSON(),
         SAMPLES: entry.SAMPLES(),
       }
     }),

@@ -58,6 +58,11 @@ const opts = { iterations: 1000, warmupIterations: 100 }
 
 for (const format of formats) {
   for (const numSamples of sampleCounts) {
-    benchParseGenotypes(`${numSamples} samples - ${format}`, numSamples, format, opts)
+    benchParseGenotypes(
+      `${numSamples} samples - ${format}`,
+      numSamples,
+      format,
+      opts,
+    )
   }
 }
