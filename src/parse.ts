@@ -1,9 +1,6 @@
 import { parseGenotypesOnly } from './parseGenotypesOnly.ts'
 import { parseMetaString } from './parseMetaString.ts'
-import { processGenotypes } from './processGenotypes.ts'
 import vcfReserved from './vcfReserved.ts'
-
-import type { GenotypeCallback } from './processGenotypes.ts'
 
 function decodeURIComponentNoThrow(uri: string) {
   try {
@@ -366,16 +363,6 @@ export default class VCFParser {
       FORMAT: format,
       SAMPLES: () => this.parseSamples(fields[8] ?? '', rest),
       GENOTYPES: () => parseGenotypesOnly(fields[8] ?? '', rest, this.samples),
-      /**
-       * Process genotypes by calling a callback for each one, avoiding
-       * intermediate object/string allocation. Useful for operations like
-       * counting alleles where you don't need the full genotypes object.
-       *
-       * @param callback - Called for each genotype with (string, startIndex, endIndex).
-       *                   Use str.charCodeAt(start) to read characters without allocation.
-       */
-      processGenotypes: (callback: GenotypeCallback) =>
-        { processGenotypes(fields[8] ?? '', rest, this.samples.length, callback); },
     }
   }
 }

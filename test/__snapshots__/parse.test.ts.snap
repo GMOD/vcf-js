@@ -622,7 +622,6 @@ exports[`can parse a line from the VCF spec 1`] = `
   "QUAL": 29,
   "REF": "G",
   "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -731,7 +730,6 @@ exports[`can parse a line from the VCF spec Y chrom (haploid)) 1`] = `
   "QUAL": 100,
   "REF": "C",
   "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -879,7 +877,6 @@ exports[`can parse a line from the VCF spec Y chrom (haploid)) 3`] = `
   "QUAL": 100,
   "REF": "G",
   "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -921,7 +918,6 @@ exports[`can parse a line with minimal entries 1`] = `
   "QUAL": undefined,
   "REF": "G",
   "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -983,7 +979,6 @@ exports[`can parse breakends 1`] = `
     "QUAL": undefined,
     "REF": "G",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -1020,7 +1015,6 @@ exports[`can parse breakends 1`] = `
     "QUAL": undefined,
     "REF": "T",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -1051,7 +1045,6 @@ exports[`can parse breakends 1`] = `
     "QUAL": undefined,
     "REF": "T",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -1605,7 +1598,6 @@ exports[`parses a line with a breakend ALT 1`] = `
   "QUAL": 6,
   "REF": "G",
   "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -1636,7 +1628,6 @@ exports[`parses a line with mix of multiple breakends and non breakends 1`] = `
   "QUAL": 6,
   "REF": "C",
   "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -2446,7 +2437,6 @@ exports[`shortcut parsing with 1000 genomes 1`] = `
     "QUAL": 100,
     "REF": "G",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2500,7 +2490,6 @@ exports[`shortcut parsing with 1000 genomes 1`] = `
     "QUAL": 100,
     "REF": "A",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -2527,7 +2516,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "QUAL": 6,
     "REF": "G",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2549,7 +2537,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "QUAL": 6,
     "REF": "T",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2571,7 +2558,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "QUAL": 6,
     "REF": "C",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2593,7 +2579,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "QUAL": 6,
     "REF": "A",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2615,7 +2600,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "QUAL": 6,
     "REF": "A",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2637,7 +2621,6 @@ exports[`shortcut parsing with vcf 4.3 bnd example 1`] = `
     "QUAL": 6,
     "REF": "C",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -2706,7 +2689,6 @@ exports[`sniffles vcf 1`] = `
   "QUAL": undefined,
   "REF": "N",
   "SAMPLES": [Function],
-  "processGenotypes": [Function],
 }
 `;
 
@@ -2756,7 +2738,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "QUAL": 29,
     "REF": "G",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2784,7 +2765,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "QUAL": 3,
     "REF": "T",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2818,7 +2798,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "QUAL": 67,
     "REF": "A",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": undefined,
@@ -2842,7 +2821,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "QUAL": 47,
     "REF": "T",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -2871,7 +2849,6 @@ exports[`snippet from VCF 4.3 spec 1`] = `
     "QUAL": 50,
     "REF": "GTC",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -3181,7 +3158,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "QUAL": 29,
     "REF": "R",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3210,7 +3186,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "QUAL": 29,
     "REF": "R",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3239,7 +3214,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "QUAL": 29,
     "REF": "W",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3268,7 +3242,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "QUAL": 29,
     "REF": "R",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3297,7 +3270,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "QUAL": 29,
     "REF": "R",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3326,7 +3298,6 @@ exports[`vcf lines with weird info field and missing format/genotypes 1`] = `
     "QUAL": 29,
     "REF": "R",
     "SAMPLES": [Function],
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -3764,7 +3735,6 @@ exports[`x simple spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3834,7 +3804,6 @@ exports[`x simple spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -3910,7 +3879,6 @@ exports[`x simple spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": undefined,
@@ -3976,7 +3944,6 @@ exports[`x simple spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4039,7 +4006,6 @@ exports[`x simple spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
 ]
 `;
@@ -4424,7 +4390,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4459,7 +4424,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4490,7 +4454,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4521,7 +4484,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4556,7 +4518,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4582,7 +4543,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4618,7 +4578,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4656,7 +4615,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
   {
     "ALT": [
@@ -4682,7 +4640,6 @@ exports[`x vcf44 spec 2`] = `
         ],
       },
     },
-    "processGenotypes": [Function],
   },
 ]
 `;
