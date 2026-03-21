@@ -34,6 +34,7 @@ export default defineConfig(
   {
     rules: {
       curly: 'error',
+      '@typescript-eslint/consistent-type-imports': 'error',
       'no-console': [
         'warn',
         {

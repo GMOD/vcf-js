@@ -15,12 +15,7 @@ header and individual lines from a VCF, like the `@gmod/tabix` module.
 
 ```typescript
 import { TabixIndexedFile } from '@gmod/tabix'
-
-// with import
 import VCF, { parseBreakend, Variant } from '@gmod/vcf'
-
-// with require
-const { default: VCF, parseBreakend } = require('@gmod/vcf')
 
 const tbiIndexed = new TabixIndexedFile({ path: '/path/to/my.vcf.gz' })
 
@@ -38,10 +33,10 @@ async function doStuff() {
 If you want to stream a VCF file, you can alternatively use something like this
 
 ```typescript
-const fs = require('fs')
-const VCF = require('@gmod/vcf').default
-const { createGunzip } = require('zlib')
-const readline = require('readline')
+import fs from 'fs'
+import VCF from '@gmod/vcf'
+import { createGunzip } from 'zlib'
+import readline from 'readline'
 
 const rl = readline.createInterface({
   input: fs.createReadStream(process.argv[2]).pipe(createGunzip()),
