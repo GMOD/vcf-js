@@ -41,13 +41,13 @@ function customSplit(str: string) {
 
 function splitFirst(str: string, split: string) {
   const index = str.indexOf(split)
-  return [str.slice(0, index), str.slice(index + 1)]
+  return [str.slice(0, index), str.slice(index + 1)] as const
 }
 
 export function parseMetaString(metaString: string) {
   const inside = metaString.slice(1, -1)
   const parts = customSplit(inside)
-  const entries: [string, any][] = []
+  const entries: [string, string | string[]][] = []
   for (let i = 0; i < parts.length; i++) {
     const f = parts[i]!
     const [key, val] = splitFirst(f, '=')
@@ -56,11 +56,11 @@ export function parseMetaString(metaString: string) {
       for (let j = 0; j < items.length; j++) {
         items[j] = items[j]!.trim()
       }
-      entries.push([key!, items])
+      entries.push([key, items])
     } else if (val && val.startsWith('"') && val.endsWith('"')) {
-      entries.push([key!, val.slice(1, -1)])
+      entries.push([key, val.slice(1, -1)])
     } else {
-      entries.push([key!, val])
+      entries.push([key, val])
     }
   }
   return Object.fromEntries(entries)

@@ -95,7 +95,7 @@ export default class VCFParser {
         this.metadata[r] = {}
       }
       const [id, keyVals] = this.parseStructuredMetaVal(metaVal)
-      if (id) {
+      if (typeof id === 'string') {
         // if there is an ID field in the <> metadata
         // e.g. ##INFO=<ID=AF_ESP,...>
         ;(this.metadata[r] as Record<string, unknown>)[id] = keyVals
@@ -119,8 +119,9 @@ export default class VCFParser {
    * and 2) an object with the other key-value pairs in the metadata
    */
   private parseStructuredMetaVal(metaVal: string) {
-    const keyVals = parseMetaString(metaVal)
-    const id = keyVals.ID!
+    const keyVals: Record<string, string | string[] | number> =
+      parseMetaString(metaVal)
+    const id = keyVals.ID
     delete keyVals.ID
     if ('Number' in keyVals) {
       if (!Number.isNaN(Number(keyVals.Number))) {
@@ -140,10 +141,13 @@ export default class VCFParser {
    * @returns {any} An object, string, or number, depending on the filtering
    */
   getMetadata(...args: string[]) {
-    let filteredMetadata: any = this.metadata
+    let filteredMetadata: unknown = this.metadata
     const argsLen = args.length
     for (let i = 0; i < argsLen; i++) {
-      filteredMetadata = filteredMetadata[args[i]!]
+      if (typeof filteredMetadata !== 'object' || filteredMetadata === null) {
+        return undefined
+      }
+      filteredMetadata = (filteredMetadata as Record<string, unknown>)[args[i]!]
       if (!filteredMetadata) {
         return filteredMetadata
       }
