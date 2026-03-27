@@ -21,7 +21,7 @@ export function parseGenotypesOnly(
       while (pos < prerestLen && prerest.charCodeAt(pos) !== TAB) {
         pos++
       }
-      genotypes[samples[idx]!] = prerest.slice(start, pos)
+      genotypes[samples[idx] ?? ''] = prerest.slice(start, pos)
       pos++
     }
     return genotypes
@@ -44,7 +44,7 @@ export function parseGenotypesOnly(
       ) {
         pos++
       }
-      genotypes[samples[idx]!] = prerest.slice(start, pos)
+      genotypes[samples[idx] ?? ''] = prerest.slice(start, pos)
       while (pos < prerestLen && prerest.charCodeAt(pos) !== TAB) {
         pos++
       }
@@ -72,7 +72,7 @@ export function parseGenotypesOnly(
     for (let j = sampleStart; j <= tabIdx; j++) {
       if (j === tabIdx || prerest.charCodeAt(j) === COLON) {
         if (colons === colonCount) {
-          genotypes[samples[idx]!] = prerest.slice(fieldStart, j)
+          genotypes[samples[idx] ?? ''] = prerest.slice(fieldStart, j)
           break
         }
         colons++

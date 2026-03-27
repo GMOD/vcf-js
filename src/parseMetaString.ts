@@ -6,7 +6,7 @@ function customSplit(str: string) {
   const strLen = str.length
 
   for (let i = 0; i < strLen; i++) {
-    const char = str[i]!
+    const char = str[i] ?? ''
     if (char === '"') {
       inQuotes = !inQuotes
       chars.push(char)

@@ -46,7 +46,7 @@ export class Variant {
     const fields = line.slice(0, splitPos).split('\t')
     const rest = line.slice(splitPos + 1)
     const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
-    const filter = FILTER === '.' ? undefined : FILTER!.split(';')
+    const filter = FILTER === '.' ? undefined : FILTER?.split(';')
 
     if (strict && !fields[7]) {
       throw new Error(
@@ -55,11 +55,11 @@ export class Variant {
     }
 
     this.CHROM = CHROM
-    this.POS = +POS!
-    this.ID = ID === '.' ? undefined : ID!.split(';')
+    this.POS = POS !== undefined ? +POS : 0
+    this.ID = ID === '.' ? undefined : ID?.split(';')
     this.REF = REF
-    this.ALT = ALT === '.' ? undefined : ALT!.split(',')
-    this.QUAL = QUAL === '.' ? undefined : +QUAL!
+    this.ALT = ALT === '.' ? undefined : ALT?.split(',')
+    this.QUAL = QUAL === '.' ? undefined : QUAL !== undefined ? +QUAL : undefined
     this.FILTER = filter?.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter
     this.INFO =
       fields[7] === undefined || fields[7] === '.'
@@ -82,7 +82,7 @@ export class Variant {
     const pairsLen = infoPairs.length
 
     for (let i = 0; i < pairsLen; i++) {
-      const pair = infoPairs[i]!
+      const pair = infoPairs[i] ?? ''
       const eqIdx = pair.indexOf('=')
       const key = eqIdx === -1 ? pair : pair.slice(0, eqIdx)
       const val = eqIdx === -1 ? undefined : pair.slice(eqIdx + 1)
@@ -100,7 +100,7 @@ export class Variant {
         if (hasDecode) {
           const items: (string | number | undefined)[] = []
           for (let j = 0; j < itemsLen; j++) {
-            const v = rawItems[j]!
+            const v = rawItems[j] ?? ''
             if (v === '.') {
               items.push(undefined)
             } else {
@@ -112,7 +112,7 @@ export class Variant {
         } else {
           const items: (string | number | undefined)[] = []
           for (let j = 0; j < itemsLen; j++) {
-            const v = rawItems[j]!
+            const v = rawItems[j] ?? ''
             if (v === '.') {
               items.push(undefined)
             } else {
@@ -137,18 +137,18 @@ export class Variant {
       const formatKeys = format.split(':')
       const isNumberType: boolean[] = []
       for (let i = 0; i < formatKeys.length; i++) {
-        const r = this.formatMeta[formatKeys[i]!]?.Type
+        const r = this.formatMeta[formatKeys[i] ?? '']?.Type
         isNumberType.push(r === 'Integer' || r === 'Float')
       }
       const numKeys = formatKeys.length
       const samplesLen = this.sampleNames.length
       for (let i = 0; i < samplesLen; i++) {
-        const sample = this.sampleNames[i]!
+        const sample = this.sampleNames[i] ?? ''
         const sampleData: Record<
           string,
           (string | number | undefined)[] | undefined
         > = {}
-        const sampleStr = rest[i]!
+        const sampleStr = rest[i] ?? ''
         const sampleStrLen = sampleStr.length
         let colStart = 0
         let colIdx = 0
@@ -157,22 +157,22 @@ export class Variant {
           if (j === sampleStrLen || sampleStr[j] === ':') {
             const val = sampleStr.slice(colStart, j)
             if (val === '' || val === '.') {
-              sampleData[formatKeys[colIdx]!] = undefined
+              sampleData[formatKeys[colIdx] ?? ''] = undefined
             } else {
               const items = val.split(',')
               const result: (string | number | undefined)[] = []
               if (isNumberType[colIdx]) {
                 for (let k = 0; k < items.length; k++) {
-                  const ent = items[k]!
+                  const ent = items[k] ?? ''
                   result.push(ent === '.' ? undefined : +ent)
                 }
               } else {
                 for (let k = 0; k < items.length; k++) {
-                  const ent = items[k]!
+                  const ent = items[k] ?? ''
                   result.push(ent === '.' ? undefined : ent)
                 }
               }
-              sampleData[formatKeys[colIdx]!] = result
+              sampleData[formatKeys[colIdx] ?? ''] = result
             }
             colStart = j + 1
             colIdx += 1

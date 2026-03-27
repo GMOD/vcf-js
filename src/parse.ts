@@ -39,7 +39,7 @@ export default class VCFParser {
 
     let lastLine: string | undefined
     for (let i = 0; i < headerLines.length; i++) {
-      const line = headerLines[i]!
+      const line = headerLines[i] ?? ''
       if (!line.startsWith('#')) {
         throw new Error(`Bad line in header:\n${line}`)
       } else if (line.startsWith('##')) {
