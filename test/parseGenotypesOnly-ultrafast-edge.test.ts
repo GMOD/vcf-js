@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { parseGenotypesOnly } from '../src/parseGenotypesOnly'
+import { parseGenotypesOnly } from '../src/parseGenotypesOnly.ts'
 
 test('ultra-fast path should not be tricked by mixed ploidy with matching length', () => {
   // 4 samples with total length = 15 = 4*4-1

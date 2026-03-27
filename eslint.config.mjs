@@ -34,6 +34,7 @@ export default defineConfig(
   {
     rules: {
       curly: 'error',
+      eqeqeq: 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
       'no-console': [
         'warn',
@@ -61,14 +62,7 @@ export default defineConfig(
         'error',
         { 'ts-expect-error': 'allow-with-description', 'ts-ignore': true },
       ],
-      '@typescript-eslint/no-this-alias': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-return': 'off',
-      '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/prefer-for-of': 'off',
 

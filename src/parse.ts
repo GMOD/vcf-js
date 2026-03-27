@@ -87,9 +87,8 @@ export default class VCFParser {
     if (!match) {
       throw new Error(`Line is not a valid metadata line: ${line}`)
     }
-    const [metaKey, metaVal] = match.slice(1, 3)
-
-    const r = metaKey!
+    const r = match[1] ?? ''
+    const metaVal = match[2]
     if (metaVal?.startsWith('<')) {
       if (!(r in this.metadata)) {
         this.metadata[r] = {}
@@ -147,7 +146,9 @@ export default class VCFParser {
       if (typeof filteredMetadata !== 'object' || filteredMetadata === null) {
         return undefined
       }
-      filteredMetadata = (filteredMetadata as Record<string, unknown>)[args[i]!]
+      filteredMetadata = (filteredMetadata as Record<string, unknown>)[
+        args[i] ?? ''
+      ]
       if (!filteredMetadata) {
         return filteredMetadata
       }

@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { parseGenotypesOnly } from '../src/parseGenotypesOnly'
+import { parseGenotypesOnly } from '../src/parseGenotypesOnly.ts'
 
 test('parse genotypes', () => {
   expect(parseGenotypesOnly('GT', './.\t./.', ['h1', 'h2'])).toMatchSnapshot()

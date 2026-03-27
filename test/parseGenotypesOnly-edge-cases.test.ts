@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { parseGenotypesOnly } from '../src/parseGenotypesOnly'
+import { parseGenotypesOnly } from '../src/parseGenotypesOnly.ts'
 
 test('last sample with 3-char GT and no trailing tab', () => {
   // Single sample, no trailing tab
@@ -120,7 +120,7 @@ test('haploid genotypes - many samples', () => {
 
   const expected = {} as Record<string, string>
   samples.forEach((s, i) => {
-    expected[s] = gts[i]!
+    expected[s] = gts[i] ?? ''
   })
 
   expect(result).toEqual(expected)
@@ -368,7 +368,7 @@ test('large scale mixed ploidy', () => {
 
   const expected = {} as Record<string, string>
   samples.forEach((s, i) => {
-    expected[s] = gts[i]!
+    expected[s] = gts[i] ?? ''
   })
 
   expect(result).toEqual(expected)
