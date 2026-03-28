@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { parseMetaString } from '../src/parseMetaString'
+import { parseMetaString } from '../src/parseMetaString.ts'
 
 test('array in values', () => {
   const result1 = parseMetaString(

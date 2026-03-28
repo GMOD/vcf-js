@@ -1,11 +1,11 @@
-import fs from 'fs'
+import { readFileSync } from 'node:fs'
 
 import { expect, test } from 'vitest'
 
-import VCF, { Variant, parseBreakend } from '../src'
+import VCF, { Variant, parseBreakend } from '../src/index.ts'
 
 const readVcf = (file: string) => {
-  const f = fs.readFileSync(file, 'utf8')
+  const f = readFileSync(file, 'utf8')
   const lines = f.split('\n')
   const header = [] as string[]
   const rest = [] as string[]

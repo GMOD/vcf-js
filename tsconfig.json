@@ -3,9 +3,10 @@
   "compilerOptions": {
     "outDir": "dist",
     "lib": ["dom", "esnext"],
-    "skipLibCheck": true,
     "declaration": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
+    "rootDir": "./src",
     "sourceMap": true,
     "strict": true,
     "noImplicitReturns": true,

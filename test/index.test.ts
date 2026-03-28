@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { Breakend, parseBreakend } from '../src'
+import { Breakend, parseBreakend } from '../src/index.ts'
 
 describe('testBreakend', () => {
   it('can parse breakends', () => {
