@@ -42,10 +42,10 @@
     "clean": "rimraf dist esm",
     "build:esm": "tsc --target es2020 --outDir esm",
     "build:es5": "tsc --target es2020 --module commonjs --outDir dist",
-    "build": "yarn build:esm && yarn build:es5",
-    "prebuild": "yarn clean",
+    "build": "pnpm build:esm && pnpm build:es5",
+    "prebuild": "pnpm clean",
     "postbuild:es5": "echo '{\"type\": \"commonjs\"}' > dist/package.json",
-    "preversion": "yarn lint && yarn test --run && yarn build",
+    "preversion": "pnpm lint && pnpm test --run && pnpm build",
     "version": "standard-changelog && git add CHANGELOG.md",
     "postversion": "git push --follow-tags"
   },
