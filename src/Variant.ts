@@ -98,30 +98,17 @@ export class Variant {
         const rawItems = val.split(',')
         const itemsLen = rawItems.length
 
-        if (hasDecode) {
-          const items: (string | number | undefined)[] = []
-          for (let j = 0; j < itemsLen; j++) {
-            const v = rawItems[j] ?? ''
-            if (v === '.') {
-              items.push(undefined)
-            } else {
-              const decoded = decodeURIComponentNoThrow(v)
-              items.push(isNumber ? Number(decoded) : decoded)
-            }
+        const items: (string | number | undefined)[] = []
+        for (let j = 0; j < itemsLen; j++) {
+          const v = rawItems[j] ?? ''
+          if (v === '.') {
+            items.push(undefined)
+          } else {
+            const w = hasDecode ? decodeURIComponentNoThrow(v) : v
+            items.push(isNumber ? Number(w) : w)
           }
-          result[key] = items
-        } else {
-          const items: (string | number | undefined)[] = []
-          for (let j = 0; j < itemsLen; j++) {
-            const v = rawItems[j] ?? ''
-            if (v === '.') {
-              items.push(undefined)
-            } else {
-              items.push(isNumber ? Number(v) : v)
-            }
-          }
-          result[key] = items
         }
+        result[key] = items
       }
     }
     return result
