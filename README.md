@@ -41,15 +41,16 @@ const rl = readline.createInterface({
   input: fs.createReadStream(process.argv[2]).pipe(createGunzip()),
 })
 
-let header = []
-let elts = []
-let parser = undefined
+const header = []
+const elts = []
+let parser
 
 rl.on('line', function (line) {
   if (line.startsWith('#')) {
     header.push(line)
     return
-  } else if (!parser) {
+  }
+  if (!parser) {
     parser = new VCF({ header: header.join('\n') })
   }
   const elt = parser.parseLine(line)
@@ -197,7 +198,7 @@ parser object:
 We offer a helper function to parse breakend strings. We used to parse these
 automatically but it is now a helper function
 
-```js
+```typescript
 import { parseBreakend } from '@gmod/vcf'
 parseBreakend('C[2:321682[')
 
@@ -284,7 +285,7 @@ Get metadata filtered by the elements in args. For example, can pass ('INFO',
 
 - `...args` **string[]** - List of metadata filter strings.
 
-Returns **any** An object, string, or number, depending on the filtering
+Returns **object | string | number** depending on the filtering
 
 #### parseLine
 
@@ -322,7 +323,7 @@ counting or iterating over genotypes with minimal memory allocation.
 
 ##### Parameters
 
-- `callback` **(str: string, start: number, end: number) => any** - Called for
+- `callback` **(str: string, start: number, end: number) => void** - Called for
   each genotype with the raw string and indices. Use `str.slice(start, end)` to
   extract the genotype string, or `str.charCodeAt(start)` to read characters
   without allocation.
