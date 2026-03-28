@@ -22,7 +22,6 @@ jobs:
           node-version: 24.x
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
-          token: ''
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: npm publish --provenance --access public
+      - run: npm publish --access public
