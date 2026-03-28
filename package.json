@@ -31,9 +31,6 @@
     "esm",
     "src"
   ],
-  "engines": {
-    "node": ">=6"
-  },
   "scripts": {
     "test": "vitest",
     "benchonly": "vitest bench",
@@ -44,7 +41,7 @@
     "postdocs": "prettier --write README.md",
     "clean": "rimraf dist esm",
     "build:esm": "tsc --target es2020 --outDir esm",
-    "build:es5": "tsc --target es2020 --module commonjs --outDir dist",
+    "build:es5": "tsc --target es2020 --module commonjs --moduleResolution bundler --outDir dist",
     "build": "pnpm build:esm && pnpm build:es5",
     "prebuild": "pnpm clean",
     "postbuild:es5": "echo '{\"type\": \"commonjs\"}' > dist/package.json",
