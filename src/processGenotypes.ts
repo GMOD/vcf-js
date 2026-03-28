@@ -2,7 +2,11 @@
  * Callback type for processGenotypes - receives the raw string and
  * start/end indices to avoid string allocation
  */
-export type GenotypeCallback = (str: string, start: number, end: number) => any
+export type GenotypeCallback = (
+  str: string,
+  start: number,
+  end: number,
+) => unknown
 
 /**
  * Process genotypes by calling a callback for each one, avoiding intermediate

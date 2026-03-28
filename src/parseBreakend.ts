@@ -24,9 +24,7 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
     let Join
     let Replacement
     let MatePosition
-    const tokensLen = tokens.length
-    for (let i = 0; i < tokensLen; i++) {
-      const tok = tokens[i]!
+    for (const tok of tokens) {
       if (tok) {
         if (tok.includes(':')) {
           MatePosition = tok
@@ -69,7 +67,7 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
           Join: 'left',
           Replacement,
           MateDirection: 'right',
-          MatePosition: `<${res[1]!}>:1`,
+          MatePosition: `<${res[1] ?? ''}>:1`,
         }
       : undefined
   }
@@ -85,7 +83,7 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
           Join: 'right',
           Replacement,
           MateDirection: 'right',
-          MatePosition: `<${res[2]!}>:1`,
+          MatePosition: `<${res[2] ?? ''}>:1`,
         }
       : undefined
   }

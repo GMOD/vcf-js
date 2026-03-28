@@ -123,7 +123,7 @@ test('sniffles vcf', () => {
   const VCFParser = new VCF({
     header,
   })
-  const variant = VCFParser.parseLine(lines[0])
+  const variant = VCFParser.parseLine(lines[0]!)
   expect(variant).toMatchSnapshot()
   expect(variant.SAMPLES()).toMatchSnapshot()
 })
@@ -133,8 +133,8 @@ test('can parse a line from the VCF spec Y chrom (haploid))', () => {
   const VCFParser = new VCF({
     header,
   })
-  const variant = VCFParser.parseLine(lines[0])
-  const variant2 = VCFParser.parseLine(lines[1])
+  const variant = VCFParser.parseLine(lines[0]!)
+  const variant2 = VCFParser.parseLine(lines[1]!)
   expect(variant).toMatchSnapshot()
   expect(variant.SAMPLES()).toMatchSnapshot()
   expect(variant2).toMatchSnapshot()
@@ -176,7 +176,7 @@ test('test no info strict', () => {
     header,
     strict: true,
   })
-  expect(() => VCFParser.parseLine(lines[0])).toThrow(/INFO/)
+  expect(() => VCFParser.parseLine(lines[0]!)).toThrow(/INFO/)
 })
 
 test('test no info non-strict', () => {
@@ -185,8 +185,8 @@ test('test no info non-strict', () => {
     header,
     strict: false,
   })
-  expect(VCFParser.parseLine(lines[0])).toBeTruthy()
-  expect(VCFParser.parseLine(lines[0]).GENOTYPES()).toEqual({})
+  expect(VCFParser.parseLine(lines[0]!)).toBeTruthy()
+  expect(VCFParser.parseLine(lines[0]!).GENOTYPES()).toEqual({})
 })
 
 test('empty header lines', () => {
@@ -205,7 +205,7 @@ test('shortcut parsing with vcf 4.3 bnd example', () => {
 
   const VCFParser = new VCF({ header })
   const variants = lines.map(line => VCFParser.parseLine(line))
-  expect(variants.map(m => m.ALT?.[0].toString())).toEqual(
+  expect(variants.map(m => m.ALT?.[0]?.toString())).toEqual(
     lines.map(line => line.split('\t')[4]),
   )
 
@@ -250,8 +250,9 @@ test('sample to genotype information', () => {
   const VCFParser = new VCF({
     header,
   })
-  expect(VCFParser.getMetadata().META).toMatchSnapshot()
-  expect(VCFParser.getMetadata().SAMPLES).toMatchSnapshot()
+  const metadata = VCFParser.getMetadata() as Record<string, unknown>
+  expect(metadata.META).toMatchSnapshot()
+  expect(metadata.SAMPLES).toMatchSnapshot()
 })
 
 test('pedigree', () => {
@@ -311,7 +312,10 @@ test('Variant serializes without methods', () => {
   const variant = VCFParser.parseLine(
     '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3;DP=14;AF=0.5;DB;H2\tGT:GQ:DP:HQ\t0|0:48:1:51,51\t1|0:48:8:51,51\t1/1:43:5:.,.',
   )
-  const serialized = JSON.parse(JSON.stringify(variant))
+  const serialized = JSON.parse(JSON.stringify(variant)) as Record<
+    string,
+    unknown
+  >
 
   expect(serialized.SAMPLES).toBeUndefined()
   expect(serialized.GENOTYPES).toBeUndefined()
