@@ -12,7 +12,10 @@
       "require": "./dist/index.js"
     }
   },
-  "repository": "github:GMOD/vcf-js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GMOD/vcf-js.git"
+  },
   "author": {
     "name": "Garrett Stevens",
     "email": "stevens.garrett.j@gmail.com",
@@ -50,22 +53,22 @@
     "postversion": "git push --follow-tags"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.5",
-    "@eslint/js": "^9.7.0",
-    "@types/node": "^24.10.1",
-    "@typescript-eslint/eslint-plugin": "^8.48.0",
-    "@typescript-eslint/parser": "^8.48.0",
-    "@vitest/coverage-v8": "^4.0.14",
-    "documentation": "^14.0.1",
-    "eslint": "^9.7.0",
+    "@babel/core": "^7.29.0",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
+    "@vitest/coverage-v8": "^4.1.2",
+    "documentation": "^14.0.3",
+    "eslint": "^9.39.4",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-unicorn": "^62.0.0",
-    "prettier": "^3.2.4",
-    "rimraf": "^6.0.1",
+    "eslint-plugin-unicorn": "^64.0.0",
+    "prettier": "^3.8.1",
+    "rimraf": "^6.1.3",
     "standard-changelog": "^7.0.1",
-    "typescript": "^5.3.3",
-    "typescript-eslint": "^8.48.0",
-    "vitest": "^4.0.14"
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.57.2",
+    "vitest": "^4.1.2"
   },
   "keywords": [
     "vcf",
@@ -75,5 +78,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@jbrowse/quick-lru": "^7.3.5"
   }
 }
