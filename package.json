@@ -5,12 +5,8 @@
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
-    "import": {
-      "import": "./esm/index.js"
-    },
-    "require": {
-      "require": "./dist/index.js"
-    }
+    "import": "./esm/index.js",
+    "require": "./dist/index.js"
   },
   "repository": {
     "type": "git",
