@@ -14,50 +14,13 @@ import VCF from '@gmod/vcf'
 const tbiIndexed = new TabixIndexedFile({ path: '/path/to/my.vcf.gz' })
 
 const headerText = await tbiIndexed.getHeader()
-const parser = new VCF({ header: headerText })
+const parser = new VCF({ header: headerText }) // strict?: boolean (default true)
 
 const variants = []
 await tbiIndexed.getLines('ctgA', 200, 300, line =>
   variants.push(parser.parseLine(line)),
 )
 ```
-
-For streaming a VCF file directly:
-
-```typescript
-import fs from 'fs'
-import VCF from '@gmod/vcf'
-import { createGunzip } from 'zlib'
-import readline from 'readline'
-
-const rl = readline.createInterface({
-  input: fs.createReadStream(process.argv[2]).pipe(createGunzip()),
-})
-
-const header = []
-let parser
-
-rl.on('line', line => {
-  if (line.startsWith('#')) {
-    header.push(line)
-  } else {
-    if (!parser) {
-      parser = new VCF({ header: header.join('\n') })
-    }
-    const variant = parser.parseLine(line)
-    console.log(variant.INFO.NS[0])
-  }
-})
-```
-
-## Constructor
-
-```typescript
-new VCF({ header: string, strict?: boolean })
-```
-
-- `header` — the full VCF header string (LF or CRLF)
-- `strict` — throw on missing INFO field (default `true`)
 
 ## Variant
 
