@@ -54,7 +54,7 @@ rl.on('line', function (line) {
     parser = new VCF({ header: header.join('\n') })
   }
   const elt = parser.parseLine(line)
-  elts.push(elt.INFO.AN[0])
+  elts.push(elt.INFO.NS[0]) // NS is defined in the VCF spec as an integer
 })
 
 rl.on('close', function () {
@@ -62,7 +62,7 @@ rl.on('close', function () {
 })
 ```
 
-This method is used to test @gmod/vcf in https://github.com/brentp/vcf-bench
+This streaming approach is used to benchmark @gmod/vcf in https://github.com/brentp/vcf-bench
 
 ## Methods
 
@@ -83,7 +83,7 @@ The `Variant` object returned by `parseLine()` has these properties:
   REF: 'G',
   ALT: ['T', 'A'],
   QUAL: 100,
-  FILTER: 'PASS',
+  FILTER: 'PASS', // 'PASS' | string[] of filter names | undefined if '.'
   INFO: {
     NS: [3],
     DP: [14],
@@ -139,44 +139,31 @@ you can access the VCF's header metadata like (some output omitted for clarity):
 
 ```typescript
 > console.log(vcfParser.getMetadata())
-{ INFO:
-   { AA:
-      { Number: 1, Type: 'String', Description: 'Ancestral Allele' },
-
-...
-
-     ABC: { Number: 2, Type: 'Integer', Description: 'A description' } },
-  FORMAT:
-   { AD:
-      { Number: 'R',
-        Type: 'Integer',
-        Description: 'Read depth for each allele' },
-
-...
-
-  ALT:
-   { DEL: { Description: 'Deletion relative to the reference' },
-
-...
-
-  FILTER: { PASS: { Description: 'Passed all filters' } } }
+{
+  INFO: {
+    AA: { Number: 1, Type: 'String', Description: 'Ancestral Allele' },
+    ...
+    ABC: { Number: 2, Type: 'Integer', Description: 'A description' }
+  },
+  FORMAT: {
+    AD: { Number: 'R', Type: 'Integer', Description: 'Read depth for each allele' },
+    ...
+  },
+  ALT: {
+    DEL: { Description: 'Deletion relative to the reference' },
+    ...
+  },
+  FILTER: { PASS: { Description: 'Passed all filters' } }
+}
 
 > console.log(vcfParser.getMetadata('INFO'))
-{ AA:
-   { Number: 1, Type: 'String', Description: 'Ancestral Allele' },
-  AC:
-   { Number: 'A',
-     Type: 'Integer',
-     Description:
-      'Allele count in genotypes, for each ALT allele, in the same order as listed' },
-  AD:
-   { Number: 'R',
-     Type: 'Integer',
-     Description: 'Total read depth for each allele' },
-
-...
-
-  ABC: { Number: 2, Type: 'Integer', Description: 'A description' } }
+{
+  AA: { Number: 1, Type: 'String', Description: 'Ancestral Allele' },
+  AC: { Number: 'A', Type: 'Integer', Description: 'Allele count in genotypes, for each ALT allele, in the same order as listed' },
+  AD: { Number: 'R', Type: 'Integer', Description: 'Total read depth for each allele' },
+  ...
+  ABC: { Number: 2, Type: 'Integer', Description: 'A description' }
+}
 
 > console.log(vcfParser.getMetadata('INFO', 'DP'))
 { Number: 1, Type: 'Integer', Description: 'Total Depth' }
@@ -195,8 +182,8 @@ parser object:
 
 ## Breakends
 
-We offer a helper function to parse breakend strings. We used to parse these
-automatically but it is now a helper function
+We offer a helper function to parse breakend strings (previously parsed
+automatically).
 
 ```typescript
 import { parseBreakend } from '@gmod/vcf'
@@ -212,12 +199,21 @@ parseBreakend('C[2:321682[')
 //     }
 ```
 
-- The C\[2:321682\[ parses as "Join": "right" because the BND is after the C
-  base
-- The C\[2:321682\[ also is given "MateDirection": "right" because the square
-  brackets point to the right.
-- The spec never has the square brackets pointing in different directions.
-  Instead, the different types of joins can be imagined as follows
+- `Join: "right"` — the replacement base C appears before the mate position in
+  the ALT string, so the mate joins to the right
+- `MateDirection: "right"` — `[` brackets mean the mate sequence extends
+  rightward from the mate position; `]` brackets mean it extends leftward
+
+All four bracket forms from the VCF spec:
+
+| ALT form | Join  | MateDirection |
+|----------|-------|---------------|
+| `t[p[`   | right | right         |
+| `t]p]`   | right | left          |
+| `[p[t`   | left  | right         |
+| `]p]t`   | left  | left          |
+
+The two brackets in a single ALT always match (`[[` or `]]`).
 
 For the above vcf line where chr13:123456->C\[2:321682\[ then we have this
 
@@ -233,7 +229,7 @@ For the above vcf line where chr13:123456->C\[2:321682\[ then we have this
                             \--------------
                              chr2:321682
 
-If the alt was instead chr13:123456->\[2:321682\[C then the the "Join" would be
+If the alt was instead chr13:123456->\[2:321682\[C then the "Join" would be
 "left" since the "BND" is before "C" and then the breakend structure looks like
 this
 
@@ -252,6 +248,19 @@ this
           |
           ----------------------
            chr2:321682
+
+### Single breakends
+
+When the ALT starts or ends with `.` (no mate position), `parseBreakend`
+returns a result with `SingleBreakend: true` and no `MatePosition`:
+
+```typescript
+parseBreakend('C.')
+// { Join: 'right', Replacement: 'C', SingleBreakend: true }
+
+parseBreakend('.ACGT')
+// { Join: 'left', Replacement: 'ACGT', SingleBreakend: true }
+```
 
 ## API
 
@@ -274,18 +283,18 @@ Class representing a VCF parser, instantiated with the VCF header.
 
 - `args.header` **string** - The VCF header. Supports both LF and CRLF newlines.
 - `args.strict` **boolean** - Whether to parse in strict mode or not (default
-  true)
+  true). In strict mode an error is thrown if the INFO field is missing.
 
 #### getMetadata
 
 Get metadata filtered by the elements in args. For example, can pass ('INFO',
-'DP') to only get info on an metadata tag that was like "##INFO=\<ID=DP,...>"
+'DP') to only get info on a metadata tag that was like "##INFO=\<ID=DP,...>"
 
 ##### Parameters
 
 - `...args` **string[]** - List of metadata filter strings.
 
-Returns **object | string | number** depending on the filtering
+Returns **object | string | number | undefined** depending on the filtering
 
 #### parseLine
 
@@ -323,7 +332,19 @@ counting or iterating over genotypes with minimal memory allocation.
 
 ##### Parameters
 
-- `callback` **(str: string, start: number, end: number) => void** - Called for
-  each genotype with the raw string and indices. Use `str.slice(start, end)` to
-  extract the genotype string, or `str.charCodeAt(start)` to read characters
-  without allocation.
+- `callback` **(str: string, start: number, end: number) => unknown** - Called
+  for each genotype with the raw string and indices.
+
+```typescript
+// count diploid homozygous ref (0|0 or 0/0) without allocating strings
+let homRef = 0
+variant.processGenotypes((str, start, end) => {
+  if (
+    end - start === 3 &&
+    str.charCodeAt(start) === 48 &&
+    str.charCodeAt(start + 2) === 48
+  ) {
+    homRef++
+  }
+})
+```
