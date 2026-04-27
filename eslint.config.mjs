@@ -1,7 +1,7 @@
 import eslint from '@eslint/js'
 import eslintPluginUnicorn from 'eslint-plugin-unicorn'
 import { defineConfig } from 'eslint/config'
-import importPlugin from 'eslint-plugin-import'
+import importPlugin from 'eslint-plugin-import-x'
 import tseslint from 'typescript-eslint'
 
 export default defineConfig(
@@ -111,8 +111,8 @@ export default defineConfig(
       'unicorn/prefer-structured-clone': 'off',
       'unicorn/prefer-string-replace-all': 'off',
 
-      'import/no-unresolved': 'off',
-      'import/order': [
+      'import-x/no-unresolved': 'off',
+      'import-x/order': [
         'error',
         {
           named: true,

@@ -123,7 +123,7 @@ test('sniffles vcf', () => {
   const VCFParser = new VCF({
     header,
   })
-  const variant = VCFParser.parseLine(lines[0]!)
+  const variant = VCFParser.parseLine(lines[0])
   expect(variant).toMatchSnapshot()
   expect(variant.SAMPLES()).toMatchSnapshot()
 })
@@ -133,8 +133,8 @@ test('can parse a line from the VCF spec Y chrom (haploid))', () => {
   const VCFParser = new VCF({
     header,
   })
-  const variant = VCFParser.parseLine(lines[0]!)
-  const variant2 = VCFParser.parseLine(lines[1]!)
+  const variant = VCFParser.parseLine(lines[0])
+  const variant2 = VCFParser.parseLine(lines[1])
   expect(variant).toMatchSnapshot()
   expect(variant.SAMPLES()).toMatchSnapshot()
   expect(variant2).toMatchSnapshot()
@@ -176,7 +176,7 @@ test('test no info strict', () => {
     header,
     strict: true,
   })
-  expect(() => VCFParser.parseLine(lines[0]!)).toThrow(/INFO/)
+  expect(() => VCFParser.parseLine(lines[0])).toThrow(/INFO/)
 })
 
 test('test no info non-strict', () => {
@@ -185,8 +185,8 @@ test('test no info non-strict', () => {
     header,
     strict: false,
   })
-  expect(VCFParser.parseLine(lines[0]!)).toBeTruthy()
-  expect(VCFParser.parseLine(lines[0]!).GENOTYPES()).toEqual({})
+  expect(VCFParser.parseLine(lines[0])).toBeTruthy()
+  expect(VCFParser.parseLine(lines[0]).GENOTYPES()).toEqual({})
 })
 
 test('empty header lines', () => {
