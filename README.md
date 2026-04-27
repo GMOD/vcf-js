@@ -1,6 +1,6 @@
 # vcf-js
 
-High performance Variant Call Format (VCF) parser in pure JavaScript.
+VCF (variant call format) parser
 
 [![NPM version](https://img.shields.io/npm/v/@gmod/vcf.svg?logo=npm&style=flat-square)](https://npmjs.org/package/@gmod/vcf)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/GMOD/vcf-js/push.yml?branch=main)](https://github.com/GMOD/vcf-js/actions)
