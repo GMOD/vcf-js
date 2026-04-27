@@ -85,6 +85,36 @@ parser.getMetadata('INFO', 'DP', 'Number')
 
 Call with no arguments to get all metadata. `parser.samples` lists sample names.
 
+## Streaming
+
+To parse a plain VCF without tabix, collect header lines until the first non-header line, then construct the parser:
+
+```typescript
+import fs from 'fs'
+import VCF from '@gmod/vcf'
+import { createGunzip } from 'zlib'
+import readline from 'readline'
+
+const rl = readline.createInterface({
+  input: fs.createReadStream('file.vcf.gz').pipe(createGunzip()),
+})
+
+const header = []
+let parser
+
+rl.on('line', line => {
+  if (line.startsWith('#')) {
+    header.push(line)
+  } else {
+    if (!parser) {
+      parser = new VCF({ header: header.join('\n') })
+    }
+    const variant = parser.parseLine(line)
+    console.log(variant.CHROM, variant.POS)
+  }
+})
+```
+
 ## Breakends
 
 `parseBreakend(alt)` parses a breakend ALT string:
