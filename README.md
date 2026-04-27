@@ -54,7 +54,8 @@ without a header entry.
 
 - `variant.SAMPLES()` — full sample data with all FORMAT fields parsed
 - `variant.GENOTYPES()` — GT strings only (faster)
-- `variant.processGenotypes(callback)` — iterate genotypes without allocating strings (fastest)
+- `variant.processGenotypes(callback)` — iterate genotypes without allocating
+  strings (fastest)
 
 ```typescript
 let homRef = 0
@@ -69,11 +70,13 @@ variant.processGenotypes((str, start, end) => {
 })
 ```
 
-Sample data is lazily parsed — nothing is computed until these methods are called.
+Sample data is lazily parsed — nothing is computed until these methods are
+called.
 
 ## Metadata
 
-`parser.getMetadata(...keys)` returns header metadata, filtered by the keys provided:
+`parser.getMetadata(...keys)` returns header metadata, filtered by the keys
+provided:
 
 ```typescript
 parser.getMetadata('INFO', 'DP')
@@ -87,7 +90,8 @@ Call with no arguments to get all metadata. `parser.samples` lists sample names.
 
 ## Streaming
 
-To parse a plain VCF without tabix, collect header lines until the first non-header line, then construct the parser:
+To parse a plain VCF without tabix, collect header lines until the first
+non-header line, then construct the parser:
 
 ```typescript
 import fs from 'fs'
@@ -129,18 +133,21 @@ parseBreakend('C[2:321682[')
 All four bracket forms from the VCF spec:
 
 | ALT form | Join  | MateDirection |
-|----------|-------|---------------|
+| -------- | ----- | ------------- |
 | `t[p[`   | right | right         |
 | `t]p]`   | right | left          |
 | `[p[t`   | left  | right         |
 | `]p]t`   | left  | left          |
 
-- `Join` — whether the replacement base appears before (`right`) or after (`left`) the mate position
-- `MateDirection` — `[` means the mate sequence extends rightward; `]` means leftward
+- `Join` — whether the replacement base appears before (`right`) or after
+  (`left`) the mate position
+- `MateDirection` — `[` means the mate sequence extends rightward; `]` means
+  leftward
 
 ### Single breakends
 
-When the ALT starts or ends with `.`, `parseBreakend` returns `SingleBreakend: true` with no `MatePosition`:
+When the ALT starts or ends with `.`, `parseBreakend` returns
+`SingleBreakend: true` with no `MatePosition`:
 
 ```typescript
 parseBreakend('C.')
