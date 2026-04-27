@@ -3,7 +3,7 @@
   "version": "7.0.1",
   "description": "High performance streaming Variant Call Format (VCF) parser in pure JavaScript",
   "type": "module",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.js",
   "exports": {
     "import": "./esm/index.js",
     "require": "./dist/index.js"
@@ -29,19 +29,19 @@
   ],
   "scripts": {
     "test": "vitest",
-    "benchonly": "vitest bench",
-    "bench": "./scripts/build-both-branches.sh \"$BRANCH1\" \"$BRANCH2\" && vitest bench",
-    "lint": "eslint --report-unused-disable-directives --max-warnings 0",
-    "format": "prettier --write .",
     "clean": "rimraf dist esm",
-    "build:esm": "tsc --target es2020 --outDir esm",
-    "build:es5": "tsc --target es2020 --module commonjs --moduleResolution bundler --outDir dist",
-    "build": "pnpm build:esm && pnpm build:es5",
+    "format": "prettier --write .",
+    "lint": "eslint --report-unused-disable-directives --max-warnings 0",
     "prebuild": "pnpm clean",
+    "build:esm": "tsc --outDir esm",
+    "build:es5": "tsc --module commonjs --moduleResolution bundler --outDir dist",
     "postbuild:es5": "echo '{\"type\": \"commonjs\"}' > dist/package.json",
     "preversion": "pnpm lint && pnpm test --run && pnpm build",
-    "version": "standard-changelog && git add CHANGELOG.md",
-    "postversion": "git push --follow-tags"
+    "postversion": "git push --follow-tags",
+    "build": "pnpm build:esm && pnpm build:es5",
+    "benchonly": "vitest bench",
+    "bench": "./scripts/build-both-branches.sh \"$BRANCH1\" \"$BRANCH2\" && vitest bench",
+    "version": "standard-changelog && git add CHANGELOG.md"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
