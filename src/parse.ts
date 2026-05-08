@@ -149,8 +149,8 @@ export default class VCFParser {
       filteredMetadata = (filteredMetadata as Record<string, unknown>)[
         args[i] ?? ''
       ]
-      if (!filteredMetadata) {
-        return filteredMetadata
+      if (filteredMetadata === undefined) {
+        return undefined
       }
     }
     return filteredMetadata
