@@ -1,11 +1,13 @@
 /**
  * Callback type for processGenotypes - receives the raw string and
- * start/end indices to avoid string allocation
+ * start/end indices to avoid string allocation. The sample index is the
+ * 0-based position in the header sample list.
  */
 export type GenotypeCallback = (
   str: string,
   start: number,
   end: number,
+  sampleIdx: number,
 ) => unknown
 
 /**
@@ -36,7 +38,7 @@ export function processGenotypes(
       while (pos < prerestLen && prerest.charCodeAt(pos) !== TAB) {
         pos++
       }
-      callback(prerest, start, pos)
+      callback(prerest, start, pos, idx)
       pos++
     }
     return
@@ -59,7 +61,7 @@ export function processGenotypes(
       ) {
         pos++
       }
-      callback(prerest, start, pos)
+      callback(prerest, start, pos, idx)
       while (pos < prerestLen && prerest.charCodeAt(pos) !== TAB) {
         pos++
       }
@@ -88,7 +90,7 @@ export function processGenotypes(
     for (let j = sampleStart; j <= tabIdx; j++) {
       if (j === tabIdx || prerest.charCodeAt(j) === COLON) {
         if (colons === colonCount) {
-          callback(prerest, fieldStart, j)
+          callback(prerest, fieldStart, j, idx)
           break
         }
         colons++
