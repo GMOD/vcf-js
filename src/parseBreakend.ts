@@ -11,7 +11,7 @@ const ANGLE_BRACKET_END_REGEX = /(.*)<(.*)>/
 
 export function parseBreakend(breakendString: string): Breakend | undefined {
   const firstChar = breakendString[0]
-  const lastChar = breakendString[breakendString.length - 1]
+  const lastChar = breakendString.at(-1)
 
   if (
     firstChar === '[' ||

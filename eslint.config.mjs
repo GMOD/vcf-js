@@ -34,6 +34,8 @@ export default defineConfig(
   {
     rules: {
       curly: 'error',
+      'object-shorthand': 'error',
+      '@typescript-eslint/no-unnecessary-condition': 'error',
       eqeqeq: 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
       'no-console': [

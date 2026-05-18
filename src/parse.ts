@@ -141,14 +141,11 @@ export default class VCFParser {
    */
   getMetadata(...args: string[]) {
     let filteredMetadata: unknown = this.metadata
-    const argsLen = args.length
-    for (let i = 0; i < argsLen; i++) {
+    for (const arg of args) {
       if (typeof filteredMetadata !== 'object' || filteredMetadata === null) {
         return undefined
       }
-      filteredMetadata = (filteredMetadata as Record<string, unknown>)[
-        args[i] ?? ''
-      ]
+      filteredMetadata = (filteredMetadata as Record<string, unknown>)[arg]
       if (filteredMetadata === undefined) {
         return undefined
       }

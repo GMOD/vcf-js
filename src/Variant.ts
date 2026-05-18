@@ -34,10 +34,11 @@ export class Variant {
     sampleNames: string[],
     strict: boolean,
   ) {
+    const lineLen = line.length
     let currChar = 0
     let tabCount = 0
-    while (currChar < line.length && tabCount < 9) {
-      if (line[currChar] === '\t') {
+    while (currChar < lineLen && tabCount < 9) {
+      if (line.charCodeAt(currChar) === 9) {
         tabCount += 1
       }
       currChar += 1
@@ -59,8 +60,7 @@ export class Variant {
     this.ID = ID === '.' ? undefined : ID?.split(';')
     this.REF = REF
     this.ALT = ALT === '.' ? undefined : ALT?.split(',')
-    this.QUAL =
-      QUAL === '.' ? undefined : QUAL !== undefined ? +QUAL : undefined
+    this.QUAL = QUAL === undefined || QUAL === '.' ? undefined : +QUAL
     this.FILTER = filter?.length === 1 && filter[0] === 'PASS' ? 'PASS' : filter
     this.INFO =
       fields[7] === undefined || fields[7] === '.'
@@ -89,9 +89,7 @@ export class Variant {
       const val = eqIdx === -1 ? undefined : pair.slice(eqIdx + 1)
       const itemType = infoMeta[key]?.Type
 
-      if (itemType === 'Flag') {
-        result[key] = true
-      } else if (!val) {
+      if (itemType === 'Flag' || !val) {
         result[key] = true
       } else {
         const isNumber = itemType === 'Integer' || itemType === 'Float'
@@ -123,11 +121,10 @@ export class Variant {
     if (format) {
       const rest = this.rest.split('\t')
       const formatKeys = format.split(':')
-      const isNumberType: boolean[] = []
-      for (let i = 0; i < formatKeys.length; i++) {
-        const r = this.formatMeta[formatKeys[i] ?? '']?.Type
-        isNumberType.push(r === 'Integer' || r === 'Float')
-      }
+      const isNumberType = formatKeys.map(k => {
+        const t = this.formatMeta[k]?.Type
+        return t === 'Integer' || t === 'Float'
+      })
       const numKeys = formatKeys.length
       const samplesLen = this.sampleNames.length
       for (let i = 0; i < samplesLen; i++) {
@@ -148,17 +145,12 @@ export class Variant {
               sampleData[formatKeys[colIdx] ?? ''] = undefined
             } else {
               const items = val.split(',')
+              const itemsLen = items.length
+              const isNum = isNumberType[colIdx]
               const result: (string | number | undefined)[] = []
-              if (isNumberType[colIdx]) {
-                for (let k = 0; k < items.length; k++) {
-                  const ent = items[k] ?? ''
-                  result.push(ent === '.' ? undefined : +ent)
-                }
-              } else {
-                for (let k = 0; k < items.length; k++) {
-                  const ent = items[k] ?? ''
-                  result.push(ent === '.' ? undefined : ent)
-                }
+              for (let k = 0; k < itemsLen; k++) {
+                const ent = items[k] ?? ''
+                result.push(ent === '.' ? undefined : isNum ? +ent : ent)
               }
               sampleData[formatKeys[colIdx] ?? ''] = result
             }
