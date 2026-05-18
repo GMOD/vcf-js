@@ -1,18 +1,11 @@
 function decodeURIComponentNoThrow(uri: string) {
   try {
     return decodeURIComponent(uri)
-  } catch (_e) {
-    // avoid throwing exception on a failure to decode URI component
+  } catch {
     return uri
   }
 }
 
-/**
- * Parse a VCF INFO field (the 8th column, e.g. "DP=10;AF=0.5,0.1;DB") into a
- * record. Values are split on commas; entries with Integer/Float types are
- * coerced to numbers; "." entries become undefined; Flag types and bare keys
- * become true; percent-encoded values are URI-decoded.
- */
 export function parseInfo(
   infoStr: string,
   infoMeta: Record<string, { Type?: string }>,
