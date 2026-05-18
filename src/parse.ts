@@ -2,10 +2,14 @@ import { Variant } from './Variant.ts'
 import { parseStructuredMetaVal } from './parseMetaString.ts'
 import vcfReserved from './vcfReserved.ts'
 
+import type { MetaField, MetaMap } from './parseInfo.ts'
+
 export { Variant } from './Variant.ts'
 
+type Metadata = Record<string, MetaMap | MetaField | string | undefined>
+
 export default class VCFParser {
-  private metadata: Record<string, unknown>
+  private metadata: Metadata
   public strict: boolean
   public samples: string[]
 
@@ -72,17 +76,16 @@ export default class VCFParser {
     const r = match[1] ?? ''
     const metaVal = match[2]
     if (metaVal?.startsWith('<')) {
-      if (!(r in this.metadata)) {
-        this.metadata[r] = {}
-      }
+      const existing = this.metadata[r]
+      const section: MetaMap =
+        existing && typeof existing === 'object' ? (existing as MetaMap) : {}
       const [id, keyVals] = parseStructuredMetaVal(metaVal)
       if (typeof id === 'string') {
-        // if there is an ID field in the <> metadata
-        // e.g. ##INFO=<ID=AF_ESP,...>
-        ;(this.metadata[r] as Record<string, unknown>)[id] = keyVals
+        // ##INFO=<ID=AF_ESP,...>
+        section[id] = keyVals
+        this.metadata[r] = section
       } else {
-        // if there is not an ID field in the <> metadata
-        // e.g. ##ID=<Description="ClinVar Variation ID">
+        // ##ID=<Description="ClinVar Variation ID">
         this.metadata[r] = keyVals
       }
     } else {
@@ -90,7 +93,10 @@ export default class VCFParser {
     }
   }
 
-  getMetadata(...args: string[]) {
+  getMetadata(): Metadata
+  getMetadata(section: string): MetaMap | MetaField | string | undefined
+  getMetadata(section: string, ...rest: string[]): unknown
+  getMetadata(...args: string[]): unknown {
     let filteredMetadata: unknown = this.metadata
     for (const arg of args) {
       if (typeof filteredMetadata !== 'object' || filteredMetadata === null) {
@@ -108,8 +114,8 @@ export default class VCFParser {
   parseLine(line: string) {
     return new Variant(
       line,
-      this.metadata.INFO as Record<string, { Type?: string }>,
-      this.metadata.FORMAT as Record<string, { Type?: string }>,
+      this.metadata.INFO as MetaMap,
+      this.metadata.FORMAT as MetaMap,
       this.samples,
       this.strict,
     )

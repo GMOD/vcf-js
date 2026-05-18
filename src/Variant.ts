@@ -2,7 +2,12 @@ import { parseGenotypesOnly } from './parseGenotypesOnly.ts'
 import { parseInfo } from './parseInfo.ts'
 import { processGenotypes } from './processGenotypes.ts'
 
+import type { InfoValue, MetaMap } from './parseInfo.ts'
 import type { GenotypeCallback } from './processGenotypes.ts'
+
+export type SampleValue = (string | number | undefined)[] | undefined
+export type SampleData = Record<string, SampleValue>
+export type Samples = Record<string, SampleData>
 
 export class Variant {
   CHROM: string | undefined
@@ -12,17 +17,17 @@ export class Variant {
   ALT: string[] | undefined
   QUAL: number | undefined
   FILTER: string | string[] | undefined
-  INFO: Record<string, unknown>
+  INFO: Record<string, InfoValue>
   FORMAT: string | undefined
 
-  private formatMeta: Record<string, { Type?: string }>
+  private formatMeta: MetaMap
   private rest: string
   private sampleNames: string[]
 
   constructor(
     line: string,
-    infoMeta: Record<string, { Type?: string }>,
-    formatMeta: Record<string, { Type?: string }>,
+    infoMeta: MetaMap,
+    formatMeta: MetaMap,
     sampleNames: string[],
     strict: boolean,
   ) {
@@ -65,11 +70,8 @@ export class Variant {
     this.sampleNames = sampleNames
   }
 
-  SAMPLES() {
-    const genotypes = {} as Record<
-      string,
-      Record<string, (string | number | undefined)[] | undefined>
-    >
+  SAMPLES(): Samples {
+    const genotypes: Samples = {}
     const format = this.FORMAT
     if (format) {
       const rest = this.rest.split('\t')
@@ -82,10 +84,7 @@ export class Variant {
       const samplesLen = this.sampleNames.length
       for (let i = 0; i < samplesLen; i++) {
         const sample = this.sampleNames[i] ?? ''
-        const sampleData: Record<
-          string,
-          (string | number | undefined)[] | undefined
-        > = {}
+        const sampleData: SampleData = {}
         const sampleStr = rest[i] ?? ''
         const sampleStrLen = sampleStr.length
         let colStart = 0
@@ -93,9 +92,10 @@ export class Variant {
 
         for (let j = 0; j <= sampleStrLen; j++) {
           if (j === sampleStrLen || sampleStr[j] === ':') {
+            const key = formatKeys[colIdx] ?? ''
             const val = sampleStr.slice(colStart, j)
             if (val === '' || val === '.') {
-              sampleData[formatKeys[colIdx] ?? ''] = undefined
+              sampleData[key] = undefined
             } else {
               const items = val.split(',')
               const itemsLen = items.length
@@ -105,7 +105,7 @@ export class Variant {
                 const ent = items[k] ?? ''
                 result.push(ent === '.' ? undefined : isNum ? +ent : ent)
               }
-              sampleData[formatKeys[colIdx] ?? ''] = result
+              sampleData[key] = result
             }
             colStart = j + 1
             colIdx += 1

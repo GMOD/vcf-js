@@ -53,22 +53,19 @@ export function parseStructuredMetaVal(metaVal: string) {
 export function parseMetaString(metaString: string) {
   const inside = metaString.slice(1, -1)
   const parts = customSplit(inside)
-  const entries: [string, string | string[]][] = []
+  const result: Record<string, string | string[]> = {}
   for (const f of parts) {
     const [key, val] = splitFirst(f, '=')
     if (val && val.startsWith('[') && val.endsWith(']')) {
-      entries.push([
-        key,
-        val
-          .slice(1, -1)
-          .split(',')
-          .map(s => s.trim()),
-      ])
+      result[key] = val
+        .slice(1, -1)
+        .split(',')
+        .map(s => s.trim())
     } else if (val && val.startsWith('"') && val.endsWith('"')) {
-      entries.push([key, val.slice(1, -1)])
+      result[key] = val.slice(1, -1)
     } else {
-      entries.push([key, val])
+      result[key] = val
     }
   }
-  return Object.fromEntries(entries)
+  return result
 }

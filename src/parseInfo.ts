@@ -1,3 +1,10 @@
+export type MetaField = Record<
+  string,
+  string | string[] | number | null | undefined
+>
+
+export type MetaMap = Record<string, MetaField>
+
 function decodeURIComponentNoThrow(uri: string) {
   try {
     return decodeURIComponent(uri)
@@ -6,11 +13,13 @@ function decodeURIComponentNoThrow(uri: string) {
   }
 }
 
+export type InfoValue = true | (string | number | undefined)[]
+
 export function parseInfo(
   infoStr: string,
-  infoMeta: Record<string, { Type?: string }>,
-) {
-  const result: Record<string, unknown> = {}
+  infoMeta: MetaMap,
+): Record<string, InfoValue> {
+  const result: Record<string, InfoValue> = {}
   const hasDecode = infoStr.includes('%')
   const infoPairs = infoStr.split(';')
   const pairsLen = infoPairs.length
