@@ -59,7 +59,7 @@ without a header entry.
 
 ```typescript
 let homRef = 0
-variant.processGenotypes((str, start, end) => {
+variant.processGenotypes((str, start, end, sampleIdx) => {
   if (
     end - start === 3 && // e.g. "0|0"
     str.charCodeAt(start) === 48 && // 48 = '0'
