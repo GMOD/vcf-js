@@ -1,3 +1,10 @@
+## [7.0.4](https://github.com/GMOD/vcf-js/compare/v7.0.3...v7.0.4) (2026-05-18)
+
+
+### Features
+
+* pass sample index to GenotypeCallback ([6b2a661](https://github.com/GMOD/vcf-js/commit/6b2a6610c526d5aeeaad7a309a00e5c1f00ad098))
+
 ## [7.0.3](https://github.com/GMOD/vcf-js/compare/v7.0.2...v7.0.3) (2026-05-08)
 
 ## [7.0.2](https://github.com/GMOD/vcf-js/compare/v7.0.1...v7.0.2) (2026-04-27)
