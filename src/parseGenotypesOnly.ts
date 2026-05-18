@@ -1,6 +1,3 @@
-/**
- * Extracts genotype (GT) values from VCF sample data.
- */
 export function parseGenotypesOnly(
   format: string,
   prerest: string,

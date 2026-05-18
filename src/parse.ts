@@ -4,17 +4,6 @@ import vcfReserved from './vcfReserved.ts'
 
 export { Variant } from './Variant.ts'
 
-/**
- * Class representing a VCF parser, instantiated with the VCF header.
- *
- * @param {object} args
- *
- * @param {string} args.header - The VCF header. Supports both LF and CRLF
- * newlines.
- *
- * @param {boolean} args.strict - Whether to parse in strict mode or not
- * (default true)
- */
 export default class VCFParser {
   private metadata: Record<string, unknown>
   public strict: boolean
@@ -75,13 +64,6 @@ export default class VCFParser {
     this.samples = fields.slice(9)
   }
 
-  /**
-   * Parse a VCF metadata line (i.e. a line that starts with "##") and add its
-   * properties to the object.
-   *
-   * @param {string} line - A line from the VCF. Supports both LF and CRLF
-   * newlines.
-   */
   private parseMetadata(line: string) {
     const match = /^##(.+?)=(.*)/.exec(line.trim())
     if (!match) {
@@ -108,15 +90,6 @@ export default class VCFParser {
     }
   }
 
-  /**
-   * Get metadata filtered by the elements in args. For example, can pass
-   * ('INFO', 'DP') to only get info on an metadata tag that was like
-   * "##INFO=<ID=DP,...>"
-   *
-   * @param  {...string} args - List of metadata filter strings.
-   *
-   * @returns {any} An object, string, or number, depending on the filtering
-   */
   getMetadata(...args: string[]) {
     let filteredMetadata: unknown = this.metadata
     for (const arg of args) {
@@ -131,15 +104,7 @@ export default class VCFParser {
     return filteredMetadata
   }
 
-  /**
-   * Parse a VCF line into a Variant object.
-   *
-   * The returned Variant has SAMPLES() and GENOTYPES() methods which are
-   * lazily evaluated to avoid parsing the potentially long list of samples from
-   * e.g. 1000 genotypes data unless requested.
-   *
-   * @param {string} line - A string of a line from a VCF
-   */
+  // SAMPLES() and GENOTYPES() on the returned Variant are lazily evaluated.
   parseLine(line: string) {
     return new Variant(
       line,
