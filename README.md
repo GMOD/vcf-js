@@ -162,5 +162,5 @@ parseBreakend('.ACGT')
 [Trusted publishing](https://docs.npmjs.com/about-trusted-publishing) via GitHub Actions.
 
 ```bash
-npm version patch  # or minor/major
+pnpm version patch  # or minor/major
 ```
