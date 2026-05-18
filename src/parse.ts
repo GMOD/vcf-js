@@ -1,5 +1,5 @@
 import { Variant } from './Variant.ts'
-import { parseMetaString } from './parseMetaString.ts'
+import { parseStructuredMetaVal } from './parseMetaString.ts'
 import vcfReserved from './vcfReserved.ts'
 
 export { Variant } from './Variant.ts'
@@ -93,7 +93,7 @@ export default class VCFParser {
       if (!(r in this.metadata)) {
         this.metadata[r] = {}
       }
-      const [id, keyVals] = this.parseStructuredMetaVal(metaVal)
+      const [id, keyVals] = parseStructuredMetaVal(metaVal)
       if (typeof id === 'string') {
         // if there is an ID field in the <> metadata
         // e.g. ##INFO=<ID=AF_ESP,...>
@@ -106,28 +106,6 @@ export default class VCFParser {
     } else {
       this.metadata[r] = metaVal
     }
-  }
-
-  /**
-   * Parse a VCF header structured meta string (i.e. a meta value that starts
-   * with "<ID=...")
-   *
-   * @param {string} metaVal - The VCF metadata value
-   *
-   * @returns {Array} - Array with two entries, 1) a string of the metadata ID
-   * and 2) an object with the other key-value pairs in the metadata
-   */
-  private parseStructuredMetaVal(metaVal: string) {
-    const keyVals: Record<string, string | string[] | number> =
-      parseMetaString(metaVal)
-    const id = keyVals.ID
-    delete keyVals.ID
-    if ('Number' in keyVals) {
-      if (!Number.isNaN(Number(keyVals.Number))) {
-        keyVals.Number = Number(keyVals.Number)
-      }
-    }
-    return [id, keyVals] as const
   }
 
   /**

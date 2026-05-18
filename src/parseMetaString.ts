@@ -36,6 +36,25 @@ function splitFirst(str: string, split: string) {
   return [str.slice(0, index), str.slice(index + 1)] as const
 }
 
+/**
+ * Parse a VCF header structured meta value (e.g. "<ID=DP,Number=1,Type=Integer,
+ * ...>"), returning the ID and a record of the remaining key/value pairs.
+ * `Number` is coerced to a JS number when parseable.
+ */
+export function parseStructuredMetaVal(metaVal: string) {
+  const keyVals: Record<string, string | string[] | number> =
+    parseMetaString(metaVal)
+  const id = keyVals.ID
+  delete keyVals.ID
+  if ('Number' in keyVals) {
+    const n = Number(keyVals.Number)
+    if (!Number.isNaN(n)) {
+      keyVals.Number = n
+    }
+  }
+  return [id, keyVals] as const
+}
+
 export function parseMetaString(metaString: string) {
   const inside = metaString.slice(1, -1)
   const parts = customSplit(inside)
