@@ -1,3 +1,15 @@
+## [7.0.8](https://github.com/GMOD/vcf-js/compare/v7.0.7...v7.0.8) (2026-05-19)
+
+
+### Bug Fixes
+
+* update CI badge to reference publish.yml workflow ([af3aac6](https://github.com/GMOD/vcf-js/commit/af3aac67365e691e5e0680aa3f8207232a8eaa5f))
+
+
+### Features
+
+* export Samples, InfoValue, MetaField, MetaMap types ([a58b195](https://github.com/GMOD/vcf-js/commit/a58b19565ce927a200eba3cdffd542a5394cb459))
+
 ## [7.0.7](https://github.com/GMOD/vcf-js/compare/v7.0.6...v7.0.7) (2026-05-19)
 
 ## [7.0.6](https://github.com/GMOD/vcf-js/compare/v7.0.5...v7.0.6) (2026-05-19)
