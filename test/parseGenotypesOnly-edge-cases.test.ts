@@ -448,3 +448,21 @@ test('alternating ploidy pattern', () => {
     S8: '0/1',
   })
 })
+
+test('field containing GT as substring is not mistaken for GT (real GT first)', () => {
+  const result = parseGenotypesOnly('GT:PGT:PID', '0/1:0|1:1\t1/1:1|0:2', [
+    'S1',
+    'S2',
+  ])
+  expect(result).toEqual({ S1: '0/1', S2: '1/1' })
+})
+
+test('field containing GT as substring is not mistaken for GT (real GT later)', () => {
+  const result = parseGenotypesOnly('AGT:GT', 'foo:0/1\tbar:1/1', ['S1', 'S2'])
+  expect(result).toEqual({ S1: '0/1', S2: '1/1' })
+})
+
+test('no real GT field, only PGT - returns empty', () => {
+  const result = parseGenotypesOnly('PGT:PID', '0|1:1\t1|0:2', ['S1', 'S2'])
+  expect(result).toEqual({})
+})

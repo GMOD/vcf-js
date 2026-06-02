@@ -68,6 +68,82 @@ describe('testBreakend', () => {
     })
   })
 
+  it('parses telomeric breakends (VCFv4.5 section 5.4.5)', () => {
+    // virtual telomeric breakends use positions 0 and N+1
+    const telomeresAndParsed = [
+      [
+        '.[13:123457[',
+        {
+          MatePosition: '13:123457',
+          Join: 'right',
+          Replacement: '.',
+          MateDirection: 'right',
+        },
+      ],
+      [
+        'C[1:1[',
+        {
+          MatePosition: '1:1',
+          Join: 'right',
+          Replacement: 'C',
+          MateDirection: 'right',
+        },
+      ],
+      [
+        ']1:0]A',
+        {
+          MatePosition: '1:0',
+          Join: 'left',
+          Replacement: 'A',
+          MateDirection: 'left',
+        },
+      ],
+    ] as [string, Breakend][]
+    telomeresAndParsed.forEach(([breakend, parsedBreakend]) => {
+      expect(parseBreakend(breakend)).toEqual(parsedBreakend)
+    })
+  })
+
+  it('parses assembly-contig mate positions (VCFv4.5 section 5.4.1)', () => {
+    // mate position can be a contig in the assembly file: <ctg1>:pos
+    const contigsAndParsed = [
+      [
+        'C[<ctg1>:1[',
+        {
+          MatePosition: '<ctg1>:1',
+          Join: 'right',
+          Replacement: 'C',
+          MateDirection: 'right',
+        },
+      ],
+      [
+        ']<ctg1>:329]A',
+        {
+          MatePosition: '<ctg1>:329',
+          Join: 'left',
+          Replacement: 'A',
+          MateDirection: 'left',
+        },
+      ],
+    ] as [string, Breakend][]
+    contigsAndParsed.forEach(([breakend, parsedBreakend]) => {
+      expect(parseBreakend(breakend)).toEqual(parsedBreakend)
+    })
+  })
+
+  it('parses single breakends (VCFv4.5 section 5.4.9)', () => {
+    expect(parseBreakend('G.')).toEqual({
+      Join: 'right',
+      SingleBreakend: true,
+      Replacement: 'G',
+    })
+    expect(parseBreakend('.A')).toEqual({
+      Join: 'left',
+      SingleBreakend: true,
+      Replacement: 'A',
+    })
+  })
+
   it('throws on invalid breakend', () => {
     expect(() => parseBreakend('[13:123457[')).toThrow(/Invalid breakend/)
   })

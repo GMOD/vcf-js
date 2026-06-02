@@ -20,6 +20,34 @@ export type GenotypeCallback = (
  * @param samplesLen - Number of samples
  * @param callback - Called for each genotype with (string, startIndex, endIndex)
  */
+const TAB = 9
+const COLON = 58
+const G = 71
+const T = 84
+
+// Column index of the exact "GT" field among the colon-separated FORMAT
+// keys, or -1 if absent. Matches the field exactly so keys that merely
+// contain "GT" (e.g. GATK's PGT) are not mistaken for it.
+function gtColumnIndex(format: string) {
+  let col = 0
+  let start = 0
+  const len = format.length
+  for (let j = 0; j <= len; j++) {
+    if (j === len || format.charCodeAt(j) === COLON) {
+      if (
+        j - start === 2 &&
+        format.charCodeAt(start) === G &&
+        format.charCodeAt(start + 1) === T
+      ) {
+        return col
+      }
+      col++
+      start = j + 1
+    }
+  }
+  return -1
+}
+
 export function processGenotypes(
   format: string,
   prerest: string,
@@ -27,8 +55,6 @@ export function processGenotypes(
   callback: GenotypeCallback,
 ) {
   const prerestLen = prerest.length
-  const TAB = 9
-  const COLON = 58
   let pos = 0
 
   // Fast path: format is exactly "GT"
@@ -44,14 +70,13 @@ export function processGenotypes(
     return
   }
 
-  // Check if GT field exists
-  const gtIdx = format.indexOf('GT')
-  if (gtIdx === -1) {
+  const colonCount = gtColumnIndex(format)
+  if (colonCount === -1) {
     return
   }
 
   // GT is first field but not only field
-  if (gtIdx === 0) {
+  if (colonCount === 0) {
     for (let idx = 0; idx < samplesLen; idx++) {
       const start = pos
       while (
@@ -70,14 +95,7 @@ export function processGenotypes(
     return
   }
 
-  // GT is not first field - need to skip to the right column
-  let colonCount = 0
-  for (let j = 0; j < gtIdx; j++) {
-    if (format.charCodeAt(j) === COLON) {
-      colonCount++
-    }
-  }
-
+  // GT is not first field - skip to its column (colonCount fields precede it)
   for (let idx = 0; idx < samplesLen; idx++) {
     const sampleStart = pos
     let tabIdx = pos
