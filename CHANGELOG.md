@@ -1,3 +1,10 @@
+## [7.0.9](https://github.com/GMOD/vcf-js/compare/v7.0.8...v7.0.9) (2026-06-02)
+
+
+### Bug Fixes
+
+* remove stale workflow query link from CI badge ([0e39e60](https://github.com/GMOD/vcf-js/commit/0e39e603bec2042c85839c7e6fddd69c0a27080f))
+
 ## [7.0.8](https://github.com/GMOD/vcf-js/compare/v7.0.7...v7.0.8) (2026-05-19)
 
 
