@@ -106,6 +106,8 @@ export default defineConfig(
       'unicorn/prefer-switch': 'off',
       'unicorn/better-regex': 'off',
       'unicorn/no-for-loop': 'off',
+      'unicorn/consistent-boolean-name': 'off',
+      'unicorn/no-break-in-nested-loop': 'off',
       'unicorn/escape-case': 'off',
       'unicorn/prefer-number-properties': 'off',
       'unicorn/no-process-exit': 'off',

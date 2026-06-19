@@ -35,7 +35,8 @@ export default class VCFParser {
       const line = headerLines[i] ?? ''
       if (!line.startsWith('#')) {
         throw new Error(`Bad line in header:\n${line}`)
-      } else if (line.startsWith('##')) {
+      }
+      if (line.startsWith('##')) {
         this.parseMetadata(line)
       } else {
         lastLine = line
@@ -46,6 +47,9 @@ export default class VCFParser {
       throw new Error('No format line found in header')
     }
     const fields = lastLine.trim().split('\t')
+    if (fields.length < 8) {
+      throw new Error(`VCF header missing columns:\n${lastLine}`)
+    }
     const thisHeader = fields.slice(0, 8)
     const correctHeader = [
       '#CHROM',
@@ -57,11 +61,9 @@ export default class VCFParser {
       'FILTER',
       'INFO',
     ]
-    if (fields.length < 8) {
-      throw new Error(`VCF header missing columns:\n${lastLine}`)
-    } else if (
+    if (
       thisHeader.length !== correctHeader.length ||
-      !thisHeader.every((value, index) => value === correctHeader[index])
+      thisHeader.some((value, index) => value !== correctHeader[index])
     ) {
       throw new Error(`VCF column headers not correct:\n${lastLine}`)
     }

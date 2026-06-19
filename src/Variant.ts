@@ -10,6 +10,10 @@ export type SampleData = Record<string, SampleValue>
 export type Samples = Record<string, SampleData>
 
 export class Variant {
+  private formatMeta: MetaMap
+  private rest: string
+  private sampleNames: string[]
+
   CHROM: string | undefined
   POS: number
   ID: string[] | undefined
@@ -19,10 +23,6 @@ export class Variant {
   FILTER: string | string[] | undefined
   INFO: Record<string, InfoValue>
   FORMAT: string | undefined
-
-  private formatMeta: MetaMap
-  private rest: string
-  private sampleNames: string[]
 
   constructor(
     line: string,
@@ -42,15 +42,16 @@ export class Variant {
     }
     const splitPos = tabCount === 9 ? currChar - 1 : currChar
     const fields = line.slice(0, splitPos).split('\t')
-    const rest = line.slice(splitPos + 1)
     const [CHROM, POS, ID, REF, ALT, QUAL, FILTER] = fields
-    const filter = FILTER === '.' ? undefined : FILTER?.split(';')
 
     if (strict && !fields[7]) {
       throw new Error(
         "no INFO field specified, must contain at least a '.' (turn off strict mode to allow)",
       )
     }
+
+    const rest = line.slice(splitPos + 1)
+    const filter = FILTER === '.' ? undefined : FILTER?.split(';')
 
     this.CHROM = CHROM
     this.POS = POS !== undefined ? +POS : 0
