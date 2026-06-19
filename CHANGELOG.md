@@ -1,21 +1,21 @@
 ## [7.0.9](https://github.com/GMOD/vcf-js/compare/v7.0.8...v7.0.9) (2026-06-02)
 
-
 ### Bug Fixes
 
-* remove stale workflow query link from CI badge ([0e39e60](https://github.com/GMOD/vcf-js/commit/0e39e603bec2042c85839c7e6fddd69c0a27080f))
+- remove stale workflow query link from CI badge
+  ([0e39e60](https://github.com/GMOD/vcf-js/commit/0e39e603bec2042c85839c7e6fddd69c0a27080f))
 
 ## [7.0.8](https://github.com/GMOD/vcf-js/compare/v7.0.7...v7.0.8) (2026-05-19)
 
-
 ### Bug Fixes
 
-* update CI badge to reference publish.yml workflow ([af3aac6](https://github.com/GMOD/vcf-js/commit/af3aac67365e691e5e0680aa3f8207232a8eaa5f))
-
+- update CI badge to reference publish.yml workflow
+  ([af3aac6](https://github.com/GMOD/vcf-js/commit/af3aac67365e691e5e0680aa3f8207232a8eaa5f))
 
 ### Features
 
-* export Samples, InfoValue, MetaField, MetaMap types ([a58b195](https://github.com/GMOD/vcf-js/commit/a58b19565ce927a200eba3cdffd542a5394cb459))
+- export Samples, InfoValue, MetaField, MetaMap types
+  ([a58b195](https://github.com/GMOD/vcf-js/commit/a58b19565ce927a200eba3cdffd542a5394cb459))
 
 ## [7.0.7](https://github.com/GMOD/vcf-js/compare/v7.0.6...v7.0.7) (2026-05-19)
 
@@ -25,10 +25,10 @@
 
 ## [7.0.4](https://github.com/GMOD/vcf-js/compare/v7.0.3...v7.0.4) (2026-05-18)
 
-
 ### Features
 
-* pass sample index to GenotypeCallback ([6b2a661](https://github.com/GMOD/vcf-js/commit/6b2a6610c526d5aeeaad7a309a00e5c1f00ad098))
+- pass sample index to GenotypeCallback
+  ([6b2a661](https://github.com/GMOD/vcf-js/commit/6b2a6610c526d5aeeaad7a309a00e5c1f00ad098))
 
 ## [7.0.3](https://github.com/GMOD/vcf-js/compare/v7.0.2...v7.0.3) (2026-05-08)
 

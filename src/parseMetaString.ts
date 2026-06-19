@@ -33,7 +33,9 @@ function customSplit(str: string) {
 
 function splitFirst(str: string, split: string) {
   const index = str.indexOf(split)
-  return [str.slice(0, index), str.slice(index + 1)] as const
+  return index === -1
+    ? ([str, ''] as const)
+    : ([str.slice(0, index), str.slice(index + 1)] as const)
 }
 
 export function parseStructuredMetaVal(metaVal: string) {

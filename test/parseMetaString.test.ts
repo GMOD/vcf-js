@@ -32,6 +32,14 @@ test('equals in description', () => {
   ).toMatchSnapshot()
 })
 
+test('value-less key keeps its full name', () => {
+  expect(parseMetaString('<ID=X,Number=1,SOMEFLAG>')).toEqual({
+    ID: 'X',
+    Number: '1',
+    SOMEFLAG: '',
+  })
+})
+
 test('parseStructuredMetaVal extracts ID and coerces numeric Number', () => {
   const [id, rest] = parseStructuredMetaVal(
     '<ID=DP,Number=1,Type=Integer,Description="depth">',
