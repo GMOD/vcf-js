@@ -9,13 +9,13 @@ const readVcf = (file: string) => {
   const lines = f.split('\n')
   const header = [] as string[]
   const rest = [] as string[]
-  lines.forEach(line => {
+  for (const line of lines) {
     if (line.startsWith('#')) {
       header.push(line)
     } else if (line) {
       rest.push(line)
     }
-  })
+  }
   return {
     header: header.join('\n'),
     lines: rest,
@@ -206,7 +206,7 @@ test('shortcut parsing with vcf 4.3 bnd example', () => {
   const VCFParser = new VCF({ header })
   const variants = lines.map(line => VCFParser.parseLine(line))
   expect(variants.map(m => m.ALT?.[0]?.toString())).toEqual(
-    lines.map(line => line.split('\t')[4]),
+    lines.map(line => line.split('\t', 5)[4]),
   )
 
   expect(variants).toMatchSnapshot()

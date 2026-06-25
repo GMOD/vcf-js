@@ -63,9 +63,9 @@ describe('testBreakend', () => {
         },
       ],
     ] as [string, Breakend][]
-    breakendsAndParsed.forEach(([breakend, parsedBreakend]) => {
+    for (const [breakend, parsedBreakend] of breakendsAndParsed) {
       expect(parseBreakend(breakend)).toEqual(parsedBreakend)
-    })
+    }
   })
 
   it('parses telomeric breakends (VCFv4.5 section 5.4.5)', () => {
@@ -99,9 +99,9 @@ describe('testBreakend', () => {
         },
       ],
     ] as [string, Breakend][]
-    telomeresAndParsed.forEach(([breakend, parsedBreakend]) => {
+    for (const [breakend, parsedBreakend] of telomeresAndParsed) {
       expect(parseBreakend(breakend)).toEqual(parsedBreakend)
-    })
+    }
   })
 
   it('parses assembly-contig mate positions (VCFv4.5 section 5.4.1)', () => {
@@ -126,9 +126,9 @@ describe('testBreakend', () => {
         },
       ],
     ] as [string, Breakend][]
-    contigsAndParsed.forEach(([breakend, parsedBreakend]) => {
+    for (const [breakend, parsedBreakend] of contigsAndParsed) {
       expect(parseBreakend(breakend)).toEqual(parsedBreakend)
-    })
+    }
   })
 
   it('parses single breakends (VCFv4.5 section 5.4.9)', () => {

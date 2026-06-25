@@ -119,9 +119,9 @@ test('haploid genotypes - many samples', () => {
   const result = parseGenotypesOnly('GT', gts.join('\t'), samples)
 
   const expected = {} as Record<string, string>
-  samples.forEach((s, i) => {
+  for (const [i, s] of samples.entries()) {
     expected[s] = gts[i]!
-  })
+  }
 
   expect(result).toEqual(expected)
 })
@@ -367,9 +367,9 @@ test('large scale mixed ploidy', () => {
   const result = parseGenotypesOnly('GT', gts.join('\t'), samples)
 
   const expected = {} as Record<string, string>
-  samples.forEach((s, i) => {
+  for (const [i, s] of samples.entries()) {
     expected[s] = gts[i]!
-  })
+  }
 
   expect(result).toEqual(expected)
 })
