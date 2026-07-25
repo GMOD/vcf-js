@@ -1,6 +1,7 @@
 {
   "name": "@gmod/vcf",
   "version": "7.0.10",
+  "packageManager": "pnpm@11.15.1",
   "description": "High performance streaming Variant Call Format (VCF) parser in pure JavaScript",
   "type": "module",
   "sideEffects": false,
