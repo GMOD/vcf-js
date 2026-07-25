@@ -1,3 +1,10 @@
+## [7.0.10](https://github.com/GMOD/vcf-js/compare/v7.0.9...v7.0.10) (2026-07-25)
+
+
+### Bug Fixes
+
+* trailing line terminators and skipped genotype callbacks ([5900c05](https://github.com/GMOD/vcf-js/commit/5900c054024217caffe7a8e3dc5075371a98bf0f))
+
 ## [7.0.9](https://github.com/GMOD/vcf-js/compare/v7.0.8...v7.0.9) (2026-06-02)
 
 ### Bug Fixes
