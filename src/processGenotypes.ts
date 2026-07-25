@@ -95,26 +95,37 @@ export function processGenotypes(
     return
   }
 
-  // GT is not first field - skip to its column (colonCount fields precede it)
+  // GT is not the first field - locate its column (colonCount fields precede
+  // it) in a single pass over each sample.
   for (let idx = 0; idx < samplesLen; idx++) {
-    const sampleStart = pos
-    let tabIdx = pos
-    while (tabIdx < prerestLen && prerest.charCodeAt(tabIdx) !== TAB) {
-      tabIdx++
-    }
-
     let colons = 0
-    let fieldStart = sampleStart
-    for (let j = sampleStart; j <= tabIdx; j++) {
-      if (j === tabIdx || prerest.charCodeAt(j) === COLON) {
-        if (colons === colonCount) {
-          callback(prerest, fieldStart, j, idx)
-          break
-        }
-        colons++
-        fieldStart = j + 1
+    let fieldStart = pos
+    let gtStart = -1
+    let gtEnd = -1
+    while (pos < prerestLen) {
+      const c = prerest.charCodeAt(pos)
+      if (c === TAB) {
+        break
       }
+      if (c === COLON && gtStart === -1) {
+        if (colons === colonCount) {
+          gtStart = fieldStart
+          gtEnd = pos
+        } else {
+          colons++
+          fieldStart = pos + 1
+        }
+      }
+      pos++
     }
-    pos = tabIdx + 1
+    if (gtStart === -1) {
+      // GT is the sample's last field, or the sample's fields stop before GT's
+      // column - report an empty range in the latter case rather than skipping
+      // the callback, so sampleIdx always tracks the callback count
+      gtStart = colons === colonCount ? fieldStart : pos
+      gtEnd = pos
+    }
+    callback(prerest, gtStart, gtEnd, idx)
+    pos++
   }
 }

@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
 
 import { parseGenotypesOnly } from '../src/parseGenotypesOnly.ts'
+import { processGenotypes } from '../src/processGenotypes.ts'
 
 test('last sample with 3-char GT and no trailing tab', () => {
   // Single sample, no trailing tab
@@ -465,4 +466,36 @@ test('field containing GT as substring is not mistaken for GT (real GT later)', 
 test('no real GT field, only PGT - returns empty', () => {
   const result = parseGenotypesOnly('PGT:PID', '0|1:1\t1|0:2', ['S1', 'S2'])
   expect(result).toEqual({})
+})
+
+test('sample whose fields stop before GT still gets a callback', () => {
+  // GT not first: the middle sample has no GT column at all. It must still
+  // report (as empty) so sampleIdx keeps tracking the callback count.
+  const result = parseGenotypesOnly('DP:GT', '20:0/1\t30\t40:1/1', [
+    'S1',
+    'S2',
+    'S3',
+  ])
+  expect(result).toEqual({ S1: '0/1', S2: '', S3: '1/1' })
+})
+
+test('more samples than data, GT not first', () => {
+  const result = parseGenotypesOnly('DP:GT', '20:0/1', ['S1', 'S2', 'S3'])
+  expect(result).toEqual({ S1: '0/1', S2: '', S3: '' })
+})
+
+test('sampleIdx is passed through for every sample when GT is not first', () => {
+  const seen: number[] = []
+  processGenotypes('DP:GT', '20:0/1\t30\t40:1/1', 3, (_s, _a, _b, idx) => {
+    seen.push(idx)
+  })
+  expect(seen).toEqual([0, 1, 2])
+})
+
+test('GT as the last FORMAT field of a truncated-looking sample', () => {
+  const result = parseGenotypesOnly('DP:GQ:GT', '20:99:0/1\t30:98:1/1', [
+    'S1',
+    'S2',
+  ])
+  expect(result).toEqual({ S1: '0/1', S2: '1/1' })
 })

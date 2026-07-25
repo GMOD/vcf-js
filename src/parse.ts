@@ -8,6 +8,21 @@ export { Variant } from './Variant.ts'
 
 type Metadata = Record<string, MetaMap | MetaField | string | undefined>
 
+const VCF_COLUMNS = [
+  '#CHROM',
+  'POS',
+  'ID',
+  'REF',
+  'ALT',
+  'QUAL',
+  'FILTER',
+  'INFO',
+]
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
 export default class VCFParser {
   private metadata: Metadata
   public strict: boolean
@@ -31,8 +46,7 @@ export default class VCFParser {
     }
 
     let lastLine: string | undefined
-    for (let i = 0; i < headerLines.length; i++) {
-      const line = headerLines[i] ?? ''
+    for (const line of headerLines) {
       if (!line.startsWith('#')) {
         throw new Error(`Bad line in header:\n${line}`)
       }
@@ -50,21 +64,7 @@ export default class VCFParser {
     if (fields.length < 8) {
       throw new Error(`VCF header missing columns:\n${lastLine}`)
     }
-    const thisHeader = fields.slice(0, 8)
-    const correctHeader = [
-      '#CHROM',
-      'POS',
-      'ID',
-      'REF',
-      'ALT',
-      'QUAL',
-      'FILTER',
-      'INFO',
-    ]
-    if (
-      thisHeader.length !== correctHeader.length ||
-      thisHeader.some((value, index) => value !== correctHeader[index])
-    ) {
+    if (VCF_COLUMNS.some((column, index) => fields[index] !== column)) {
       throw new Error(`VCF column headers not correct:\n${lastLine}`)
     }
     this.samples = fields.slice(9)
@@ -99,17 +99,11 @@ export default class VCFParser {
   getMetadata(section: string): MetaMap | MetaField | string | undefined
   getMetadata(section: string, ...rest: string[]): unknown
   getMetadata(...args: string[]): unknown {
-    let filteredMetadata: unknown = this.metadata
+    let current: unknown = this.metadata
     for (const arg of args) {
-      if (typeof filteredMetadata !== 'object' || filteredMetadata === null) {
-        return undefined
-      }
-      filteredMetadata = (filteredMetadata as Record<string, unknown>)[arg]
-      if (filteredMetadata === undefined) {
-        return undefined
-      }
+      current = isRecord(current) ? current[arg] : undefined
     }
-    return filteredMetadata
+    return current
   }
 
   // SAMPLES() and GENOTYPES() on the returned Variant are lazily evaluated.

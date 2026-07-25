@@ -5,6 +5,8 @@ import { processGenotypes } from './processGenotypes.ts'
 import type { InfoValue, MetaMap } from './parseInfo.ts'
 import type { GenotypeCallback } from './processGenotypes.ts'
 
+const COLON = 58
+
 export type SampleValue = (string | number | undefined)[] | undefined
 export type SampleData = Record<string, SampleValue>
 export type Samples = Record<string, SampleData>
@@ -31,7 +33,18 @@ export class Variant {
     sampleNames: string[],
     strict: boolean,
   ) {
-    const lineLen = line.length
+    // Ignore any trailing line terminator so it can't end up inside the last
+    // field. Callers that split a CRLF file on '\n' leave a '\r' behind, which
+    // would otherwise make e.g. GT read as '0/0\r'.
+    let lineLen = line.length
+    while (lineLen > 0) {
+      const c = line.charCodeAt(lineLen - 1)
+      if (c !== 10 && c !== 13) {
+        break
+      }
+      lineLen -= 1
+    }
+
     let currChar = 0
     let tabCount = 0
     while (currChar < lineLen && tabCount < 9) {
@@ -50,7 +63,7 @@ export class Variant {
       )
     }
 
-    const rest = line.slice(splitPos + 1)
+    const rest = line.slice(splitPos + 1, lineLen)
     const filter = FILTER === '.' ? undefined : FILTER?.split(';')
 
     this.CHROM = CHROM
@@ -92,15 +105,19 @@ export class Variant {
         let colIdx = 0
 
         for (let j = 0; j <= sampleStrLen; j++) {
-          if (j === sampleStrLen || sampleStr[j] === ':') {
+          if (j === sampleStrLen || sampleStr.charCodeAt(j) === COLON) {
             const key = formatKeys[colIdx] ?? ''
             const val = sampleStr.slice(colStart, j)
+            const isNum = isNumberType[colIdx]
             if (val === '' || val === '.') {
               sampleData[key] = undefined
+            } else if (!val.includes(',')) {
+              // single-valued fields are the common case, and skipping split()
+              // here is the bulk of this method's cost
+              sampleData[key] = [isNum ? +val : val]
             } else {
               const items = val.split(',')
               const itemsLen = items.length
-              const isNum = isNumberType[colIdx]
               const result: (string | number | undefined)[] = []
               for (let k = 0; k < itemsLen; k++) {
                 const ent = items[k] ?? ''

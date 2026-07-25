@@ -348,3 +348,32 @@ test('SAMPLES and GENOTYPES can be called multiple times', () => {
   expect(variant.SAMPLES()).toEqual(variant.SAMPLES())
   expect(variant.GENOTYPES()).toEqual(variant.GENOTYPES())
 })
+
+test('trailing line terminators do not leak into the last field', () => {
+  const VCFParser = makeParser()
+  const line =
+    '20\t14370\trs6054257\tG\tA\t29\tPASS\tNS=3\tGT:GQ:HQ\t0|0:48:51,51\t1|0:48:51,51\t0/0:43:.,.'
+  const expected = VCFParser.parseLine(line)
+  for (const terminator of ['\n', '\r\n', '\r']) {
+    const variant = VCFParser.parseLine(line + terminator)
+    expect(variant.SAMPLES()).toEqual(expected.SAMPLES())
+    expect(variant.GENOTYPES()).toEqual(expected.GENOTYPES())
+  }
+  // the last sample's trailing '.,.' is missing data, not NaN
+  expect(expected.SAMPLES().NA00003!.HQ).toEqual([undefined, undefined])
+  expect(expected.GENOTYPES()).toEqual({
+    NA00001: '0|0',
+    NA00002: '1|0',
+    NA00003: '0/0',
+  })
+})
+
+test('trailing line terminators do not leak into INFO when no samples', () => {
+  const VCFParser = new VCF({
+    header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n',
+  })
+  const line = '2\t321681\tbnd_W\tG\tG]17:198982]\t6\tPASS\tSVTYPE=BND'
+  for (const terminator of ['', '\n', '\r\n', '\r']) {
+    expect(VCFParser.parseLine(line + terminator).INFO.SVTYPE).toEqual(['BND'])
+  }
+})

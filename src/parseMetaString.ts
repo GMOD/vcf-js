@@ -1,31 +1,27 @@
+// Split on commas that are not inside quotes or square brackets
 function customSplit(str: string) {
   const result = []
-  const chars = []
   let inQuotes = false
   let inBrackets = false
+  let start = 0
   const strLen = str.length
 
   for (let i = 0; i < strLen; i++) {
-    const char = str[i] ?? ''
+    const char = str[i]
     if (char === '"') {
       inQuotes = !inQuotes
-      chars.push(char)
     } else if (char === '[') {
       inBrackets = true
-      chars.push(char)
     } else if (char === ']') {
       inBrackets = false
-      chars.push(char)
     } else if (char === ',' && !inQuotes && !inBrackets) {
-      result.push(chars.join('').trim())
-      chars.length = 0
-    } else {
-      chars.push(char)
+      result.push(str.slice(start, i).trim())
+      start = i + 1
     }
   }
 
-  if (chars.length > 0) {
-    result.push(chars.join('').trim())
+  if (start < strLen) {
+    result.push(str.slice(start).trim())
   }
 
   return result
