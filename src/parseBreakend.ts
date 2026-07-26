@@ -9,6 +9,10 @@ export interface Breakend {
 const ANGLE_BRACKET_START_REGEX = /<(.*)>(.*)/
 const ANGLE_BRACKET_END_REGEX = /(.*)<(.*)>/
 
+// Returns undefined for anything that isn't a well-formed breakend, including
+// malformed bracket notation. Callers get ALT strings straight out of a VCF and
+// treat the result as optional, so an unparseable allele must not take down the
+// record it appears on.
 export function parseBreakend(breakendString: string): Breakend | undefined {
   const firstChar = breakendString[0]
   const lastChar = breakendString.at(-1)
@@ -34,10 +38,9 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
         }
       }
     }
-    if (!(MatePosition && Join && Replacement)) {
-      throw new Error(`Invalid breakend: ${breakendString}`)
-    }
-    return { MatePosition, Join, Replacement, MateDirection }
+    return MatePosition && Join && Replacement
+      ? { MatePosition, Join, Replacement, MateDirection }
+      : undefined
   }
 
   if (firstChar === '.') {
@@ -57,33 +60,27 @@ export function parseBreakend(breakendString: string): Breakend | undefined {
   }
 
   if (firstChar === '<') {
-    const res = ANGLE_BRACKET_START_REGEX.exec(breakendString)
-    if (!res) {
-      throw new Error(`failed to parse ${breakendString}`)
-    }
-    const Replacement = res[2]
+    const [, symbol = '', Replacement = ''] =
+      ANGLE_BRACKET_START_REGEX.exec(breakendString) ?? []
     return Replacement
       ? {
           Join: 'left',
           Replacement,
           MateDirection: 'right',
-          MatePosition: `<${res[1] ?? ''}>:1`,
+          MatePosition: `<${symbol}>:1`,
         }
       : undefined
   }
 
   if (breakendString.includes('<')) {
-    const res = ANGLE_BRACKET_END_REGEX.exec(breakendString)
-    if (!res) {
-      throw new Error(`failed to parse ${breakendString}`)
-    }
-    const Replacement = res[1]
+    const [, Replacement = '', symbol = ''] =
+      ANGLE_BRACKET_END_REGEX.exec(breakendString) ?? []
     return Replacement
       ? {
           Join: 'right',
           Replacement,
           MateDirection: 'right',
-          MatePosition: `<${res[2] ?? ''}>:1`,
+          MatePosition: `<${symbol}>:1`,
         }
       : undefined
   }

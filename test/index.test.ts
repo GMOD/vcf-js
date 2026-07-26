@@ -144,8 +144,13 @@ describe('testBreakend', () => {
     })
   })
 
-  it('throws on invalid breakend', () => {
-    expect(() => parseBreakend('[13:123457[')).toThrow(/Invalid breakend/)
+  it('returns undefined on malformed breakend rather than throwing', () => {
+    // bracket notation with no replacement base
+    expect(parseBreakend('[13:123457[')).toBeUndefined()
+    // bracket notation with no mate position
+    expect(parseBreakend('G[')).toBeUndefined()
+    // unterminated angle bracket
+    expect(parseBreakend('G<DEL')).toBeUndefined()
   })
 
   it('returns "undefined" for non-breakend', () => {
