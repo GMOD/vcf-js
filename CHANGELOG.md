@@ -39,33 +39,124 @@
 
 ## [7.0.3](https://github.com/GMOD/vcf-js/compare/v7.0.2...v7.0.3) (2026-05-08)
 
+### Bug Fixes
+
+- fix `getMetadata()` treating falsy-but-defined values (`0`, `''`, `false`)
+  as missing; only `undefined` is now treated as missing
+  ([ca49e2c](https://github.com/GMOD/vcf-js/commit/ca49e2cfb5f0519ac90af8a3ce6f3f9dd7b235f8))
+
 ## [7.0.2](https://github.com/GMOD/vcf-js/compare/v7.0.1...v7.0.2) (2026-04-27)
+
+### Bug Fixes
+
+- stop publishing a top-level `types` field; add `main` instead so
+  TypeScript's `node10`/classic module resolution can still find the
+  CommonJS type declarations
+  ([6f32a5f](https://github.com/GMOD/vcf-js/commit/6f32a5fce4df5c7ca20d5040273002e98c14342b))
 
 ## [7.0.1](https://github.com/GMOD/vcf-js/compare/v7.0.0...v7.0.1) (2026-04-27)
 
 # [7.0.0](https://github.com/GMOD/vcf-js/compare/v6.1.2...v7.0.0) (2026-01-18)
 
+### Features
+
+- **BREAKING**: `parseLine()` now returns a `Variant` class instance instead
+  of a plain object literal, with `SAMPLES()`, `GENOTYPES()`, and
+  `processGenotypes()` exposed as prototype methods (#123)
+  ([2dd811d](https://github.com/GMOD/vcf-js/commit/2dd811d8561f431c544bd3cd3e83a7e598118107))
+
 ## [6.1.2](https://github.com/GMOD/vcf-js/compare/v6.1.1...v6.1.2) (2026-01-18)
+
+### Bug Fixes
+
+- remove the `processGenotypes()` callback added in 6.1.1; the author noted
+  this is technically a breaking change
+  ([b353821](https://github.com/GMOD/vcf-js/commit/b3538216814e5a56d88849242e70cafe4da378f9))
+
+## [6.1.1](https://github.com/GMOD/vcf-js/compare/v6.1.0...v6.1.1) (2026-01-17)
+
+### Features
+
+- add `processGenotypes()` for per-record genotype iteration without
+  intermediate object/string allocation, plus the `GenotypeCallback` type
+  export
+  ([a6e136c](https://github.com/GMOD/vcf-js/commit/a6e136c1ddc1eafa81415da460df8b312c6e50e0))
 
 # [6.1.0](https://github.com/GMOD/vcf-js/compare/v6.0.9...v6.1.0) (2025-11-26)
 
+### Performance Improvements
+
+- various optimizations to VCF parsing, including faster parsing of large
+  genotype arrays (#122)
+  ([90a785e](https://github.com/GMOD/vcf-js/commit/90a785e1aa876d5adda8e501be17edfe1e62053d))
+
 ## [6.0.9](https://github.com/GMOD/vcf-js/compare/v6.0.8...v6.0.9) (2025-04-01)
+
+### Bug Fixes
+
+- better handling of variants that have a FORMAT column but are missing
+  FORMAT fields (#113)
+  ([e23ac28](https://github.com/GMOD/vcf-js/commit/e23ac28f112a3fa1a5fe74b0028bd18350484a24))
 
 ## [6.0.8](https://github.com/GMOD/vcf-js/compare/v6.0.7...v6.0.8) (2025-02-13)
 
+### Bug Fixes
+
+- fix header parsing when a `=` character appears inside a meta description
+  (#110)
+  ([b72f780](https://github.com/GMOD/vcf-js/commit/b72f780c2cf865d756fc78c312b74f63987a9783))
+
 ## [6.0.7](https://github.com/GMOD/vcf-js/compare/v6.0.6...v6.0.7) (2025-01-29)
+
+### Features
+
+- add FORMAT field to parsed records (#109)
+  ([d8ed6cd](https://github.com/GMOD/vcf-js/commit/d8ed6cd18cbd9b6cc27d9fecbc8455e6d5e09355))
 
 ## [6.0.6](https://github.com/GMOD/vcf-js/compare/v6.0.5...v6.0.6) (2025-01-16)
 
+### Bug Fixes
+
+- add an explicit top-level `types` field to package.json, for TypeScript
+  resolvers that don't support conditional `exports`
+  ([f97ab0e](https://github.com/GMOD/vcf-js/commit/f97ab0e8fc6d04ee71ee3604f0cf3cc0f28e1efb))
+
 ## [6.0.5](https://github.com/GMOD/vcf-js/compare/v6.0.4...v6.0.5) (2025-01-16)
 
+### Bug Fixes
+
+- restore the per-condition `types` entries in package.json `exports`,
+  fixing TypeScript resolution regressed in 6.0.4
+  ([36e9575](https://github.com/GMOD/vcf-js/commit/36e95754742667c0a69487e200e5eb5c6567b0f6))
+
 ## [6.0.4](https://github.com/GMOD/vcf-js/compare/v6.0.3...v6.0.4) (2025-01-16)
+
+### Features
+
+- simplify package.json `exports` to flat `import`/`require` path strings,
+  dropping the per-condition `types` entries
+  ([1aacd89](https://github.com/GMOD/vcf-js/commit/1aacd894a1c6f9a110de963044a1ae953609e8c2))
 
 ## [6.0.3](https://github.com/GMOD/vcf-js/compare/v6.0.2...v6.0.3) (2025-01-16)
 
 ## [6.0.2](https://github.com/GMOD/vcf-js/compare/v6.0.1...v6.0.2) (2025-01-07)
 
+### Features
+
+- publish dual ESM/CommonJS builds via package.json `exports` conditions
+  instead of separate `main`/`module` fields (#108)
+  ([acf463c](https://github.com/GMOD/vcf-js/commit/acf463c94a8af776f790ba24cb98f5e678c0e509))
+
 ## [6.0.1](https://github.com/GMOD/vcf-js/compare/v6.0.0...v6.0.1) (2024-12-17)
+
+### Bug Fixes
+
+- fix parsing of header lines whose values contain square-bracket lists
+  (#107)
+  ([5950b41](https://github.com/GMOD/vcf-js/commit/5950b416fa855b6e2236b8887f29b4781eda9611))
+- fix INFO keys with no value and no header `Type=Flag` declaration
+  evaluating to `undefined` instead of `true`
+  ([0fa6e43](https://github.com/GMOD/vcf-js/commit/0fa6e43a2481ddf81bed8e1f698ac5c2a444fa9c))
 
 # [6.0.0](https://github.com/GMOD/vcf-js/compare/v5.0.10...v6.0.0) (2024-11-30)
 
