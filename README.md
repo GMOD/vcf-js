@@ -5,41 +5,53 @@ VCF (variant call format) parser
 [![NPM version](https://img.shields.io/npm/v/@gmod/vcf.svg?logo=npm&style=flat-square)](https://npmjs.org/package/@gmod/vcf)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/GMOD/vcf-js/publish.yml?branch=main)
 
+## Install
+
+```sh
+npm install @gmod/vcf
+```
+
 ## Usage
 
 ```typescript
 import { TabixIndexedFile } from '@gmod/tabix'
-import VCF from '@gmod/vcf'
+import VCF, { type Variant } from '@gmod/vcf'
 
 const tbiIndexed = new TabixIndexedFile({ path: '/path/to/my.vcf.gz' })
 
 const headerText = await tbiIndexed.getHeader()
-const parser = new VCF({ header: headerText }) // strict?: boolean (default true)
+const parser = new VCF({ header: headerText })
 
-const variants = []
-await tbiIndexed.getLines('ctgA', 200, 300, line =>
-  variants.push(parser.parseLine(line)),
-)
+const variants: Variant[] = []
+await tbiIndexed.getLines('ctgA', 200, 300, line => {
+  variants.push(parser.parseLine(line))
+})
 ```
+
+Reuse one parser for all lines — the header is parsed once per `VCF`.
+
+`strict` (default `true`) makes `parseLine` throw on a line with no INFO column;
+the VCF spec requires at least a `.` there.
 
 ## Variant
 
-`parseLine(line)` returns a `Variant` with these fields:
+`parseLine(line)` returns a `Variant`:
 
 ```typescript
 {
   CHROM: 'contigA',
   POS: 3000,
-  ID: ['rs17883296'],
+  ID: ['rs17883296'],  // undefined if '.'
   REF: 'G',
-  ALT: ['T', 'A'],
-  QUAL: 100,
-  FILTER: 'PASS', // 'PASS' | string[] of filter names | undefined if '.'
+  ALT: ['T', 'A'],     // undefined if '.'
+  QUAL: 100,           // undefined if '.'
+  FILTER: 'PASS',      // 'PASS' | string[] of filter names | undefined if '.'
+  FORMAT: 'GT:DP',     // undefined if the file has no samples
   INFO: {
     NS: [3],
     DP: [14],
     AF: [0.5],
-    DB: true,   // Flag type
+    DB: true,   // Type=Flag, a bare key, or KEY= with an empty value
     XYZ: ['5'], // unknown fields default to Number=1, Type=String
   },
 }
@@ -48,14 +60,20 @@ await tbiIndexed.getLines('ctgA', 200, 300, line =>
 INFO and FORMAT values are typed using header metadata. Values are arrays unless
 `Type=Flag`, in which case they are `true`. Fields defined in the
 [VCF spec](https://samtools.github.io/hts-specs/VCFv4.3.pdf) are typed even
-without a header entry.
+without a header entry. `.` inside a value becomes `undefined`, and `%XX`
+escapes are percent-decoded.
+
+`JSON.stringify(variant)` serializes the columns above only — sample data is not
+included.
 
 ### Sample methods
 
-- `variant.SAMPLES()` — full sample data with all FORMAT fields parsed
-- `variant.GENOTYPES()` — GT strings only (faster)
-- `variant.processGenotypes(callback)` — iterate genotypes without allocating
-  strings (fastest)
+Sample data is not touched until one of these is called, so lines from a
+many-sample file are cheap to parse if you only need the columns above.
+
+- `variant.SAMPLES()` — all FORMAT fields, keyed by sample name
+- `variant.GENOTYPES()` — GT strings only, keyed by sample name
+- `variant.processGenotypes(callback)` — GT positions only, no allocation
 
 ```typescript
 let homRef = 0
@@ -70,8 +88,26 @@ variant.processGenotypes((str, start, end, sampleIdx) => {
 })
 ```
 
-Sample data is lazily parsed — nothing is computed until these methods are
-called.
+## Performance
+
+For files with many samples:
+
+| method               | allocates per sample                    |
+| -------------------- | --------------------------------------- |
+| `processGenotypes()` | nothing — indices into the line         |
+| `GENOTYPES()`        | one string                              |
+| `SAMPLES()`          | one object plus an array per FORMAT key |
+
+- `SAMPLES()` re-parses on every call. Call it once and keep the result.
+- `processGenotypes` ignores the callback's return value, so there is no early
+  exit — it always visits every sample.
+- `GENOTYPES()` returns a null-prototype object; use `Object.keys` / `in`, not
+  `hasOwnProperty`.
+- INFO is parsed eagerly for every line, unlike sample data. Files with large
+  INFO columns pay that cost even if you only read `CHROM`/`POS`.
+- A retained `Variant` holds a reference to its whole input line. Streaming is
+  fine, but collecting variants from a many-sample file keeps every line in
+  memory.
 
 ## Metadata
 
@@ -80,7 +116,7 @@ provided:
 
 ```typescript
 parser.getMetadata('INFO', 'DP')
-// { Number: 1, Type: 'Integer', Description: 'Total Depth' }
+// { Number: 1, Type: 'Integer', Description: 'combined depth across samples' }
 
 parser.getMetadata('INFO', 'DP', 'Number')
 // 1
@@ -90,38 +126,38 @@ Call with no arguments to get all metadata. `parser.samples` lists sample names.
 
 ## Streaming
 
-To parse a plain VCF without tabix, collect header lines until the first
-non-header line, then construct the parser:
+Without tabix, collect header lines until the first non-header line, then
+construct the parser:
 
 ```typescript
-import fs from 'fs'
+import fs from 'node:fs'
+import readline from 'node:readline'
 import VCF from '@gmod/vcf'
-import { createGunzip } from 'zlib'
-import readline from 'readline'
 
 const rl = readline.createInterface({
-  input: fs.createReadStream('file.vcf.gz').pipe(createGunzip()),
+  input: fs.createReadStream('file.vcf'),
 })
 
-const header = []
-let parser
+const header: string[] = []
+let parser: VCF | undefined
 
-rl.on('line', line => {
+for await (const line of rl) {
   if (line.startsWith('#')) {
     header.push(line)
   } else {
-    if (!parser) {
-      parser = new VCF({ header: header.join('\n') })
-    }
+    parser ??= new VCF({ header: header.join('\n') })
     const variant = parser.parseLine(line)
     console.log(variant.CHROM, variant.POS)
   }
-})
+}
 ```
+
+For `.vcf.gz`, pipe the read stream through `createGunzip()` from `node:zlib`.
 
 ## Breakends
 
-`parseBreakend(alt)` parses a breakend ALT string:
+`parseBreakend(alt)` parses a breakend ALT string, returning `undefined` for
+anything that isn't one:
 
 ```typescript
 import { parseBreakend } from '@gmod/vcf'
@@ -146,8 +182,8 @@ All four bracket forms from the VCF spec:
 
 ### Single breakends
 
-When the ALT starts or ends with `.`, `parseBreakend` returns
-`SingleBreakend: true` with no `MatePosition`:
+When the ALT starts or ends with `.`, the result has `SingleBreakend: true` and
+no `MatePosition`:
 
 ```typescript
 parseBreakend('C.')
@@ -157,11 +193,24 @@ parseBreakend('.ACGT')
 // { Join: 'left', Replacement: 'ACGT', SingleBreakend: true }
 ```
 
-## Publishing
+### Symbolic alleles
 
-[Trusted publishing](https://docs.npmjs.com/about-trusted-publishing) via GitHub
-Actions.
+An ALT containing `<...>` uses the symbol as the mate contig:
 
-```bash
-pnpm version patch  # or minor/major
+```typescript
+parseBreakend('<DUP>ACGT')
+// { Join: 'left', Replacement: 'ACGT', MateDirection: 'right', MatePosition: '<DUP>:1' }
+
+parseBreakend('ACGT<DUP>')
+// { Join: 'right', Replacement: 'ACGT', MateDirection: 'right', MatePosition: '<DUP>:1' }
 ```
+
+## Exports
+
+`default` (the parser), `Variant`, `parseBreakend`, and the types `Breakend`,
+`Samples`, `SampleData`, `SampleValue`, `InfoValue`, `MetaMap`, `MetaField`,
+`GenotypeCallback`.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
