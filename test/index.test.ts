@@ -104,7 +104,59 @@ describe('testBreakend', () => {
     }
   })
 
-  it('parses assembly-contig mate positions (VCFv4.5 section 5.4.1)', () => {
+  it('parses novel bases inserted at the junction (VCFv4.5 section 5.4.1)', () => {
+    // "The string t may be an extended version of s if some novel bases are
+    // inserted during the formation of the novel adjacency" -- so t is not one
+    // base, and Replacement carries the whole of it. A parser that assumes a
+    // single base drops these records entirely, and callers emit them
+    // constantly: 28 of the 66 BND records in COLO829's nanomonsv VCF.
+    const insertedAndParsed = [
+      // the spec's own example
+      [
+        ']13:123456]AGTNNNNNCAT',
+        {
+          MatePosition: '13:123456',
+          Join: 'left',
+          Replacement: 'AGTNNNNNCAT',
+          MateDirection: 'left',
+        },
+      ],
+      [
+        'CAGTNNNNNCA[2:321682[',
+        {
+          MatePosition: '2:321682',
+          Join: 'right',
+          Replacement: 'CAGTNNNNNCA',
+          MateDirection: 'right',
+        },
+      ],
+      // a real reciprocal pair (COLO829, nanomonsv): 11 novel bases either
+      // side, and a mate refName cased differently from its own CHROM
+      [
+        'GTGATGGATTCA[CHR12:72273112[',
+        {
+          MatePosition: 'CHR12:72273112',
+          Join: 'right',
+          Replacement: 'GTGATGGATTCA',
+          MateDirection: 'right',
+        },
+      ],
+      [
+        ']CHR3:25359111]TGAATCCATCAG',
+        {
+          MatePosition: 'CHR3:25359111',
+          Join: 'left',
+          Replacement: 'TGAATCCATCAG',
+          MateDirection: 'left',
+        },
+      ],
+    ] as [string, Breakend][]
+    for (const [breakend, parsedBreakend] of insertedAndParsed) {
+      expect(parseBreakend(breakend)).toEqual(parsedBreakend)
+    }
+  })
+
+  it('parses assembly-contig mate positions (VCFv4.5 section 5.4.2)', () => {
     // mate position can be a contig in the assembly file: <ctg1>:pos
     const contigsAndParsed = [
       [
