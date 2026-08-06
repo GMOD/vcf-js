@@ -26,7 +26,7 @@ jobs:
       # or a changed signature and go on passing by testing nothing.
       - run: pnpm typecheck
       - run: pnpm build
-      - run: pnpm test
+      - run: pnpm test --run
 
   publish:
     name: Publish to npm
