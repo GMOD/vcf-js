@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/GMOD/vcf-js.git"
+    "url": "git+https://github.com/GMOD/vcf-js.git"
   },
   "author": {
     "name": "Garrett Stevens",
