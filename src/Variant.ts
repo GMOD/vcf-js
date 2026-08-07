@@ -1,8 +1,10 @@
 import { parseGenotypesOnly } from './parseGenotypesOnly.ts'
 import { parseInfo } from './parseInfo.ts'
+import { processFormatFields } from './processFormatFields.ts'
 import { processGenotypes } from './processGenotypes.ts'
 
 import type { InfoValue, MetaMap } from './parseInfo.ts'
+import type { FormatFieldsCallback } from './processFormatFields.ts'
 import type { GenotypeCallback } from './processGenotypes.ts'
 
 const COLON = 58
@@ -13,8 +15,10 @@ export type Samples = Record<string, SampleData>
 
 export class Variant {
   private formatMeta: MetaMap
-  private rest: string
-  private sampleNames: string[]
+  /** The sample columns of the line, i.e. everything after FORMAT. */
+  readonly rest: string
+  /** Header sample names, in column order; the index `processGenotypes` reports. */
+  readonly sampleNames: string[]
 
   CHROM: string | undefined
   POS: number
@@ -147,6 +151,16 @@ export class Variant {
       this.FORMAT ?? '',
       this.rest,
       this.sampleNames.length,
+      callback,
+    )
+  }
+
+  processFormatFields(keys: string[], callback: FormatFieldsCallback) {
+    processFormatFields(
+      this.FORMAT ?? '',
+      this.rest,
+      this.sampleNames.length,
+      keys,
       callback,
     )
   }
