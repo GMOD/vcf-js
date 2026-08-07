@@ -1,3 +1,37 @@
+## [7.1.0](https://github.com/GMOD/vcf-js/compare/v7.0.10...v7.1.0) (2026-08-07)
+
+### Bug Fixes
+
+- ParseBreakend returns undefined on malformed input instead of throwing
+
+### Chores
+
+- Sha-pin actions, take pnpm version from packageManager, node 24
+- Pin pnpm via the `packageManager` field, so local pnpm and CI agree
+- Share one eslint-plugin-unicorn opt-out list across the repos
+- Turn off unicorn/prefer-early-return across the repos
+- Replace standard-changelog with git-cliff for changelog generation
+- Drop eslint-plugin-unicorn
+- Type-check the tests and enforce prettier, as @gmod/bam does
+- Let npm publish stop auto-correcting repository.url
+- Exempt our own packages from the release quarantine
+- Bump pnpm/action-setup to v6.0.10
+- Run the test suite as `pnpm test --run`
+
+### Documentation
+
+- Correct README inaccuracies, document performance characteristics
+- Backfill CHANGELOG entries dropped by non-conventional commit messages
+- Mark breaking changes in the generated changelog
+
+### Features
+
+- ProcessFormatFields, for reading two FORMAT fields without parsing five
+
+### Tests
+
+- Pin breakend parsing of novel bases inserted at the junction
+
 ## [7.0.10](https://github.com/GMOD/vcf-js/compare/v7.0.9...v7.0.10) (2026-07-25)
 
 
