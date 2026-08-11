@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest'
 
+import VCF from '../src/index.ts'
 import { parseGenotypesOnly } from '../src/parseGenotypesOnly.ts'
 import { processGenotypes } from '../src/processGenotypes.ts'
 
@@ -525,4 +526,41 @@ test('GT first: fewer samples on the line than in the header', () => {
     'S3',
   ])
   expect(result).toEqual({ S1: '0/1', S2: '1/1', S3: '' })
+})
+
+// The scans take the whole line plus offsets rather than a sliced-out `rest`,
+// so the ranges they report are into whatever string was handed in. These pin
+// that a caller passing a wider string with offsets gets the same genotypes,
+// and that the reported ranges are absolute.
+test('offsets: a range inside a wider string scans as if it were the whole rest', () => {
+  const wide = 'chr1\t1\t.\tA\tG\t.\t.\t.\tGT:DP\t0/1:20\t1/1:30'
+  const from = wide.indexOf('GT:DP') + 'GT:DP'.length + 1
+  const result = parseGenotypesOnly('GT:DP', wide, ['S1', 'S2'], from)
+  expect(result).toEqual({ S1: '0/1', S2: '1/1' })
+})
+
+test('offsets: `to` bounds the scan short of the string end', () => {
+  const wide = '0/1:20\t1/1:30\tIGNORED'
+  const to = wide.indexOf('\tIGNORED')
+  const result = parseGenotypesOnly('GT:DP', wide, ['S1', 'S2', 'S3'], 0, to)
+  expect(result).toEqual({ S1: '0/1', S2: '1/1', S3: '' })
+})
+
+test('a Variant reports genotype ranges into the whole line, not into rest', () => {
+  const line = 'chr1\t1\t.\tA\tG\t.\t.\t.\tGT:DP\t0/1:20\t1/1:30'
+  const parser = new VCF({
+    header:
+      '##fileformat=VCFv4.3\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\tS2\n',
+  })
+  const variant = parser.parseLine(line)
+  const seen: [string, number, number][] = []
+  variant.processGenotypes((str, start, end) => {
+    seen.push([str.slice(start, end), start, end])
+  })
+  expect(seen).toEqual([
+    ['0/1', line.indexOf('0/1'), line.indexOf('0/1') + 3],
+    ['1/1', line.indexOf('1/1'), line.indexOf('1/1') + 3],
+  ])
+  // `rest` still answers with the sample columns alone
+  expect(variant.rest).toBe('0/1:20\t1/1:30')
 })

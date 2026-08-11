@@ -15,8 +15,19 @@ export type Samples = Record<string, SampleData>
 
 export class Variant {
   private formatMeta: MetaMap
-  /** The sample columns of the line, i.e. everything after FORMAT. */
-  readonly rest: string
+  /**
+   * The whole line, kept rather than the `rest` slice it used to hold. `rest` is
+   * `line.slice(restStart, restEnd)`, and in V8 that is a `SlicedString` - which
+   * costs an extra unwrap on every `charCodeAt`, the one operation the genotype
+   * scans consist of. Scanning the flat line with offsets instead measured 1.3x
+   * on a 3202-sample record. `rest` stays as a getter for callers that want the
+   * substring, and materializes only when asked for.
+   */
+  readonly line: string
+  /** Offset of the first sample column in `line`. */
+  readonly restStart: number
+  /** Offset just past the last sample column in `line` (trailing CR/LF excluded). */
+  readonly restEnd: number
   /** Header sample names, in column order; the index `processGenotypes` reports. */
   readonly sampleNames: string[]
 
@@ -67,7 +78,6 @@ export class Variant {
       )
     }
 
-    const rest = line.slice(splitPos + 1, lineLen)
     const filter = FILTER === '.' ? undefined : FILTER?.split(';')
 
     this.CHROM = CHROM
@@ -84,8 +94,18 @@ export class Variant {
     this.FORMAT = fields[8]
 
     this.formatMeta = formatMeta
-    this.rest = rest
+    this.line = line
+    // `splitPos` is the last tab counted, so the samples begin one past it. A
+    // line with fewer than 9 tabs has no sample columns at all, and then
+    // restStart lands at or past restEnd and every scan reports nothing.
+    this.restStart = Math.min(splitPos + 1, lineLen)
+    this.restEnd = lineLen
     this.sampleNames = sampleNames
+  }
+
+  /** The sample columns of the line, i.e. everything after FORMAT. */
+  get rest() {
+    return this.line.slice(this.restStart, this.restEnd)
   }
 
   SAMPLES(): Samples {
@@ -143,25 +163,35 @@ export class Variant {
   }
 
   GENOTYPES() {
-    return parseGenotypesOnly(this.FORMAT ?? '', this.rest, this.sampleNames)
+    return parseGenotypesOnly(
+      this.FORMAT ?? '',
+      this.line,
+      this.sampleNames,
+      this.restStart,
+      this.restEnd,
+    )
   }
 
   processGenotypes(callback: GenotypeCallback) {
     processGenotypes(
       this.FORMAT ?? '',
-      this.rest,
+      this.line,
       this.sampleNames.length,
       callback,
+      this.restStart,
+      this.restEnd,
     )
   }
 
   processFormatFields(keys: string[], callback: FormatFieldsCallback) {
     processFormatFields(
       this.FORMAT ?? '',
-      this.rest,
+      this.line,
       this.sampleNames.length,
       keys,
       callback,
+      this.restStart,
+      this.restEnd,
     )
   }
 

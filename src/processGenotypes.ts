@@ -16,9 +16,17 @@ export type GenotypeCallback = (
  * where you don't need to build the full genotypes object.
  *
  * @param format - The FORMAT field from the VCF line
- * @param prerest - The sample data portion of the VCF line (after FORMAT)
+ * @param prerest - A string whose `[from, to)` range is the sample data portion
+ * of the VCF line (everything after FORMAT). Callers that already hold the whole
+ * line should pass it with offsets rather than slicing: a V8 `SlicedString`
+ * costs an extra unwrap on every `charCodeAt`, and this scan is nothing but
+ * `charCodeAt` - handing the flat line through instead measured 1.3x on a
+ * 3202-sample record. The offsets the callback reports are into `prerest`,
+ * whatever it is, so a consumer's `str.slice(start, end)` is unaffected.
  * @param samplesLen - Number of samples
  * @param callback - Called for each genotype with (string, startIndex, endIndex)
+ * @param from - Offset of the first sample column in `prerest`
+ * @param to - Offset just past the last sample column in `prerest`
  */
 const TAB = 9
 const COLON = 58
@@ -53,9 +61,11 @@ export function processGenotypes(
   prerest: string,
   samplesLen: number,
   callback: GenotypeCallback,
+  from = 0,
+  to = prerest.length,
 ) {
-  const prerestLen = prerest.length
-  let pos = 0
+  const prerestLen = to
+  let pos = from
 
   // Fast path: format is exactly "GT"
   if (format === 'GT') {
@@ -96,8 +106,10 @@ export function processGenotypes(
         pos++
       }
       callback(prerest, start, pos, idx)
+      // `indexOf` searches to the end of the whole string, so a caller passing
+      // the line with offsets needs the hit clamped back to `to`
       const tab = prerest.indexOf('\t', pos)
-      pos = (tab === -1 ? prerestLen : tab) + 1
+      pos = (tab === -1 || tab > prerestLen ? prerestLen : tab) + 1
     }
     return
   }

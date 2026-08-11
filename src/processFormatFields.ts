@@ -60,10 +60,14 @@ function formatColumnIndices(format: string, keys: string[]) {
  * length regardless of how many keys are asked for.
  *
  * @param format - The FORMAT field from the VCF line
- * @param prerest - The sample data portion of the VCF line (after FORMAT)
+ * @param prerest - A string whose `[from, to)` range is the sample data portion
+ * of the VCF line; see `processGenotypes` for why passing the whole line with
+ * offsets beats slicing it
  * @param samplesLen - Number of samples
  * @param keys - FORMAT keys to report, e.g. `['GT', 'PS']`
  * @param callback - Called once per sample with (line, ranges, sampleIdx)
+ * @param from - Offset of the first sample column in `prerest`
+ * @param to - Offset just past the last sample column in `prerest`
  */
 export function processFormatFields(
   format: string,
@@ -71,6 +75,8 @@ export function processFormatFields(
   samplesLen: number,
   keys: string[],
   callback: FormatFieldsCallback,
+  from = 0,
+  to = prerest.length,
 ) {
   const numKeys = keys.length
   if (numKeys === 0) {
@@ -90,8 +96,8 @@ export function processFormatFields(
   }
 
   const ranges = new Int32Array(numKeys * 2)
-  const prerestLen = prerest.length
-  let pos = 0
+  const prerestLen = to
+  let pos = from
 
   for (let idx = 0; idx < samplesLen; idx++) {
     ranges.fill(-1)
@@ -122,8 +128,10 @@ export function processFormatFields(
         // hop and the loop below runs as before.
         if (col > maxCol) {
           closed = true
+          // clamped back to `to`, since `indexOf` searches past it when the
+          // caller passed the whole line with offsets
           const tab = prerest.indexOf('\t', pos)
-          pos = tab === -1 ? prerestLen : tab
+          pos = tab === -1 || tab > prerestLen ? prerestLen : tab
           break
         }
       }
