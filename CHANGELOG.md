@@ -1,3 +1,16 @@
+## [7.2.0](https://github.com/GMOD/vcf-js/compare/v7.1.1...v7.2.0) (2026-08-11)
+
+### Chores
+
+- Render only the commit subject, and link the commit ([1a8ece3](https://github.com/GMOD/vcf-js/commit/1a8ece311fd0642e72330e05736a26db5d64d617))
+- Create a GitHub release for each published tag ([322e857](https://github.com/GMOD/vcf-js/commit/322e8577c568cd012ca0943c0796c42f1e306cb1))
+- Enforce type strippability in tsconfig ([f243e99](https://github.com/GMOD/vcf-js/commit/f243e991776f01b7ca5de175ce95b675ec5e38bd))
+
+### Performance Improvements
+
+- Hop between samples with indexOf, not a byte at a time ([28300b1](https://github.com/GMOD/vcf-js/commit/28300b19d8aa6c159e3ea5f1d382ea99bf27ccc5))
+- Scan the flat line with offsets, not a sliced-out `rest` ([781a3e9](https://github.com/GMOD/vcf-js/commit/781a3e90e73d9ac14a2efdebbdc19ad42c6db517))
+
 ## [7.1.1](https://github.com/GMOD/vcf-js/compare/v7.1.0...v7.1.1) (2026-08-10)
 
 ### Chores
