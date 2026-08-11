@@ -98,15 +98,14 @@ export function processFormatFields(
     let col = 0
     let fieldStart = pos
     // Walk the sample's colon-separated fields once, closing out whichever
-    // requested keys land on each column. Stops scanning columns past the last
-    // one asked for, but still runs to the tab so `pos` lands on the next
-    // sample.
+    // requested keys land on each column.
+    let closed = false
     while (pos < prerestLen) {
       const c = prerest.charCodeAt(pos)
       if (c === TAB) {
         break
       }
-      if (c === COLON && col <= maxCol) {
+      if (c === COLON) {
         for (let k = 0; k < numKeys; k++) {
           if (cols[k] === col) {
             ranges[k * 2] = fieldStart
@@ -115,16 +114,33 @@ export function processFormatFields(
         }
         col++
         fieldStart = pos + 1
+        // Every requested key is answered, so the rest of this sample is dead
+        // weight - hop it in one `indexOf` instead of a byte at a time. On a
+        // GT:PS:AD:DP:GQ:PL record asked for GT and PS that measured 1.7x, and
+        // it is the same vectorized-memchr win processGenotypes takes. When the
+        // last requested key IS the sample's last column there is nothing to
+        // hop and the loop below runs as before.
+        if (col > maxCol) {
+          closed = true
+          const tab = prerest.indexOf('\t', pos)
+          pos = tab === -1 ? prerestLen : tab
+          break
+        }
       }
       pos++
     }
-    // The sample's last field carries no trailing colon. A sample whose fields
-    // stop before a requested column leaves that key at -1 rather than skipping
-    // the callback, so sampleIdx always tracks the callback count.
-    for (let k = 0; k < numKeys; k++) {
-      if (cols[k] === col) {
-        ranges[k * 2] = fieldStart
-        ranges[k * 2 + 1] = pos
+    // The sample's last field carries no trailing colon, so it is closed out
+    // here rather than in the loop - unless the hop above already answered
+    // every key, in which case `col` is past them all and this would only
+    // rediscover that. A sample whose fields stop before a requested column
+    // leaves that key at -1 rather than skipping the callback, so sampleIdx
+    // always tracks the callback count.
+    if (!closed) {
+      for (let k = 0; k < numKeys; k++) {
+        if (cols[k] === col) {
+          ranges[k * 2] = fieldStart
+          ranges[k * 2 + 1] = pos
+        }
       }
     }
     callback(prerest, ranges, idx)

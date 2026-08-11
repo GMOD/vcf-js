@@ -499,3 +499,30 @@ test('GT as the last FORMAT field of a truncated-looking sample', () => {
   ])
   expect(result).toEqual({ S1: '0/1', S2: '1/1' })
 })
+
+// GT-first-but-not-only is the shape the VCF spec mandates and the one the
+// scan hops over with indexOf rather than a charCodeAt loop. These pin the
+// boundaries that hop has to get right - a sample carrying GT alone (no
+// colon), the last sample of the line, and an empty trailing sample.
+test('GT first: a sample carrying GT alone still advances to the next sample', () => {
+  const result = parseGenotypesOnly('GT:DP:GQ', '0/1\t1/1:30:99\t0/0', [
+    'S1',
+    'S2',
+    'S3',
+  ])
+  expect(result).toEqual({ S1: '0/1', S2: '1/1', S3: '0/0' })
+})
+
+test('GT first: trailing tab leaves the extra sample empty', () => {
+  const result = parseGenotypesOnly('GT:DP', '0/1:20\t', ['S1', 'S2'])
+  expect(result).toEqual({ S1: '0/1', S2: '' })
+})
+
+test('GT first: fewer samples on the line than in the header', () => {
+  const result = parseGenotypesOnly('GT:DP', '0/1:20\t1/1:30', [
+    'S1',
+    'S2',
+    'S3',
+  ])
+  expect(result).toEqual({ S1: '0/1', S2: '1/1', S3: '' })
+})
