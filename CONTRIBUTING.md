@@ -8,8 +8,9 @@ pnpm test
 pnpm build
 ```
 
-Use `pnpm version patch/minor/major` to release — it runs lint, tests, and
-build, then pushes the version tag which triggers the publish workflow.
+Use `pnpm version patch/minor/major` to release — it runs lint, format, types,
+tests and build, regenerates CHANGELOG.md with git-cliff, then pushes the
+version tag which triggers the publish workflow.
 
 ## Benchmarking
 
