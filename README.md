@@ -46,24 +46,12 @@ throws on one, since the spec requires at least a `.` there.
   QUAL: 100,           // undefined if '.'
   FILTER: 'PASS',      // 'PASS' | string[] of filter names | undefined if '.'
   FORMAT: 'GT:DP',     // undefined if the line has no sample columns
-  INFO: {
-    NS: [3],
-    DP: [14],
-    AF: [0.5],
-    DB: true,   // Type=Flag, a bare key, or KEY= with an empty value
-    XYZ: ['5'], // unknown fields default to Number=1, Type=String
-  },
+  INFO: { NS: [3], DP: [14], AF: [0.5], DB: true },
 }
 ```
 
-INFO and FORMAT values are typed using header metadata. Values are arrays unless
-`Type=Flag`, in which case they are `true`. Fields defined in the
-[VCF spec](https://samtools.github.io/hts-specs/VCFv4.3.pdf) are typed even
-without a header entry. `.` inside a value becomes `undefined`, and `%XX`
-escapes are percent-decoded.
-
-`JSON.stringify(variant)` serializes the columns above only — sample data is not
-included.
+INFO and FORMAT values are typed using header metadata — see
+[docs/api.md](docs/api.md) for the rules, and for `parser.getMetadata`.
 
 ### Sample methods
 
@@ -89,30 +77,6 @@ variant.processGenotypes((str, start, end, sampleIdx) => {
 })
 ```
 
-`processFormatFields` is the same idea past GT. Each key's bounds are reported
-interleaved — key `k` spans `ranges[2 * k]` to `ranges[2 * k + 1]`, both `-1`
-when that sample has no value for it:
-
-```typescript
-// samples carrying a phase set, and their genotype
-const phased: { sampleIdx: number; gt: string; ps: string }[] = []
-variant.processFormatFields(['GT', 'PS'], (str, ranges, sampleIdx) => {
-  if (ranges[2] !== -1) {
-    phased.push({
-      sampleIdx,
-      gt: str.slice(ranges[0], ranges[1]),
-      ps: str.slice(ranges[2], ranges[3]),
-    })
-  }
-})
-```
-
-Each sample is located in one pass, so the cost is the sample's length however
-many keys you ask for. `ranges` is scratch, reused for every sample — read it
-inside the callback rather than retaining it. If FORMAT declares none of the
-requested keys the callback never fires, matching `processGenotypes` on a
-GT-less record.
-
 ## Performance
 
 For files with many samples:
@@ -131,28 +95,15 @@ For files with many samples:
 - `SAMPLES()` re-parses on every call. Call it once and keep the result.
 - Both `process*` methods ignore the callback's return value, so there is no
   early exit — they always visit every sample.
-- `GENOTYPES()` returns a null-prototype object; use `Object.keys` / `in`, not
-  `hasOwnProperty`.
+- Key off the callback's `sampleIdx` rather than counting calls.
 - INFO is parsed eagerly for every line, unlike sample data. Files with large
   INFO columns pay that cost even if you only read `CHROM`/`POS`.
 - A retained `Variant` holds a reference to its whole input line. Streaming is
   fine, but collecting variants from a many-sample file keeps every line in
   memory.
 
-## Metadata
-
-`parser.getMetadata(...keys)` returns header metadata, filtered by the keys
-provided:
-
-```typescript
-parser.getMetadata('INFO', 'DP')
-// { Number: 1, Type: 'Integer', Description: 'combined depth across samples' }
-
-parser.getMetadata('INFO', 'DP', 'Number')
-// 1
-```
-
-Call with no arguments to get all metadata. `parser.samples` lists sample names.
+[docs/optimizations.md](docs/optimizations.md) explains why each of those is the
+way it is, and what a consumer has to do to keep the wins.
 
 ## Streaming
 
@@ -196,48 +147,14 @@ parseBreakend('C[2:321682[')
 // { MateDirection: 'right', Replacement: 'C', MatePosition: '2:321682', Join: 'right' }
 ```
 
-All four bracket forms from the VCF spec. `Join` is whether the replacement base
-comes before (`right`) or after (`left`) the mate position; `MateDirection` is
-which way the mate sequence extends, `[` rightward and `]` leftward:
+All four bracket forms from the spec, plus single breakends and symbolic alleles
+— [docs/api.md](docs/api.md#parsebreakendalt-breakend--undefined) has the table
+and the edge cases.
 
-| ALT form | Join  | MateDirection |
-| -------- | ----- | ------------- |
-| `t[p[`   | right | right         |
-| `t]p]`   | right | left          |
-| `[p[t`   | left  | right         |
-| `]p]t`   | left  | left          |
+## Docs
 
-### Single breakends
-
-When the ALT starts or ends with `.`, the result has `SingleBreakend: true` and
-no `MatePosition`:
-
-```typescript
-parseBreakend('C.')
-// { Join: 'right', Replacement: 'C', SingleBreakend: true }
-
-parseBreakend('.ACGT')
-// { Join: 'left', Replacement: 'ACGT', SingleBreakend: true }
-```
-
-### Symbolic alleles
-
-An ALT containing `<...>` uses the symbol as the mate contig:
-
-```typescript
-parseBreakend('<DUP>ACGT')
-// { Join: 'left', Replacement: 'ACGT', MateDirection: 'right', MatePosition: '<DUP>:1' }
-
-parseBreakend('ACGT<DUP>')
-// { Join: 'right', Replacement: 'ACGT', MateDirection: 'right', MatePosition: '<DUP>:1' }
-```
-
-## Exports
-
-`default` (the parser), `Variant`, `parseBreakend`, and the types `Breakend`,
-`Samples`, `SampleData`, `SampleValue`, `InfoValue`, `MetaMap`, `MetaField`,
-`GenotypeCallback`, `FormatFieldsCallback`.
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+- [docs/api.md](docs/api.md) — every constructor arg, method and type
+- [docs/optimizations.md](docs/optimizations.md) — why the parser is lazy about
+  sample data, what that measured, and what a consumer has to do
+- [CONTRIBUTING.md](CONTRIBUTING.md) — development, benchmarking and release
+  steps
