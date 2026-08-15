@@ -13,6 +13,23 @@ allocating memory per sample.
 `processGenotypes` or `processFormatFields`. Use `SAMPLES()` only when you
 really want every field, and then call it once and keep what it returns.
 
+## About the numbers in this document
+
+Two kinds of measurement appear below, and they are not comparable.
+
+Figures written as a ratio, such as **1.3x**, come from
+`benchmark/parse.bench.ts` and time a single scan against an alternative
+implementation of that same scan. Run them with `pnpm benchonly`. Figures in
+milliseconds and megabytes measure a whole operation end to end, so they include
+work this parser does not do.
+
+Take the ratios as evidence that one approach beats another, not as a promise of
+what your own machine will do. The benchmark file explains why in more detail:
+whole runs drift by around 40% when the machine is busy, and the first benchmark
+declared in a group is penalized enough to invent a 10-30% gap between two
+functions running identical code. Compare within a run rather than across runs,
+and swap the declaration order before you believe a small difference.
+
 ## Parsing a line
 
 ### The parser splits only the first nine columns
@@ -66,8 +83,12 @@ substring.
 that as a `SlicedString`, and every `charCodeAt` call on one has to unwrap it
 first. Unwrapping costs real time here because `charCodeAt` is essentially all
 these scans do. Passing the flat line through with offsets instead ran **1.3x**
-faster on a 3202-sample record. `rest` still exists as a getter, and it builds
-the slice only if you ask for it.
+faster on a 3202-sample record.
+
+`rest` is still there, and it is still public: it is a getter now, so it builds
+the slice only when something reads it. Use it if you genuinely want the sample
+columns as a string. Just be aware that reading it on a file with many samples
+allocates the copy this change exists to avoid.
 
 The offsets in the callbacks point into whichever string the parser passed you,
 so calling `str.slice(start, end)` in your own code still works the same way.
@@ -104,9 +125,24 @@ characters. That way it does not mistake GATK's `PGT` for `GT`, or its `PID` for
 
 As `processFormatFields` walks a sample, it closes out whichever of your keys
 land on each colon. Asking for five fields therefore costs the same walk as
-asking for one. The bounds come back in a single `Int32Array` that the parser
-reuses for every sample, so treat it as scratch space. Read it inside the
-callback rather than holding onto it.
+asking for one.
+
+The bounds for all of your keys come back in one `Int32Array`, laid out as pairs
+in the order you asked for them. Key `k` occupies `ranges[2 * k]` and
+`ranges[2 * k + 1]`, and both entries are `-1` when that sample has no value for
+it.
+
+```typescript
+variant.processFormatFields(['GT', 'PS'], (str, ranges, sampleIdx) => {
+  const gt = str.slice(ranges[0], ranges[1])
+  const ps = ranges[2] === -1 ? undefined : str.slice(ranges[2], ranges[3])
+  // ...
+})
+```
+
+The parser reuses that same array for every sample, so treat it as scratch
+space. Read what you need inside the callback. If you hold onto the array, the
+next sample overwrites it.
 
 If FORMAT declares none of the keys you asked for, the callback never fires,
 which matches how `processGenotypes` behaves on a record with no GT.
