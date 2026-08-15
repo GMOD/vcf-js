@@ -3,7 +3,7 @@
 VCF (variant call format) parser
 
 [![NPM version](https://img.shields.io/npm/v/@gmod/vcf.svg?logo=npm&style=flat-square)](https://npmjs.org/package/@gmod/vcf)
-![Build Status](https://img.shields.io/github/actions/workflow/status/GMOD/vcf-js/publish.yml?branch=main)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/GMOD/vcf-js/publish.yml?branch=main&style=flat-square)](https://github.com/GMOD/vcf-js/actions/workflows/publish.yml)
 
 ## Install
 
@@ -28,10 +28,9 @@ await tbiIndexed.getLines('ctgA', 200, 300, line => {
 })
 ```
 
-Reuse one parser for all lines — the header is parsed once per `VCF`.
-
-`strict` (default `true`) makes `parseLine` throw on a line with no INFO column;
-the VCF spec requires at least a `.` there.
+Reuse one parser for all lines — the header is parsed once per `VCF`. Pass
+`strict: false` to accept a line with no INFO column; by default `parseLine`
+throws on one, since the spec requires at least a `.` there.
 
 ## Variant
 
@@ -46,7 +45,7 @@ the VCF spec requires at least a `.` there.
   ALT: ['T', 'A'],     // undefined if '.'
   QUAL: 100,           // undefined if '.'
   FILTER: 'PASS',      // 'PASS' | string[] of filter names | undefined if '.'
-  FORMAT: 'GT:DP',     // undefined if the file has no samples
+  FORMAT: 'GT:DP',     // undefined if the line has no sample columns
   INFO: {
     NS: [3],
     DP: [14],
@@ -74,6 +73,8 @@ many-sample file are cheap to parse if you only need the columns above.
 - `variant.SAMPLES()` — all FORMAT fields, keyed by sample name
 - `variant.GENOTYPES()` — GT strings only, keyed by sample name
 - `variant.processGenotypes(callback)` — GT positions only, no allocation
+- `variant.processFormatFields(keys, callback)` — positions of the named FORMAT
+  fields, no allocation
 
 ```typescript
 let homRef = 0
@@ -88,19 +89,48 @@ variant.processGenotypes((str, start, end, sampleIdx) => {
 })
 ```
 
+`processFormatFields` is the same idea past GT. Each key's bounds are reported
+interleaved — key `k` spans `ranges[2 * k]` to `ranges[2 * k + 1]`, both `-1`
+when that sample has no value for it:
+
+```typescript
+// samples carrying a phase set, and their genotype
+const phased: { sampleIdx: number; gt: string; ps: string }[] = []
+variant.processFormatFields(['GT', 'PS'], (str, ranges, sampleIdx) => {
+  if (ranges[2] !== -1) {
+    phased.push({
+      sampleIdx,
+      gt: str.slice(ranges[0], ranges[1]),
+      ps: str.slice(ranges[2], ranges[3]),
+    })
+  }
+})
+```
+
+Each sample is located in one pass, so the cost is the sample's length however
+many keys you ask for. `ranges` is scratch, reused for every sample — read it
+inside the callback rather than retaining it. If FORMAT declares none of the
+requested keys the callback never fires, matching `processGenotypes` on a
+GT-less record.
+
 ## Performance
 
 For files with many samples:
 
-| method               | allocates per sample                    |
-| -------------------- | --------------------------------------- |
-| `processGenotypes()` | nothing — indices into the line         |
-| `GENOTYPES()`        | one string                              |
-| `SAMPLES()`          | one object plus an array per FORMAT key |
+| method                  | allocates per sample                    |
+| ----------------------- | --------------------------------------- |
+| `processGenotypes()`    | nothing — indices into the line         |
+| `processFormatFields()` | nothing — indices into the line         |
+| `GENOTYPES()`           | one string                              |
+| `SAMPLES()`             | one object plus an array per FORMAT key |
 
+- Reading a couple of fields through `SAMPLES()` still parses every field of
+  every sample. On a 2504-sample `GT:AD:DP:GQ:PL` set that measured 1985ms and
+  2095MB, against 180ms and 1MB for the same two fields via
+  `processFormatFields`.
 - `SAMPLES()` re-parses on every call. Call it once and keep the result.
-- `processGenotypes` ignores the callback's return value, so there is no early
-  exit — it always visits every sample.
+- Both `process*` methods ignore the callback's return value, so there is no
+  early exit — they always visit every sample.
 - `GENOTYPES()` returns a null-prototype object; use `Object.keys` / `in`, not
   `hasOwnProperty`.
 - INFO is parsed eagerly for every line, unlike sample data. Files with large
@@ -166,7 +196,9 @@ parseBreakend('C[2:321682[')
 // { MateDirection: 'right', Replacement: 'C', MatePosition: '2:321682', Join: 'right' }
 ```
 
-All four bracket forms from the VCF spec:
+All four bracket forms from the VCF spec. `Join` is whether the replacement base
+comes before (`right`) or after (`left`) the mate position; `MateDirection` is
+which way the mate sequence extends, `[` rightward and `]` leftward:
 
 | ALT form | Join  | MateDirection |
 | -------- | ----- | ------------- |
@@ -174,11 +206,6 @@ All four bracket forms from the VCF spec:
 | `t]p]`   | right | left          |
 | `[p[t`   | left  | right         |
 | `]p]t`   | left  | left          |
-
-- `Join` — whether the replacement base appears before (`right`) or after
-  (`left`) the mate position
-- `MateDirection` — `[` means the mate sequence extends rightward; `]` means
-  leftward
 
 ### Single breakends
 
@@ -209,7 +236,7 @@ parseBreakend('ACGT<DUP>')
 
 `default` (the parser), `Variant`, `parseBreakend`, and the types `Breakend`,
 `Samples`, `SampleData`, `SampleValue`, `InfoValue`, `MetaMap`, `MetaField`,
-`GenotypeCallback`.
+`GenotypeCallback`, `FormatFieldsCallback`.
 
 ## Contributing
 
