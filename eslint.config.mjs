@@ -6,14 +6,12 @@ import tseslint from 'typescript-eslint'
 export default defineConfig(
   {
     ignores: [
-      'analyze-profile.cjs',
       'esm_*/',
       'benchmark/',
       'esm/',
       'dist/',
       '*.js',
       '*.mjs',
-      'example/*',
       // agent worktrees are whole checkouts of this repo living inside it, so
       // without this eslint lints every one of them against the root
       // tsconfig.lint.json and fails on files that are not in it. gitignored,

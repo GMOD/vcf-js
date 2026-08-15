@@ -65,8 +65,6 @@ typings/
 .next
 *.swp
 
-esm-master
-esm-optimized
 esm
 
 *.cpuprofile
