@@ -79,31 +79,19 @@ variant.processGenotypes((str, start, end, sampleIdx) => {
 
 ## Performance
 
-For files with many samples:
+On a many-sample file the choice of sample method dominates everything else —
+the `process*` pair allocates nothing per sample, `SAMPLES()` allocates an
+object and an array per FORMAT key. See
+[docs/optimizations.md](docs/optimizations.md) for the per-method costs, the
+measurements behind them, and what a consumer has to do to keep the wins.
 
-| method                  | allocates per sample                    |
-| ----------------------- | --------------------------------------- |
-| `processGenotypes()`    | nothing — indices into the line         |
-| `processFormatFields()` | nothing — indices into the line         |
-| `GENOTYPES()`           | one string                              |
-| `SAMPLES()`             | one object plus an array per FORMAT key |
+Three rules that are easy to get wrong:
 
-- Reading a couple of fields through `SAMPLES()` still parses every field of
-  every sample. On a 2504-sample `GT:AD:DP:GQ:PL` set that measured 1985ms and
-  2095MB, against 180ms and 1MB for the same two fields via
-  `processFormatFields`.
-- `SAMPLES()` re-parses on every call. Call it once and keep the result.
-- Both `process*` methods ignore the callback's return value, so there is no
+- **Both `process*` methods ignore the callback's return value**, so there is no
   early exit — they always visit every sample.
-- Key off the callback's `sampleIdx` rather than counting calls.
-- INFO is parsed eagerly for every line, unlike sample data. Files with large
-  INFO columns pay that cost even if you only read `CHROM`/`POS`.
-- A retained `Variant` holds a reference to its whole input line. Streaming is
-  fine, but collecting variants from a many-sample file keeps every line in
-  memory.
-
-[docs/optimizations.md](docs/optimizations.md) explains why each of those is the
-way it is, and what a consumer has to do to keep the wins.
+- **Key off the callback's `sampleIdx`, not a running count.** A sample whose
+  fields stop short still gets a callback.
+- **`SAMPLES()` re-parses on every call.** Call it once and keep the result.
 
 ## Streaming
 
