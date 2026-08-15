@@ -8,6 +8,11 @@ Why the parser looks the way it does. Every method is documented in
 tens of kilobytes of genotypes. So: touch only what the caller asked for, and
 walk it without allocating per sample.
 
+**If you read nothing else:** on a many-sample file reach sample data through
+`processGenotypes`/`processFormatFields`; use `SAMPLES()` only when you really
+do want every field, and then call it once and keep the result. The rest of this
+document is why.
+
 ## Parsing a line
 
 ### Only the first nine columns are split
@@ -108,43 +113,60 @@ consumer must key off it rather than counting callbacks.
 
 ## What the consumer has to do
 
-The parser can only make sample data cheap to _reach_. What
-[jbrowse-components](https://github.com/GMOD/jbrowse-components) does, as the
-worked example:
+The parser can only make sample data cheap to _reach_. Whether a consumer then
+throws that away is a decision above this library.
+
+### Applies to any consumer
 
 - **One parser per file, constructed from the header once.** The header parse —
   INFO/FORMAT/ALT/FILTER metadata plus a sample list running to thousands of
-  names — is per file, not per record. The sample names array is
-  identity-stable, which downstream code uses to detect two features from the
+  names — is per file, not per record. The sample names array is also
+  identity-stable, so downstream code can use it to detect two features from the
   same header.
 - **Read named fields through `processFormatFields`, never `SAMPLES()`.**
-  Phase-set coloring needs GT and PS; reaching PS through the samples object
-  parses every other FORMAT field of every sample to get there. On a 100-sample
-  phased long-read callset over 2k variants: 343ms / 239MB per fetch against
-  33ms / 4MB; at 500 samples, 1686ms / 1.17GB against 113ms / 4MB.
-- **Fuse the passes into one callback.** Genotypes used to cross the RPC
-  boundary as a `Record<sampleName, genotype>` built by `GENOTYPES()`, then
-  walked three more times — legend flags, cell colors, transfer encoding. Four
-  traversals and F×S string allocations for a payload the worker only ships as
-  integer codes. Doing it all in one `processGenotypes` callback took
-  analyze-plus-paint from **613ms to 168ms** on 2504 samples × 400 variants —
-  and the 168ms includes painting the 613ms did not.
-- **Memoize per site, not globally.** A site carries a handful of distinct
-  genotypes across thousands of samples, so a linear scan over ranges already
-  seen at this site answers almost every sample without materializing its
-  substring. Genotypes of four characters or fewer — every diploid call an
-  ordinary VCF spells — pack whole into one int, so recognizing a repeat is one
-  integer compare.
-- **Don't close over mutated primitives on the hot path.** The allele counter
-  accumulates into an object, because a closure mutating a captured primitive
-  forces a V8 `Context` allocation on the per-sample callback. The non-callback
-  version uses plain locals, which are faster there. Not accidental duplication.
+  Reaching one field through the samples object parses every other FORMAT field
+  of every sample to get there.
+- **Fuse the passes into one callback.** If you walk the samples once to
+  classify and again to render, you have paid twice for a traversal that has no
+  intermediate anyone needs.
 - **Key off `sampleIdx`, not a running counter** — see above.
 - **Don't retain `Variant`s from a many-sample file.** A `Variant` holds its
   whole input line, which is what makes the lazy scans possible. Streaming is
   fine; collecting a region into an array keeps every line in memory.
   Serializing a feature (`toJSON`) is the one operation that materializes
   everything.
+
+### Worked example: jbrowse-components
+
+What those cost in practice, measured in
+[jbrowse-components](https://github.com/GMOD/jbrowse-components):
+
+- **`processFormatFields` over `SAMPLES()`.** Phase-set coloring needs GT and
+  PS. On a 100-sample phased long-read callset over 2k variants: 343ms / 239MB
+  per fetch through the samples object, against 33ms / 4MB. At 500 samples,
+  1686ms / 1.17GB against 113ms / 4MB.
+- **Fusing the passes.** Genotypes used to cross the RPC boundary as a
+  `Record<sampleName, genotype>` built by `GENOTYPES()`, then walked three more
+  times — legend flags, cell colors, transfer encoding. Four traversals and F×S
+  string allocations for a payload the worker only ships as integer codes. Doing
+  it all in one `processGenotypes` callback took analyze-plus-paint from **613ms
+  to 168ms** on 2504 samples × 400 variants — and the 168ms includes painting
+  the 613ms did not.
+
+Two further tricks from the same code, worth knowing if your workload looks like
+this one:
+
+- **Memoize per site, not globally.** A site carries a handful of distinct
+  genotypes across thousands of samples, so a linear scan over ranges already
+  seen at this site answers almost every sample without materializing its
+  substring. Genotypes of four characters or fewer — every diploid call an
+  ordinary VCF spells — pack whole into one int, so recognizing a repeat is one
+  integer compare.
+- **Don't close over mutated primitives on the hot path.** jbrowse's allele
+  counter accumulates into an object, because a closure mutating a captured
+  primitive forces a V8 `Context` allocation on the per-sample callback. Its
+  non-callback twin uses plain locals, which are faster there. The two are not
+  accidental duplication.
 
 The read path underneath — index, chunks, decompression, and the line scan that
 feeds `parseLine` — is
