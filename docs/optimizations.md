@@ -1,47 +1,52 @@
 # Optimizations
 
-Why the parser looks the way it does. Every method is documented in
-[api.md](api.md); this is the reasoning behind them.
+This is why the parser works the way it does. [api.md](api.md) documents every
+method; this document explains the reasoning behind them.
 
-**The premise:** in a many-sample VCF the line is almost entirely sample columns
-— a 2504-sample 1000 Genomes record is a couple hundred bytes of variant and
-tens of kilobytes of genotypes. So: touch only what the caller asked for, and
-walk it without allocating per sample.
+One fact drives all of it. In a VCF with many samples, the line is mostly sample
+columns. A record from 1000 Genomes has 2504 samples, so it carries a couple
+hundred bytes of variant and tens of kilobytes of genotypes. The parser tries to
+touch as little of that as it can, and to walk what you do ask for without
+allocating memory per sample.
 
-**If you read nothing else:** on a many-sample file reach sample data through
-`processGenotypes`/`processFormatFields`; use `SAMPLES()` only when you really
-do want every field, and then call it once and keep the result. The rest of this
-document is why.
+**If you read nothing else:** on a file with many samples, read sample data with
+`processGenotypes` or `processFormatFields`. Use `SAMPLES()` only when you
+really want every field, and then call it once and keep what it returns.
 
 ## Parsing a line
 
-### Only the first nine columns are split
+### The parser splits only the first nine columns
 
-`new Variant(line, ...)` counts tabs to the ninth, then slices and splits just
-that prefix. Sample columns are never split or sliced; the constructor keeps
-`line` plus `restStart`/`restEnd` offsets. A 3000-sample line costs about what a
-sites-only line costs.
+`new Variant(line, ...)` counts tabs until it reaches the ninth. Then it slices
+that prefix and splits it. It never splits or slices the sample columns. Instead
+the constructor keeps the whole `line`, plus `restStart` and `restEnd` offsets
+that mark where the sample columns begin and end. Parsing a line from a
+3000-sample file therefore costs about what a sites-only line costs.
 
-Fewer than nine tabs means no sample columns: `restStart` lands at or past
-`restEnd`, so every scan below reports nothing rather than needing a special
-case.
+A line with fewer than nine tabs has no sample columns. In that case `restStart`
+lands at or past `restEnd`, so every scan below finds nothing and no special
+case is needed.
 
-### The line terminator is stripped once, up front
+### The constructor strips the line terminator first
 
-Splitting a CRLF file on `\n` leaves a `\r` that would otherwise make a GT read
-as `0/0\r`. The constructor trims it before anything else, so no downstream scan
-has to think about it.
+If you split a CRLF file on `\n`, a `\r` stays behind at the end of the line. It
+would land inside the last field and turn a genotype into `0/0\r`. The
+constructor trims the trailing CR and LF before it does anything else, so no
+later scan has to worry about it.
 
-### INFO is the one eager cost
+### INFO is the one thing parsed eagerly
 
-INFO is a column, not sample data, and typing it needs header metadata only the
-parser holds — so it is parsed even for a `CHROM`/`POS` scan. Two things keep
-the bill down: percent-decoding is skipped unless the raw string contains `%`,
-and a value with no comma skips `split()`.
+The parser reads INFO on every line whether you use it or not. INFO is a column
+rather than sample data, and typing its values needs header metadata that only
+the parser holds. A file with a large INFO column pays for this even when you
+only want `CHROM` and `POS`. Two shortcuts keep the cost down. The parser skips
+percent-decoding unless the raw string contains a `%`, and it skips `split()` on
+a value that has no comma.
 
 ## Reading sample data
 
-Nothing below runs until you call a sample method. Cost per sample:
+None of the work below happens until you call one of the four sample methods.
+Here is what each one allocates per sample.
 
 | method                  | allocates per sample                    |
 | ----------------------- | --------------------------------------- |
@@ -50,124 +55,141 @@ Nothing below runs until you call a sample method. Cost per sample:
 | `GENOTYPES()`           | one string                              |
 | `SAMPLES()`             | one object plus an array per FORMAT key |
 
-The two `process*` methods report each value as a `(start, end)` range plus the
-line itself, so a caller that only needs to _classify_ a genotype never
-materializes the substring.
+The two `process*` methods hand you the line itself and report each value as a
+`start` and `end` range into it. If you only need to classify a genotype, such
+as counting its alleles or picking a color, you never have to build the
+substring.
 
-### The scans walk the flat line, not a `rest` slice
+### The scans walk the flat line instead of a `rest` slice
 
-`Variant` used to hold `rest = line.slice(restStart, restEnd)`. In V8 that is a
-`SlicedString`, and every `charCodeAt` on one pays an extra unwrap — which is
-the entire operation these scans consist of. Passing the flat line with offsets
-measured **1.3x** on a 3202-sample record. `rest` survives as a getter.
+`Variant` used to store `rest = line.slice(restStart, restEnd)`. V8 represents
+that as a `SlicedString`, and every `charCodeAt` call on one has to unwrap it
+first. Unwrapping costs real time here because `charCodeAt` is essentially all
+these scans do. Passing the flat line through with offsets instead ran **1.3x**
+faster on a 3202-sample record. `rest` still exists as a getter, and it builds
+the slice only if you ask for it.
 
-Reported offsets are into whatever string was passed, so `str.slice(start, end)`
-in a consumer is unaffected.
+The offsets in the callbacks point into whichever string the parser passed you,
+so calling `str.slice(start, end)` in your own code still works the same way.
 
-### Long hops use `indexOf`; short ones deliberately don't
+### Long hops use `indexOf`, short ones do not
 
-- Once GT is read, the rest of the sample is dead weight — on the 1000G shape
-  (`GT:AB:AD:DP:GQ:PGT:PID:PL`, ~30 chars/sample) that's most of the line.
-  `indexOf('\t')` skips it with V8's vectorized memchr: **2.3x** over walking
-  byte by byte. `processFormatFields` takes the same hop once every requested
-  key is answered: **1.7x** on `GT:PS:AD:DP:GQ:PL` asked for GT and PS.
-- Short scans keep `charCodeAt` loops on purpose. Reading GT itself, and the
-  `format === 'GT'` fast path, have nothing to skip, and the call costs more
-  than it saves — **0.86x**. Same lesson tabix-js records in
-  [ADR 0003](https://github.com/GMOD/tabix-js/blob/main/agent-docs/adr/0003-keep-indexof-based-byte-scans.md):
-  bytes touched does not predict time.
-- `indexOf` searches to the end of the whole string, so every hit is clamped
-  back to `restEnd`.
+Once the scan has read a sample's genotype, the rest of that sample is dead
+weight. On the shape 1000 Genomes uses, `GT:AB:AD:DP:GQ:PGT:PID:PL` at roughly
+30 characters per sample, that dead weight is most of the line. `indexOf('\t')`
+skips it using V8's vectorized memchr, and that ran **2.3x** faster than walking
+the same bytes one at a time. `processFormatFields` makes the same jump once it
+has answered every key you asked for, which ran **1.7x** faster on a
+`GT:PS:AD:DP:GQ:PL` record queried for GT and PS.
 
-### FORMAT columns are located once, and matched exactly
+The short scans still use `charCodeAt` loops, and that is deliberate. Reading
+the genotype itself has nothing to skip, and neither does the `format === 'GT'`
+fast path. There the call to `indexOf` costs more than it saves, and it measured
+**0.86x**. tabix-js reached the same conclusion for its `Uint8Array` scans in
+[ADR 0003](https://github.com/GMOD/tabix-js/blob/main/agent-docs/adr/0003-keep-indexof-based-byte-scans.md).
+How many bytes you touch does not tell you how long the work will take.
 
-The column index of GT (or of each requested key) is computed from the FORMAT
-string once per record, not per sample. Matching is by exact length and
-characters, so GATK's `PGT` and `PID` are not mistaken for `GT` or `ID` by a
-substring test.
+`indexOf` searches all the way to the end of the string, so the scan clamps
+every hit back to `restEnd`. That is the price of handing the scans the whole
+line rather than a slice of it.
+
+### The parser finds FORMAT columns once, and matches them exactly
+
+The parser works out the column index of GT, or of each key you asked for, once
+per record rather than once per sample. It matches on exact length and exact
+characters. That way it does not mistake GATK's `PGT` for `GT`, or its `PID` for
+`ID`, the way a substring test would.
 
 ### One pass per sample, however many keys you ask for
 
-`processFormatFields` closes out whichever requested keys land on each colon as
-it walks, so five fields cost the same walk as one. Bounds come back in a single
-`Int32Array` reused for every sample — scratch, read inside the callback, not
-retained.
+As `processFormatFields` walks a sample, it closes out whichever of your keys
+land on each colon. Asking for five fields therefore costs the same walk as
+asking for one. The bounds come back in a single `Int32Array` that the parser
+reuses for every sample, so treat it as scratch space. Read it inside the
+callback rather than holding onto it.
 
-If FORMAT declares none of the requested keys, the callback never fires at all,
-matching `processGenotypes` on a GT-less record.
+If FORMAT declares none of the keys you asked for, the callback never fires,
+which matches how `processGenotypes` behaves on a record with no GT.
 
-### `SAMPLES()` is the fallback, and it prices like one
+### `SAMPLES()` is the fallback, and it costs like one
 
-It parses every field of every sample into an object with an array per FORMAT
-key. Two fields from a 2504-sample `GT:AD:DP:GQ:PL` set: **1985ms / 2095MB**,
-against **180ms / 1MB** through `processFormatFields`. It also re-parses on
-every call — call it once and keep the result. Single-valued fields, the common
-case, skip `split()`, which is the bulk of the remaining cost.
+`SAMPLES()` parses every field of every sample into an object, with an array for
+each FORMAT key. Reading two fields that way from a 2504-sample `GT:AD:DP:GQ:PL`
+set took **1985ms and 2095MB**. Reading the same two fields through
+`processFormatFields` took **180ms and 1MB**. `SAMPLES()` also re-parses the
+line every time you call it, so call it once and hold onto the result.
+
+One thing keeps it from being worse. Fields with a single value, which is the
+common case, skip `split()`, and `split()` is most of what remains of the
+method's cost.
 
 ### A sample that stops short still gets a callback
 
-When a sample's fields end before the requested column, the callback fires with
-an empty range (or `-1` bounds) rather than being skipped. That is what makes
-`sampleIdx` trustworthy: it always tracks the header's sample order, so a
-consumer must key off it rather than counting callbacks.
+Sometimes a sample's colon-separated fields run out before the column you asked
+for. The callback still fires, with an empty range or with `-1` bounds. The
+parser never silently skips a sample. That is what makes `sampleIdx` reliable:
+it always follows the sample order from the header. Key off it rather than
+counting the callbacks yourself.
 
 ## What the consumer has to do
 
-The parser can only make sample data cheap to _reach_. Whether a consumer then
-throws that away is a decision above this library.
+The parser can only make sample data cheap to reach. What you do with it after
+that is up to the code above this library.
 
 ### Applies to any consumer
 
-- **One parser per file, constructed from the header once.** The header parse —
-  INFO/FORMAT/ALT/FILTER metadata plus a sample list running to thousands of
-  names — is per file, not per record. The sample names array is also
-  identity-stable, so downstream code can use it to detect two features from the
-  same header.
-- **Read named fields through `processFormatFields`, never `SAMPLES()`.**
-  Reaching one field through the samples object parses every other FORMAT field
-  of every sample to get there.
-- **Fuse the passes into one callback.** If you walk the samples once to
-  classify and again to render, you have paid twice for a traversal that has no
-  intermediate anyone needs.
-- **Key off `sampleIdx`, not a running counter** — see above.
-- **Don't retain `Variant`s from a many-sample file.** A `Variant` holds its
-  whole input line, which is what makes the lazy scans possible. Streaming is
-  fine; collecting a region into an array keeps every line in memory.
-  Serializing a feature (`toJSON`) is the one operation that materializes
-  everything.
+- **Build one parser per file, from the header, once.** Parsing the header
+  covers the INFO, FORMAT, ALT and FILTER metadata, plus a sample list that can
+  run to thousands of names. Do that per file, not per record. The array of
+  sample names also keeps its identity, so your own code can compare it to tell
+  that two features came from the same header.
+- **Read named fields with `processFormatFields`, not `SAMPLES()`.** Getting one
+  field out of the samples object means parsing every other FORMAT field of
+  every sample first.
+- **Do all your work in one callback.** If you walk the samples once to classify
+  them and again to draw them, you have paid twice for a traversal whose
+  intermediate result nobody wants.
+- **Key off `sampleIdx` rather than a counter of your own,** as above.
+- **Do not hold onto `Variant`s from a file with many samples.** Each `Variant`
+  keeps its whole input line, which is exactly what lets the scans stay lazy.
+  Streaming is fine. Collecting a region's worth into an array keeps every one
+  of those lines in memory. Serializing a feature with `toJSON` is the one
+  operation that builds everything at once.
 
-### Worked example: jbrowse-components
+### A worked example: jbrowse-components
 
-What those cost in practice, measured in
-[jbrowse-components](https://github.com/GMOD/jbrowse-components):
+Here is what two of those rules were worth in
+[jbrowse-components](https://github.com/GMOD/jbrowse-components).
 
-- **`processFormatFields` over `SAMPLES()`.** Phase-set coloring needs GT and
-  PS. On a 100-sample phased long-read callset over 2k variants: 343ms / 239MB
-  per fetch through the samples object, against 33ms / 4MB. At 500 samples,
-  1686ms / 1.17GB against 113ms / 4MB.
-- **Fusing the passes.** Genotypes used to cross the RPC boundary as a
-  `Record<sampleName, genotype>` built by `GENOTYPES()`, then walked three more
-  times — legend flags, cell colors, transfer encoding. Four traversals and F×S
-  string allocations for a payload the worker only ships as integer codes. Doing
-  it all in one `processGenotypes` callback took analyze-plus-paint from **613ms
-  to 168ms** on 2504 samples × 400 variants — and the 168ms includes painting
-  the 613ms did not.
+- **`processFormatFields` instead of `SAMPLES()`.** Coloring by phase set needs
+  GT and PS. Reading them through the samples object took 343ms and 239MB per
+  fetch on a 100-sample phased long-read callset across 2k variants, against
+  33ms and 4MB the other way. At 500 samples the gap was 1686ms and 1.17GB
+  against 113ms and 4MB.
+- **Doing the work in one callback.** The genotypes used to cross the RPC
+  boundary as a `Record<sampleName, genotype>`, built by `GENOTYPES()` and then
+  walked three more times: once for the legend flags, once for the cell colors,
+  and once to encode them for transfer. That is four traversals and F×S string
+  allocations, all to rebuild a payload the worker only ever ships as integer
+  codes. Moving it into a single `processGenotypes` callback took the analyze
+  and paint step from **613ms to 168ms** on 2504 samples across 400 variants,
+  and the 168ms covers painting that the 613ms did not.
 
-Two further tricks from the same code, worth knowing if your workload looks like
-this one:
+Two more tricks from the same code. They are worth knowing if your workload
+looks like this one.
 
-- **Memoize per site, not globally.** A site carries a handful of distinct
-  genotypes across thousands of samples, so a linear scan over ranges already
-  seen at this site answers almost every sample without materializing its
-  substring. Genotypes of four characters or fewer — every diploid call an
-  ordinary VCF spells — pack whole into one int, so recognizing a repeat is one
-  integer compare.
-- **Don't close over mutated primitives on the hot path.** jbrowse's allele
-  counter accumulates into an object, because a closure mutating a captured
-  primitive forces a V8 `Context` allocation on the per-sample callback. Its
-  non-callback twin uses plain locals, which are faster there. The two are not
-  accidental duplication.
+- **Memoize per site, not globally.** A single site holds only a handful of
+  distinct genotypes across thousands of samples. A linear scan over the ranges
+  you have already seen at that site answers almost every sample, and it never
+  builds the substring. Genotypes of four characters or fewer, which covers
+  every diploid call an ordinary VCF spells out, pack whole into one integer, so
+  spotting a repeat is a single integer comparison.
+- **Do not close over mutated primitives on the hot path.** jbrowse's allele
+  counter accumulates into an object instead of into captured local variables. A
+  closure that mutates a captured primitive forces V8 to allocate a `Context` on
+  the per-sample callback. Its non-callback twin does use plain locals, which
+  are faster there. The two versions are not duplicated by accident.
 
-The read path underneath — index, chunks, decompression, and the line scan that
-feeds `parseLine` — is
+The layer underneath this one covers the index, the chunks, the decompression,
+and the line scan that produces the strings you pass to `parseLine`. That is
 [tabix-js's own optimizations doc](https://github.com/GMOD/tabix-js/blob/main/docs/optimizations.md).
