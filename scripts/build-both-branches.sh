@@ -31,7 +31,7 @@ build() {
   local ref=$1 out=$2 wt="$SCRATCH/$2"
   echo "Building $ref..."
   git worktree add --quiet --detach "$wt" "$ref"
-  (cd "$wt" && pnpm install --prefer-offline && pnpm build:esm)
+  (cd "$wt" && pnpm install --frozen-lockfile --prefer-offline && pnpm build:esm)
   rm -rf "${ROOT:?}/$out"
   mv "$wt/esm" "$ROOT/$out"
   echo "$ref" >"$ROOT/$out/branchname.txt"
