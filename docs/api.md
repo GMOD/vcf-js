@@ -12,8 +12,8 @@ INFO/FORMAT/ALT/FILTER metadata that types values, plus the sample list.
 
 ## `parser.parseLine(line): Variant`
 
-Parses the first nine columns and returns a `Variant`. Sample columns are not
-touched until a sample method is called; see
+Parses the first nine columns and returns a `Variant`. It leaves the sample
+columns alone until you call a sample method; see
 [optimizations.md](optimizations.md).
 
 ## `parser.samples: string[]`
@@ -60,9 +60,9 @@ when the header doesn't define them.
 }
 ```
 
-INFO and FORMAT values are typed from header metadata. Values are arrays unless
-`Type=Flag`, in which case they are `true`. `.` inside a value becomes
-`undefined`, and `%XX` escapes are percent-decoded.
+Header metadata types the INFO and FORMAT values. Values come back as arrays
+unless `Type=Flag`, where they are `true`. A `.` inside a value becomes
+`undefined`, and the parser percent-decodes `%XX` escapes.
 
 `JSON.stringify(variant)` serializes the columns above only — sample data is not
 included.
@@ -128,10 +128,10 @@ variant.processFormatFields(['GT', 'PS'], (str, ranges, sampleIdx) => {
 })
 ```
 
-Each sample is located in one pass, so the cost is the sample's length however
-many keys you ask for. `ranges` is scratch, reused for every sample — read it
-inside the callback rather than retaining it. If FORMAT declares none of the
-requested keys the callback never fires.
+One pass locates each sample, so it costs the sample's length however many keys
+you ask for. `ranges` is scratch, reused for every sample — read it inside the
+callback rather than retaining it. If FORMAT declares none of the requested keys
+the callback never fires.
 
 Neither `process*` method reads the callback's return value, so there is no
 early exit: both always visit every sample.

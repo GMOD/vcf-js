@@ -26,9 +26,9 @@ work this parser does not do.
 Take the ratios as evidence that one approach beats another, not as a promise of
 what your own machine will do. The benchmark file explains why in more detail:
 whole runs drift by around 40% when the machine is busy, and the first benchmark
-declared in a group is penalized enough to invent a 10-30% gap between two
-functions running identical code. Compare within a run rather than across runs,
-and swap the declaration order before you believe a small difference.
+declared in a group carries enough of a penalty to invent a 10-30% gap between
+two functions running identical code. Compare within a run rather than across
+runs, and swap the declaration order before you believe a small difference.
 
 ## Parsing a line
 
@@ -41,8 +41,8 @@ that mark where the sample columns begin and end. Parsing a line from a
 3000-sample file therefore costs about what a sites-only line costs.
 
 A line with fewer than nine tabs has no sample columns. In that case `restStart`
-lands at or past `restEnd`, so every scan below finds nothing and no special
-case is needed.
+lands at or past `restEnd`, so every scan below finds nothing and needs no
+special case.
 
 ### The constructor strips the line terminator first
 

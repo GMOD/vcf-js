@@ -28,7 +28,7 @@ await tbiIndexed.getLines('ctgA', 200, 300, line => {
 })
 ```
 
-Reuse one parser for all lines — the header is parsed once per `VCF`. Pass
+Reuse one parser for all lines — each `VCF` parses its header once. Pass
 `strict: false` to accept a line with no INFO column; by default `parseLine`
 throws on one, since the spec requires at least a `.` there.
 
@@ -50,12 +50,12 @@ throws on one, since the spec requires at least a `.` there.
 }
 ```
 
-INFO and FORMAT values are typed using header metadata — see
+The header metadata types the INFO and FORMAT values — see
 [docs/api.md](docs/api.md) for the rules, and for `parser.getMetadata`.
 
 ### Sample methods
 
-Sample data is not touched until one of these is called, so lines from a
+Nothing touches the sample data until you call one of these, so lines from a
 many-sample file are cheap to parse if you only need the columns above.
 
 - `variant.SAMPLES()` — all FORMAT fields, keyed by sample name
