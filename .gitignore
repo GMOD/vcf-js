@@ -72,3 +72,5 @@ esm
 *.cpuprofile
 *-results.*
 esm_*/
+.claude/settings.local.json
+.claude/worktrees/
