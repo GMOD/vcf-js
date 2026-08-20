@@ -85,9 +85,27 @@
 
 ## [7.0.7](https://github.com/GMOD/vcf-js/compare/v7.0.6...v7.0.7) (2026-05-19)
 
+### Chores
+
+- Rename the merged workflow back to publish.yml, since npm trusted publishing pins to the exact workflow file path via the OIDC `job_workflow_ref` claim and the merge in 7.0.6 deleted the old publish.yml ([82eaea0](https://github.com/GMOD/vcf-js/commit/82eaea0a7cc33a565d36468809c60e4d1e8ea2d7))
+
 ## [7.0.6](https://github.com/GMOD/vcf-js/compare/v7.0.5...v7.0.6) (2026-05-19)
 
+### Chores
+
+- Merge publish into the push workflow, gating the publish job on `needs: test` plus a tag-ref guard so a tag can't ship without tests passing in the same run ([a28a52d](https://github.com/GMOD/vcf-js/commit/a28a52d3b11344d60b16b251d908881b26327f89))
+
 ## [7.0.5](https://github.com/GMOD/vcf-js/compare/v7.0.4...v7.0.5) (2026-05-18)
+
+### Documentation
+
+- Update the `processGenotypes` callback example in the README with its `sampleIdx` parameter ([588a54f](https://github.com/GMOD/vcf-js/commit/588a54fd768b420cdfff954959405271f1b59435))
+
+### Refactoring
+
+- Have `parseGenotypesOnly` delegate to `processGenotypes`, eliminating ~80 lines of duplicated column-scanning logic across the GT-only/GT-first/GT-elsewhere branches, with benchmarks showing no meaningful regression ([110caba](https://github.com/GMOD/vcf-js/commit/110caba3a7b8b7cc746c7d3244e63508943d9423))
+- Extract shared `MetaField`/`MetaMap` types in place of duplicated inline annotations, type `VCFParser.metadata` precisely instead of `unknown`, narrow `Variant.INFO`/`parseInfo`'s return type, and simplify `parseMetaString` to accumulate its result directly instead of an `entries.push` + `Object.fromEntries` shuffle ([d71082e](https://github.com/GMOD/vcf-js/commit/d71082eca2b0d8942737517df742802de460f5b7))
+- Trim verbose docstrings with redundant type annotations from `parse.ts`/`parseGenotypesOnly.ts` ([97da7bc](https://github.com/GMOD/vcf-js/commit/97da7bc902e11c2f722674f2be7021530abf7b5d))
 
 ## [7.0.4](https://github.com/GMOD/vcf-js/compare/v7.0.3...v7.0.4) (2026-05-18)
 
@@ -114,6 +132,33 @@
   ([6f32a5f](https://github.com/GMOD/vcf-js/commit/6f32a5fce4df5c7ca20d5040273002e98c14342b))
 
 ## [7.0.1](https://github.com/GMOD/vcf-js/compare/v7.0.0...v7.0.1) (2026-04-27)
+
+### Bug Fixes
+
+- Fix publish workflow for npm trusted publishing: remove the empty token override and the `--provenance` flag from `npm publish` ([8b13d5e](https://github.com/GMOD/vcf-js/commit/8b13d5e357d49bb5542ecf9563a2aaf493836be7))
+
+### Chores
+
+- Switch from yarn to pnpm across CI and package.json scripts ([2394d51](https://github.com/GMOD/vcf-js/commit/2394d512fbcbbfd0083b00fc18af042910bbd175))
+- Update devDependencies to latest and add the `@jbrowse/quick-lru` dependency ([8227546](https://github.com/GMOD/vcf-js/commit/8227546d8d2e289c481f9c702ac4c7eb07150144))
+- Use `nodenext` for TypeScript's `module` and `moduleResolution` ([4707902](https://github.com/GMOD/vcf-js/commit/470790282f9803d704aab2f721555965f8116382))
+- Re-enable strict TypeScript ESLint rules (`no-explicit-any`, `ban-ts-comment`, `eqeqeq`, `consistent-type-imports`) and fix the resulting violations across src and test ([a454e9b](https://github.com/GMOD/vcf-js/commit/a454e9b23ff456e04649d2bcac77df67378a5958), [a507285](https://github.com/GMOD/vcf-js/commit/a50728591f4a0281e7733851ec88adcd4579b992))
+- Add CONTRIBUTING.md and an npm publish workflow ([83bee98](https://github.com/GMOD/vcf-js/commit/83bee98a35850e171ada0a14cd72eb93909c3b61))
+- Disable the `no-non-null-assertion` lint rule, drop the stale `engines` field, and add `moduleResolution: bundler` to the ES5 build script ([5619b57](https://github.com/GMOD/vcf-js/commit/5619b571d19a4dacd3a980116f39b1c3e325fba5))
+- Bump devDependency versions and drop the now-unused `@jbrowse/quick-lru` dependency ([17091cc](https://github.com/GMOD/vcf-js/commit/17091cc525c6d10aca57baffd7eb6a22c18e1d84))
+- Simplify package.json's `exports` field (drop redundant nested import/require conditions) and document the trusted-publishing release flow in the README ([92fa712](https://github.com/GMOD/vcf-js/commit/92fa7121064851fe2b7ef52844e2cff54f402788))
+- Drop the unused `documentation` devDependency and its `docs`/`postdocs` scripts ([4b9285a](https://github.com/GMOD/vcf-js/commit/4b9285aee598c014eb48db8b1682a7051bbc681c), [0b7e905](https://github.com/GMOD/vcf-js/commit/0b7e9057fd0952202a96b4ff5e7d09d776351d78))
+
+### Documentation
+
+- Update README examples to ESM imports, dropping the duplicate CommonJS snippet ([14e3a4a](https://github.com/GMOD/vcf-js/commit/14e3a4a588ed7fed75005ee336bc4dd299f74348))
+- Rename branch badges from `master` to `main`, drop the dead codecov badge ([bca0b43](https://github.com/GMOD/vcf-js/commit/bca0b43c5f58bbb26ddfbd11c18e542d4e3298a7))
+- Small README fixes: `let` to `const`, correct code-block language tags, accurate `getMetadata`/`processGenotypes` return types ([11251aa](https://github.com/GMOD/vcf-js/commit/11251aa921b9dcb424f10fd33b4fd016fa3d8cf3))
+- Rewrite the README for accuracy and concision: fix documented FILTER and `getMetadata` types, correct the `processGenotypes` example, document all four breakend bracket forms and `SingleBreakend`, trim redundant prose, and restore the streaming example as its own section ([8d1fdaa](https://github.com/GMOD/vcf-js/commit/8d1fdaafb551e62120e9dc51b0faecffda0d3b07), [4fa65c0](https://github.com/GMOD/vcf-js/commit/4fa65c05355afd977e63e4c49f7bfd44bd1b2d25), [2cc4f13](https://github.com/GMOD/vcf-js/commit/2cc4f13a77b8c0d2a71d2da50d5759a8a36f333d), [6083946](https://github.com/GMOD/vcf-js/commit/608394679d0f9f0577dcd6b7d576e076b582e120))
+
+### Refactoring
+
+- Simplify `parseInfo` by merging the duplicated decode loop in `Variant.ts` ([f707996](https://github.com/GMOD/vcf-js/commit/f70799642b24faed67df0cda411faf8714d1012a))
 
 # [7.0.0](https://github.com/GMOD/vcf-js/compare/v6.1.2...v7.0.0) (2026-01-18)
 
@@ -197,6 +242,11 @@
   ([1aacd89](https://github.com/GMOD/vcf-js/commit/1aacd894a1c6f9a110de963044a1ae953609e8c2))
 
 ## [6.0.3](https://github.com/GMOD/vcf-js/compare/v6.0.2...v6.0.3) (2025-01-16)
+
+### Chores
+
+- Remove the redundant `main`/`types` package.json fields, now covered by the `exports` map ([bb6c37f](https://github.com/GMOD/vcf-js/commit/bb6c37f27851867d8a030c3a9bd1dcd9394f17bc))
+- Bump dependencies
 
 ## [6.0.2](https://github.com/GMOD/vcf-js/compare/v6.0.1...v6.0.2) (2025-01-07)
 
