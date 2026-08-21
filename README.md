@@ -28,6 +28,10 @@ await tbiIndexed.getLines('ctgA', 200, 300, line => {
 })
 ```
 
+For a remote `.vcf.gz`, hand tabix a
+[`@gmod/range-cache-filehandle`](https://github.com/GMOD/range-cache-filehandle)
+filehandle so a query's scattered block reads coalesce into a few requests.
+
 Reuse one parser for all lines — each `VCF` parses its header once. Pass
 `strict: false` to accept a line with no INFO column; by default `parseLine`
 throws on one, since the spec requires at least a `.` there.
