@@ -1,0 +1,16 @@
+##fileformat=VCFv4.3
+##FILTER=<ID=PASS,Description="All filters passed">
+##contig=<ID=1,length=100000>
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths">
+##FORMAT=<ID=PL,Number=G,Type=Integer,Description="Phred-scaled likelihoods">
+##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read depth">
+##bcftools_viewVersion=1.24+htslib-1.24
+##bcftools_viewCommand=view -Oz -o m1.vcf.gz m1.vcf; Date=Tue Sep  1 11:06:26 2026
+##bcftools_mergeVersion=1.24+htslib-1.24
+##bcftools_mergeCommand=merge -L 2 -o merged.local.vcf m1.vcf.gz m2.vcf.gz m3.vcf.gz m4.vcf.gz m5.vcf.gz m6.vcf.gz; Date=Tue Sep  1 11:06:27 2026
+##bcftools_pluginVersion=1.24+htslib-1.24
+##bcftools_pluginCommand=plugin tag2tag -o merged.expanded.vcf -- merged.local.vcf --LXX-to-XX -r; Date=Tue Sep  1 11:06:33 2026
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA1	NA2	NA3	NA4	NA5	NA6
+1	100	.	A	AT,ATT,ATTT,AC,AAT,AGG	.	.	.	GT:GQ:DP:AD:PL	0/1:60:40:10,12,.,.,.,.,.:250,0,300,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.	2/2:60:40:1,.,25,.,.,.,.:500,.,.,70,.,0,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.	3/0:60:40:2,.,.,9,.,.,.:600,.,.,.,.,.,180,.,.,150,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.	0/4:60:40:7,.,.,.,8,.,.:140,.,.,.,.,.,.,.,.,.,0,.,.,.,190,.,.,.,.,.,.,.,.,.,.,.,.,.	0/0:60:40:31,.,.,.,.,1,.:0,.,.,.,.,.,.,.,.,.,.,.,.,.,.,95,.,.,.,.,450,.,.,.,.,.,.,.	6/6:60:40:0,.,.,.,.,.,22:380,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,66,.,.,.,.,.,0

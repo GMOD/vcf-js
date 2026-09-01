@@ -82,6 +82,30 @@ variant.processGenotypes((str, start, end, sampleIdx) => {
 })
 ```
 
+## Local alleles
+
+VCF 4.5 records can give a sample's FORMAT values against a subset of the site's
+alleles (`LAA` plus `LAD`, `LPL`, and friends). `GT` stays globally indexed, so
+genotype readers need no changes; for the rest, `decodeLocalAlleles` reports a
+sample's local fields under their non-local keys:
+
+```typescript
+import VCF, { decodeLocalAlleles } from '@gmod/vcf'
+
+const sample = decodeLocalAlleles(
+  variant.SAMPLES().NA00001!,
+  variant.ALT!.length,
+)
+sample.AD // expanded from LAD
+sample.PL // expanded from LPL
+```
+
+That expansion is quadratic in the ALT count for `Number=G` fields — the cost
+local alleles exist to avoid — so a whole-file pass should use the
+allocation-free `readLocalAlleles` instead. See
+[docs/local-alleles.md](docs/local-alleles.md) for that path, the memoized
+genotype mapping, and the spec corners worth knowing about.
+
 ## Performance
 
 On a many-sample file the choice of sample method dominates everything else —

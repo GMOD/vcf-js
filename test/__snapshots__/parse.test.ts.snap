@@ -101,6 +101,56 @@ exports[`can get metadata from the header 1`] = `
       "Number": 2,
       "Type": "Integer",
     },
+    "LAA": {
+      "Description": "1-based indices into ALT, indicating which alleles are relevant (local) for the current sample",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "LAD": {
+      "Description": "Local-allele representation of AD",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LADF": {
+      "Description": "Local-allele representation of ADF",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LADR": {
+      "Description": "Local-allele representation of ADR",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LEC": {
+      "Description": "Local-allele representation of EC",
+      "Number": "LA",
+      "Type": "Integer",
+    },
+    "LEN": {
+      "Description": "Length of <*> reference block",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "LGL": {
+      "Description": "Local-allele representation of GL",
+      "Number": "LG",
+      "Type": "Float",
+    },
+    "LGP": {
+      "Description": "Local-allele representation of GP",
+      "Number": "LG",
+      "Type": "Float",
+    },
+    "LPL": {
+      "Description": "Local-allele representation of PL",
+      "Number": "LG",
+      "Type": "Integer",
+    },
+    "LPP": {
+      "Description": "Local-allele representation of PP",
+      "Number": "LG",
+      "Type": "Integer",
+    },
     "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
@@ -108,6 +158,11 @@ exports[`can get metadata from the header 1`] = `
     },
     "PL": {
       "Description": "List of Phred-scaled genotype likelihoods",
+      "Number": "G",
+      "Type": "Integer",
+    },
+    "PP": {
+      "Description": "Phred-scaled genotype posterior probabilities",
       "Number": "G",
       "Type": "Integer",
     },
@@ -1127,6 +1182,56 @@ exports[`clinvar metadata 1`] = `
       "Number": 2,
       "Type": "Integer",
     },
+    "LAA": {
+      "Description": "1-based indices into ALT, indicating which alleles are relevant (local) for the current sample",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "LAD": {
+      "Description": "Local-allele representation of AD",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LADF": {
+      "Description": "Local-allele representation of ADF",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LADR": {
+      "Description": "Local-allele representation of ADR",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LEC": {
+      "Description": "Local-allele representation of EC",
+      "Number": "LA",
+      "Type": "Integer",
+    },
+    "LEN": {
+      "Description": "Length of <*> reference block",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "LGL": {
+      "Description": "Local-allele representation of GL",
+      "Number": "LG",
+      "Type": "Float",
+    },
+    "LGP": {
+      "Description": "Local-allele representation of GP",
+      "Number": "LG",
+      "Type": "Float",
+    },
+    "LPL": {
+      "Description": "Local-allele representation of PL",
+      "Number": "LG",
+      "Type": "Integer",
+    },
+    "LPP": {
+      "Description": "Local-allele representation of PP",
+      "Number": "LG",
+      "Type": "Integer",
+    },
     "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
@@ -1134,6 +1239,11 @@ exports[`clinvar metadata 1`] = `
     },
     "PL": {
       "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+      "Number": "G",
+      "Type": "Integer",
+    },
+    "PP": {
+      "Description": "Phred-scaled genotype posterior probabilities",
       "Number": "G",
       "Type": "Integer",
     },
@@ -1705,6 +1815,56 @@ exports[`pedigree 1`] = `
       "Number": 2,
       "Type": "Integer",
     },
+    "LAA": {
+      "Description": "1-based indices into ALT, indicating which alleles are relevant (local) for the current sample",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "LAD": {
+      "Description": "Local-allele representation of AD",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LADF": {
+      "Description": "Local-allele representation of ADF",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LADR": {
+      "Description": "Local-allele representation of ADR",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LEC": {
+      "Description": "Local-allele representation of EC",
+      "Number": "LA",
+      "Type": "Integer",
+    },
+    "LEN": {
+      "Description": "Length of <*> reference block",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "LGL": {
+      "Description": "Local-allele representation of GL",
+      "Number": "LG",
+      "Type": "Float",
+    },
+    "LGP": {
+      "Description": "Local-allele representation of GP",
+      "Number": "LG",
+      "Type": "Float",
+    },
+    "LPL": {
+      "Description": "Local-allele representation of PL",
+      "Number": "LG",
+      "Type": "Integer",
+    },
+    "LPP": {
+      "Description": "Local-allele representation of PP",
+      "Number": "LG",
+      "Type": "Integer",
+    },
     "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
@@ -1712,6 +1872,11 @@ exports[`pedigree 1`] = `
     },
     "PL": {
       "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+      "Number": "G",
+      "Type": "Integer",
+    },
+    "PP": {
+      "Description": "Phred-scaled genotype posterior probabilities",
       "Number": "G",
       "Type": "Integer",
     },
@@ -2989,6 +3154,56 @@ exports[`x simple spec 1`] = `
       "Number": 2,
       "Type": "Integer",
     },
+    "LAA": {
+      "Description": "1-based indices into ALT, indicating which alleles are relevant (local) for the current sample",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "LAD": {
+      "Description": "Local-allele representation of AD",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LADF": {
+      "Description": "Local-allele representation of ADF",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LADR": {
+      "Description": "Local-allele representation of ADR",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LEC": {
+      "Description": "Local-allele representation of EC",
+      "Number": "LA",
+      "Type": "Integer",
+    },
+    "LEN": {
+      "Description": "Length of <*> reference block",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "LGL": {
+      "Description": "Local-allele representation of GL",
+      "Number": "LG",
+      "Type": "Float",
+    },
+    "LGP": {
+      "Description": "Local-allele representation of GP",
+      "Number": "LG",
+      "Type": "Float",
+    },
+    "LPL": {
+      "Description": "Local-allele representation of PL",
+      "Number": "LG",
+      "Type": "Integer",
+    },
+    "LPP": {
+      "Description": "Local-allele representation of PP",
+      "Number": "LG",
+      "Type": "Integer",
+    },
     "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
@@ -2996,6 +3211,11 @@ exports[`x simple spec 1`] = `
     },
     "PL": {
       "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+      "Number": "G",
+      "Type": "Integer",
+    },
+    "PP": {
+      "Description": "Phred-scaled genotype posterior probabilities",
       "Number": "G",
       "Type": "Integer",
     },
@@ -3686,6 +3906,56 @@ exports[`x vcf44 spec 1`] = `
       "Number": 2,
       "Type": "Integer",
     },
+    "LAA": {
+      "Description": "1-based indices into ALT, indicating which alleles are relevant (local) for the current sample",
+      "Number": null,
+      "Type": "Integer",
+    },
+    "LAD": {
+      "Description": "Local-allele representation of AD",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LADF": {
+      "Description": "Local-allele representation of ADF",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LADR": {
+      "Description": "Local-allele representation of ADR",
+      "Number": "LR",
+      "Type": "Integer",
+    },
+    "LEC": {
+      "Description": "Local-allele representation of EC",
+      "Number": "LA",
+      "Type": "Integer",
+    },
+    "LEN": {
+      "Description": "Length of <*> reference block",
+      "Number": 1,
+      "Type": "Integer",
+    },
+    "LGL": {
+      "Description": "Local-allele representation of GL",
+      "Number": "LG",
+      "Type": "Float",
+    },
+    "LGP": {
+      "Description": "Local-allele representation of GP",
+      "Number": "LG",
+      "Type": "Float",
+    },
+    "LPL": {
+      "Description": "Local-allele representation of PL",
+      "Number": "LG",
+      "Type": "Integer",
+    },
+    "LPP": {
+      "Description": "Local-allele representation of PP",
+      "Number": "LG",
+      "Type": "Integer",
+    },
     "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
@@ -3693,6 +3963,11 @@ exports[`x vcf44 spec 1`] = `
     },
     "PL": {
       "Description": "Phred-scaled genotype likelihoods rounded to the closest integer",
+      "Number": "G",
+      "Type": "Integer",
+    },
+    "PP": {
+      "Description": "Phred-scaled genotype posterior probabilities",
       "Number": "G",
       "Type": "Integer",
     },
