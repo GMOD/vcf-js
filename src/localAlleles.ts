@@ -264,33 +264,76 @@ const LOCAL_A = { LEC: 'EC' }
 const LOCAL_G = { LPL: 'PL', LGL: 'GL', LGP: 'GP', LPP: 'PP' }
 
 /**
+ * Attach `key` to `out` as a value computed on first read and remembered after,
+ * so a caller that wants AD off a decoded sample never pays to reconstruct the
+ * PL sitting beside it.
+ */
+function defineLazy(out: SampleData, key: string, compute: () => SampleValue) {
+  let value: SampleValue
+  let computed = false
+  Object.defineProperty(out, key, {
+    configurable: true,
+    enumerable: true,
+    get() {
+      if (!computed) {
+        value = compute()
+        computed = true
+      }
+      return value
+    },
+    set(next: SampleValue) {
+      value = next
+      computed = true
+    },
+  })
+}
+
+/**
  * The abstraction the spec asks libraries to provide: one sample's local-allele
  * fields reported under their non-local keys, against the record's full allele
  * list. Local keys are kept alongside, and a global key the sample already
  * carries wins over the local one it duplicates.
  *
- * This is the convenience path, sized for detail panels rather than whole-file
- * scans — expanding LPL is quadratic in ALT count, the very cost local alleles
- * exist to avoid, so a many-sample pass should map the few indices it needs
- * with `localGenotypeMap` instead.
+ * Each expanded field is reconstructed on first read rather than up front. A
+ * `Number=G` field costs `C(alleleCount + ploidy - 1, ploidy)` entries — 1891 of
+ * them for a diploid 60-ALT site — and a caller reading depths should not pay
+ * for likelihoods it never looks at. Enumerating the result (spreading it,
+ * `Object.values`, `JSON.stringify`) reads every key and so materializes
+ * everything, which is what a panel listing the whole sample wants anyway.
+ *
+ * Still the convenience path: a whole-file pass wants `readLocalAlleles` and
+ * `LocalAlleleGenotypeMaps`, which map the few indices it needs and allocate
+ * nothing per sample.
  */
 export function decodeLocalAlleles(sample: SampleData, altCount: number) {
-  const alleles = localAlleles(sample.LAA)
   const alleleCount = altCount + 1
   const out: SampleData = { ...sample }
+  // shared across the fields below, and itself deferred: a sample with no local
+  // field read never parses LAA
+  let alleles: number[] | undefined
+  const localAlleleList = () => {
+    alleles ??= localAlleles(sample.LAA)
+    return alleles
+  }
   for (const [local, global] of Object.entries(LOCAL_R)) {
     if (local in sample && !(global in sample)) {
-      out[global] = localToGlobalR(sample[local], alleles, alleleCount)
+      defineLazy(out, global, () =>
+        localToGlobalR(sample[local], localAlleleList(), alleleCount),
+      )
     }
   }
   for (const [local, global] of Object.entries(LOCAL_A)) {
     if (local in sample && !(global in sample)) {
-      out[global] = localToGlobalA(sample[local], alleles, altCount)
+      defineLazy(out, global, () =>
+        localToGlobalA(sample[local], localAlleleList(), altCount),
+      )
     }
   }
   for (const [local, global] of Object.entries(LOCAL_G)) {
     if (local in sample && !(global in sample)) {
-      out[global] = localToGlobalG(sample[local], alleles, alleleCount)
+      defineLazy(out, global, () =>
+        localToGlobalG(sample[local], localAlleleList(), alleleCount),
+      )
     }
   }
   return out

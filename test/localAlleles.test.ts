@@ -16,6 +16,8 @@ import VCF, {
   readLocalAlleles,
 } from '../src/index.ts'
 
+import type { SampleData } from '../src/index.ts'
+
 const readVcf = (file: string) => {
   const f = readFileSync(file, 'utf8')
   const header = [] as string[]
@@ -286,4 +288,44 @@ test('the allocation-free path reads local depths under processFormatFields', ()
       expect(altDepth[i * altCount + a]).toBe(ad[a + 1] ?? 0)
     }
   }
+})
+
+test('decoded fields are reconstructed on first read, not up front', () => {
+  const sample: SampleData = { LAA: [2, 4], LAD: [20, 30, 10] }
+  const decoded = decodeLocalAlleles(sample, 4)
+  // nothing built yet, so a change to the source still reaches the first read
+  sample.LAD = [1, 2, 3]
+  expect(decoded.AD).toEqual([1, undefined, 2, undefined, 3])
+  // and remembered after it, so a later change does not
+  sample.LAD = [9, 9, 9]
+  expect(decoded.AD).toEqual([1, undefined, 2, undefined, 3])
+})
+
+test('enumerating a decoded sample materializes every field', () => {
+  const decoded = decodeLocalAlleles(
+    { LAA: [2], LAD: [1, 2], LPL: [5, 6, 7] },
+    2,
+  )
+  expect({ ...decoded }).toEqual({
+    LAA: [2],
+    LAD: [1, 2],
+    LPL: [5, 6, 7],
+    AD: [1, undefined, 2],
+    PL: [5, undefined, undefined, 6, undefined, 7],
+  })
+})
+
+test('a decoded field can be overwritten', () => {
+  const decoded = decodeLocalAlleles({ LAA: [1], LAD: [3, 4] }, 2)
+  decoded.AD = [1, 2, 3]
+  expect(decoded.AD).toEqual([1, 2, 3])
+})
+
+test('a sample with no local fields decodes to a plain copy', () => {
+  const sample: SampleData = { GT: ['0/1'], AD: [5, 6] }
+  const decoded = decodeLocalAlleles(sample, 1)
+  expect(decoded).toEqual(sample)
+  // a plain value rather than an accessor onto the source
+  sample.AD = [7, 8]
+  expect(decoded.AD).toEqual([5, 6])
 })

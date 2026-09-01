@@ -100,9 +100,10 @@ sample.AD // expanded from LAD
 sample.PL // expanded from LPL
 ```
 
-That expansion is quadratic in the ALT count for `Number=G` fields — the cost
-local alleles exist to avoid — so a whole-file pass should use the
-allocation-free `readLocalAlleles` instead. See
+Each field is expanded on first read and remembered, so asking for `AD` never
+builds the `PL` beside it — which matters because `Number=G` is quadratic in the
+ALT count, the cost local alleles exist to avoid. A whole-file pass should skip
+the expansion entirely and use the allocation-free `readLocalAlleles`. See
 [docs/local-alleles.md](docs/local-alleles.md) for that path, the memoized
 genotype mapping, and the spec corners worth knowing about.
 

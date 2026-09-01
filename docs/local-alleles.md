@@ -39,22 +39,34 @@ A global key the sample already carries wins over the local one it duplicates,
 which is what the spec's "must encode identical information or one must be
 ignored" rule amounts to in practice.
 
+## What decodes when
+
+Nothing decodes until asked. `SAMPLES()` reports local fields raw, exactly as
+the line spells them, and `decodeLocalAlleles` then reconstructs each expanded
+field on first read and remembers it — so a panel that shows depths never builds
+the likelihoods sitting beside them. Enumerating the result (spreading it,
+`Object.values`, `JSON.stringify`) reads every key and materializes everything,
+which is what a view listing the whole sample wants anyway.
+
+That matters because `Number=G` is where the size goes: a diploid 60-ALT site
+has 1891 genotypes, against 61 for `Number=R`. Measured over
+`benchmark/localAlleles.bench.ts` at 5000 samples, reading only `AD` stays flat
+as the ALT count grows, while also reading `PL` does not:
+
+| 5000 samples                                | 4 ALTs | 20 ALTs | 60 ALTs |
+| ------------------------------------------- | ------ | ------- | ------- |
+| `processFormatFields` + `readLocalAlleles`  | 0.8ms  | 0.9ms   | 1.0ms   |
+| `SAMPLES()` + decode, reading `AD`          | 23ms   | 26ms    | 26ms    |
+| `SAMPLES()` + decode, reading `AD` and `PL` | 29ms   | 34ms    | 83ms    |
+
 ## Reading many samples
 
-`decodeLocalAlleles` reconstructs the full-width vectors, and that cost is the
-one local alleles exist to avoid — measured across
-`benchmark/localAlleles.bench.ts` at 5000 samples, expanding every sample runs
-23x the cost of scanning them at 4 ALTs and 44x at 60, because the
-reconstruction grows with the ALT count while the scan does not:
-
-| 5000 samples                               | 4 ALTs | 20 ALTs | 60 ALTs |
-| ------------------------------------------ | ------ | ------- | ------- |
-| `processFormatFields` + `readLocalAlleles` | 0.97ms | 1.05ms  | 1.19ms  |
-| `SAMPLES()` + `decodeLocalAlleles`         | 21.9ms | 26.2ms  | 52.0ms  |
-
-So use it for detail panels and per-record inspection, and for a whole-file pass
-map the few indices you need instead. `readLocalAlleles` fills a reusable
-`Int32Array` from a `processFormatFields` range, allocating nothing per sample:
+Even reading one field, the decode path is ~30x the cost of scanning, because
+`SAMPLES()` builds an object and an array per FORMAT key before any of this
+starts. So use it for detail panels and per-record inspection, and for a
+whole-file pass map the few indices you need instead. `readLocalAlleles` fills a
+reusable `Int32Array` from a `processFormatFields` range, allocating nothing per
+sample:
 
 ```typescript
 const alleles = new Int32Array(altCount + 1)

@@ -67,13 +67,27 @@ for (const altCount of ALT_COUNTS) {
         },
         opts,
       )
-      // the convenience path: SAMPLES() plus a full expansion per sample
+      // the convenience path, reading only the depths - the lazy PL beside them
+      // is never built
       bench(
-        'SAMPLES + decodeLocalAlleles',
+        'SAMPLES + decodeLocalAlleles, AD only',
         () => {
           const all = variant.SAMPLES()
           for (const name of variant.sampleNames) {
-            decodeLocalAlleles(all[name]!, altCount)
+            decodeLocalAlleles(all[name]!, altCount).AD
+          }
+        },
+        opts,
+      )
+      // and reading everything, which is what enumerating the sample costs
+      bench(
+        'SAMPLES + decodeLocalAlleles, AD and PL',
+        () => {
+          const all = variant.SAMPLES()
+          for (const name of variant.sampleNames) {
+            const decoded = decodeLocalAlleles(all[name]!, altCount)
+            void decoded.AD
+            void decoded.PL
           }
         },
         opts,
