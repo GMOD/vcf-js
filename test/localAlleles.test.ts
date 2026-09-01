@@ -5,16 +5,19 @@ import { expect, test } from 'vitest'
 import VCF, {
   LocalAlleleGenotypeMaps,
   decodeLocalAlleles,
-  genotypeCount,
-  genotypeIndex,
   localAlleles,
-  localGenotypeMap,
   localToGlobalA,
   localToGlobalG,
   localToGlobalR,
-  ploidyForLocalGenotypes,
   readLocalAlleles,
 } from '../src/index.ts'
+// not part of the package's public surface, exercised here directly
+import {
+  genotypeCount,
+  genotypeIndex,
+  localGenotypeMap,
+  ploidyForLocalGenotypes,
+} from '../src/localAlleles.ts'
 
 import type { SampleData } from '../src/index.ts'
 

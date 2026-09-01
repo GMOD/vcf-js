@@ -100,7 +100,7 @@ const map = maps.get(alleles, count, 2)
 ## Things that bite
 
 **Ploidy comes from the value count first, then GT.** `GT` can be MISSING while
-the likelihoods are not, so `localToGlobalG` solves `genotypeCount(n, ploidy)`
+the likelihoods are not, so `localToGlobalG` solves `C(n + ploidy - 1, ploidy)`
 against the field's length. A REF-only sample is the one case that cannot be
 solved — it has exactly one genotype at every ploidy — and there `GT` settles
 it, falling back to diploid only when `GT` is MISSING too. Guessing diploid
