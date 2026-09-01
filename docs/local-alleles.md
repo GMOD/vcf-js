@@ -99,11 +99,13 @@ const map = maps.get(alleles, count, 2)
 
 ## Things that bite
 
-**Ploidy comes from the value count, not from GT.** `GT` can be MISSING while
+**Ploidy comes from the value count first, then GT.** `GT` can be MISSING while
 the likelihoods are not, so `localToGlobalG` solves `genotypeCount(n, ploidy)`
 against the field's length. A REF-only sample is the one case that cannot be
-solved — it has exactly one genotype at every ploidy — and falls back to the
-hint, which defaults to diploid.
+solved — it has exactly one genotype at every ploidy — and there `GT` settles
+it, falling back to diploid only when `GT` is MISSING too. Guessing diploid
+outright would widen a haploid chrY or chrM reference block to 15 entries where
+it should have 5.
 
 **`LAA` need not be sorted.** The spec defines it as "the order in which they
 are interpreted", and the `Index(k1/.../kP)` formula it gives for genotype
