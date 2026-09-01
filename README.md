@@ -5,6 +5,9 @@ VCF (variant call format) parser
 [![NPM version](https://img.shields.io/npm/v/@gmod/vcf.svg?logo=npm&style=flat-square)](https://npmjs.org/package/@gmod/vcf)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/GMOD/vcf-js/publish.yml?branch=main&style=flat-square)](https://github.com/GMOD/vcf-js/actions/workflows/publish.yml)
 
+Supports the VCF 4.5 local-allele encoding (`LAA` with `LAD`, `LPL`, and
+friends), decoded transparently — see [Local alleles](#local-alleles).
+
 ## Install
 
 ```sh
