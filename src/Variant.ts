@@ -1,3 +1,8 @@
+import {
+  applyLocalAlleleFields,
+  hasLocalAlleleFields,
+  localAlleleFields,
+} from './localAlleles.ts'
 import { parseGenotypesOnly } from './parseGenotypesOnly.ts'
 import { parseInfo } from './parseInfo.ts'
 import { processFormatFields } from './processFormatFields.ts'
@@ -118,6 +123,17 @@ export class Variant {
         const t = this.formatMeta[k]?.Type
         return t === 'Integer' || t === 'Float'
       })
+      // VCF 4.5 local-allele fields are reported under their non-local keys
+      // too, as the spec asks libraries to do, so a consumer reading AD does
+      // not have to know whether the record wrote AD or LAD. Decided once for
+      // the record: a file without them pays one scan of the FORMAT keys, and
+      // the expansions themselves are built only if something reads them.
+      const localFields = hasLocalAlleleFields(formatKeys)
+        ? localAlleleFields(
+            formatKeys,
+            this.ALT === undefined ? 0 : this.ALT.length,
+          )
+        : undefined
       const numKeys = formatKeys.length
       const samplesLen = this.sampleNames.length
       for (let i = 0; i < samplesLen; i++) {
@@ -155,6 +171,9 @@ export class Variant {
               break
             }
           }
+        }
+        if (localFields) {
+          applyLocalAlleleFields(sampleData, localFields)
         }
         genotypes[sample] = sampleData
       }

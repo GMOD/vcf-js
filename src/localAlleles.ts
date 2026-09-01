@@ -263,36 +263,114 @@ const LOCAL_R = { LAD: 'AD', LADF: 'ADF', LADR: 'ADR' }
 const LOCAL_A = { LEC: 'EC' }
 const LOCAL_G = { LPL: 'PL', LGL: 'GL', LGP: 'GP', LPP: 'PP' }
 
+const LOCAL_KEYS = new Set([
+  ...Object.keys(LOCAL_R),
+  ...Object.keys(LOCAL_A),
+  ...Object.keys(LOCAL_G),
+])
+
+/** Whether any of a record's FORMAT keys is a local-allele field. */
+export function hasLocalAlleleFields(formatKeys: string[]) {
+  return formatKeys.some(key => LOCAL_KEYS.has(key))
+}
+
+export interface LocalAlleleField {
+  local: string
+  global: string
+  descriptor: PropertyDescriptor
+}
+
 /**
- * Attach `key` to `out` as a value computed on first read and remembered after,
- * so a caller that wants AD off a decoded sample never pays to reconstruct the
- * PL sitting beside it.
+ * The accessors a record's local-allele fields need, built once for the record
+ * and then attached to each sample. Every sample shares these getters — they
+ * read the sample through `this` rather than through a capture — so a record
+ * with many samples allocates no closures here, only the property slots.
+ *
+ * Each getter replaces itself with the value it computed, which both memoizes
+ * it and leaves an ordinary data property behind.
  */
-function defineLazy(out: SampleData, key: string, compute: () => SampleValue) {
-  let value: SampleValue
-  let computed = false
-  Object.defineProperty(out, key, {
-    configurable: true,
-    enumerable: true,
-    get() {
-      if (!computed) {
-        value = compute()
-        computed = true
-      }
-      return value
-    },
-    set(next: SampleValue) {
-      value = next
-      computed = true
-    },
-  })
+export function localAlleleFields(formatKeys: string[], altCount: number) {
+  const alleleCount = altCount + 1
+  const fields: LocalAlleleField[] = []
+  const add = (
+    local: string,
+    global: string,
+    compute: (values: SampleValue, list: number[]) => SampleValue,
+  ) => {
+    if (formatKeys.includes(local)) {
+      fields.push({
+        local,
+        global,
+        descriptor: {
+          configurable: true,
+          enumerable: true,
+          get(this: SampleData) {
+            const value = compute(this[local], localAlleles(this.LAA))
+            Object.defineProperty(this, global, {
+              configurable: true,
+              enumerable: true,
+              writable: true,
+              value,
+            })
+            return value
+          },
+          set(this: SampleData, value: SampleValue) {
+            Object.defineProperty(this, global, {
+              configurable: true,
+              enumerable: true,
+              writable: true,
+              value,
+            })
+          },
+        },
+      })
+    }
+  }
+  for (const [local, global] of Object.entries(LOCAL_R)) {
+    add(local, global, (values, list) =>
+      localToGlobalR(values, list, alleleCount),
+    )
+  }
+  for (const [local, global] of Object.entries(LOCAL_A)) {
+    add(local, global, (values, list) => localToGlobalA(values, list, altCount))
+  }
+  for (const [local, global] of Object.entries(LOCAL_G)) {
+    add(local, global, (values, list) =>
+      localToGlobalG(values, list, alleleCount),
+    )
+  }
+  return fields
+}
+
+/**
+ * Attach a record's local-allele accessors to one sample.
+ *
+ * A global field the sample already carries wins over the local one it
+ * duplicates — the spec has them encode identical information anyway — but the
+ * test is on the value rather than the key, since the escape hatch it offers is
+ * for one of the pair to be MISSING, and a MISSING field still has a FORMAT
+ * column and so still has a key. That makes this per-sample rather than
+ * per-record: one sample can carry a real AD while the next leaves it MISSING
+ * and means its LAD.
+ */
+export function applyLocalAlleleFields(
+  sample: SampleData,
+  fields: LocalAlleleField[],
+) {
+  for (const { local, global, descriptor } of fields) {
+    if (sample[local] !== undefined && sample[global] === undefined) {
+      Object.defineProperty(sample, global, descriptor)
+    }
+  }
 }
 
 /**
  * The abstraction the spec asks libraries to provide: one sample's local-allele
  * fields reported under their non-local keys, against the record's full allele
- * list. Local keys are kept alongside, and a global key the sample already
- * carries wins over the local one it duplicates.
+ * list. Local keys are kept alongside.
+ *
+ * `SAMPLES()` already applies this to a record whose FORMAT declares local
+ * fields, so reach for it only on sample data assembled some other way.
  *
  * Each expanded field is reconstructed on first read rather than up front. A
  * `Number=G` field costs `C(alleleCount + ploidy - 1, ploidy)` entries — 1891 of
@@ -300,41 +378,9 @@ function defineLazy(out: SampleData, key: string, compute: () => SampleValue) {
  * for likelihoods it never looks at. Enumerating the result (spreading it,
  * `Object.values`, `JSON.stringify`) reads every key and so materializes
  * everything, which is what a panel listing the whole sample wants anyway.
- *
- * Still the convenience path: a whole-file pass wants `readLocalAlleles` and
- * `LocalAlleleGenotypeMaps`, which map the few indices it needs and allocate
- * nothing per sample.
  */
 export function decodeLocalAlleles(sample: SampleData, altCount: number) {
-  const alleleCount = altCount + 1
   const out: SampleData = { ...sample }
-  // shared across the fields below, and itself deferred: a sample with no local
-  // field read never parses LAA
-  let alleles: number[] | undefined
-  const localAlleleList = () => {
-    alleles ??= localAlleles(sample.LAA)
-    return alleles
-  }
-  for (const [local, global] of Object.entries(LOCAL_R)) {
-    if (local in sample && !(global in sample)) {
-      defineLazy(out, global, () =>
-        localToGlobalR(sample[local], localAlleleList(), alleleCount),
-      )
-    }
-  }
-  for (const [local, global] of Object.entries(LOCAL_A)) {
-    if (local in sample && !(global in sample)) {
-      defineLazy(out, global, () =>
-        localToGlobalA(sample[local], localAlleleList(), altCount),
-      )
-    }
-  }
-  for (const [local, global] of Object.entries(LOCAL_G)) {
-    if (local in sample && !(global in sample)) {
-      defineLazy(out, global, () =>
-        localToGlobalG(sample[local], localAlleleList(), alleleCount),
-      )
-    }
-  }
+  applyLocalAlleleFields(out, localAlleleFields(Object.keys(sample), altCount))
   return out
 }

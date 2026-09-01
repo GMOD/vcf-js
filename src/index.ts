@@ -5,9 +5,12 @@ export type { FormatFieldsCallback } from './processFormatFields.ts'
 export type { InfoValue, MetaField, MetaMap } from './parseInfo.ts'
 export {
   LocalAlleleGenotypeMaps,
+  applyLocalAlleleFields,
   decodeLocalAlleles,
   genotypeCount,
   genotypeIndex,
+  hasLocalAlleleFields,
+  localAlleleFields,
   localAlleles,
   localGenotypeMap,
   localToGlobalA,

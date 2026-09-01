@@ -19,54 +19,61 @@ The local-allele keys are `LAD`, `LADF`, `LADR` (`Number=LR`), `LEC`
 uses local alleles, so anything that reads only genotypes needs no changes at
 all.
 
-For everything else, `decodeLocalAlleles` is the abstraction the spec asks
-libraries to provide: it reports a sample's local fields under their non-local
-keys.
+Everything else `SAMPLES()` reports under both keys. The spec asks that "local
+allele encoding can be abstracted away from the API consumer and values accessed
+through their corresponding non-local key", so a consumer that has never heard
+of local alleles reads `AD` and gets the right thing:
 
 ```typescript
-import VCF, { decodeLocalAlleles } from '@gmod/vcf'
-
-const variant = parser.parseLine(line)
-const altCount = variant.ALT?.length ?? 0
-const samples = variant.SAMPLES()
-const sample = decodeLocalAlleles(samples.NA00001!, altCount)
-sample.AD // expanded from LAD, indexed over REF + every ALT
-sample.PL // expanded from LPL
+const sample = variant.SAMPLES().NA00001!
+sample.AD // from the record's AD, or expanded from its LAD
+sample.PL // from the record's PL, or expanded from its LPL
 sample.LAD // the local field is kept alongside
 ```
 
-A global key the sample already carries wins over the local one it duplicates,
-which is what the spec's "must encode identical information or one must be
-ignored" rule amounts to in practice.
+`decodeLocalAlleles` does the same to sample data assembled some other way.
+
+Where a sample carries both a field and its local equivalent, the global one
+wins. The spec has the pair encode identical information anyway, and offers
+MISSING as the way to say which to ignore — so the test is on the value, not on
+whether FORMAT declares the column: a sample whose `AD` is `.` still defers to
+its `LAD`, and the sample beside it with a real `AD` does not.
 
 ## What decodes when
 
-Nothing decodes until asked. `SAMPLES()` reports local fields raw, exactly as
-the line spells them, and `decodeLocalAlleles` then reconstructs each expanded
-field on first read and remembers it — so a panel that shows depths never builds
-the likelihoods sitting beside them. Enumerating the result (spreading it,
-`Object.values`, `JSON.stringify`) reads every key and materializes everything,
-which is what a view listing the whole sample wants anyway.
+Nothing decodes until asked. Each expanded field is an accessor that
+reconstructs on first read and then replaces itself with the value, so a panel
+showing depths never builds the likelihoods sitting beside them. Enumerating a
+sample (spreading it, `Object.keys`, `JSON.stringify`) reads every key and
+materializes everything, which is what a view listing the whole sample wants.
 
-That matters because `Number=G` is where the size goes: a diploid 60-ALT site
-has 1891 genotypes, against 61 for `Number=R`. Measured over
+Two costs, both paid only by records that use local alleles. Whether to attach
+the accessors at all is decided once per record from its FORMAT keys, so a file
+without local fields is untouched — measured at 5000 samples, `SAMPLES()` on a
+`GT:AD:DP:GQ:PL` record is unchanged. On a record that does use them, attaching
+the accessors costs about 1.5x (7.9ms to 12.1ms at 5000 samples); the getters
+themselves are built once for the record and shared by every sample, so what is
+left is the property slots rather than a closure apiece.
+
+The second cost is the expansion, and it is why the accessors are lazy:
+`Number=G` is quadratic in the allele count — a diploid 60-ALT site has 1891
+genotypes against 61 for `Number=R`. Measured over
 `benchmark/localAlleles.bench.ts` at 5000 samples, reading only `AD` stays flat
 as the ALT count grows, while also reading `PL` does not:
 
-| 5000 samples                                | 4 ALTs | 20 ALTs | 60 ALTs |
-| ------------------------------------------- | ------ | ------- | ------- |
-| `processFormatFields` + `readLocalAlleles`  | 0.8ms  | 0.9ms   | 1.0ms   |
-| `SAMPLES()` + decode, reading `AD`          | 23ms   | 26ms    | 26ms    |
-| `SAMPLES()` + decode, reading `AD` and `PL` | 29ms   | 34ms    | 83ms    |
+| 5000 samples                               | 4 ALTs | 20 ALTs | 60 ALTs |
+| ------------------------------------------ | ------ | ------- | ------- |
+| `processFormatFields` + `readLocalAlleles` | 0.8ms  | 0.9ms   | 1.0ms   |
+| `SAMPLES()`, reading `AD`                  | 23ms   | 26ms    | 26ms    |
+| `SAMPLES()`, reading `AD` and `PL`         | 29ms   | 34ms    | 83ms    |
 
 ## Reading many samples
 
-Even reading one field, the decode path is ~30x the cost of scanning, because
-`SAMPLES()` builds an object and an array per FORMAT key before any of this
-starts. So use it for detail panels and per-record inspection, and for a
-whole-file pass map the few indices you need instead. `readLocalAlleles` fills a
-reusable `Int32Array` from a `processFormatFields` range, allocating nothing per
-sample:
+Even reading one field, `SAMPLES()` is ~30x the cost of scanning, because it
+builds an object and an array per FORMAT key before any of this starts. So use
+it for detail panels and per-record inspection, and for a whole-file pass map
+the few indices you need instead. `readLocalAlleles` fills a reusable
+`Int32Array` from a `processFormatFields` range, allocating nothing per sample:
 
 ```typescript
 const alleles = new Int32Array(altCount + 1)

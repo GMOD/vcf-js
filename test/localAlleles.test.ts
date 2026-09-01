@@ -293,12 +293,14 @@ test('the allocation-free path reads local depths under processFormatFields', ()
 test('decoded fields are reconstructed on first read, not up front', () => {
   const sample: SampleData = { LAA: [2, 4], LAD: [20, 30, 10] }
   const decoded = decodeLocalAlleles(sample, 4)
-  // nothing built yet, so a change to the source still reaches the first read
-  sample.LAD = [1, 2, 3]
+  // nothing built yet, so a change to LAD still reaches the first read of AD
+  decoded.LAD = [1, 2, 3]
   expect(decoded.AD).toEqual([1, undefined, 2, undefined, 3])
   // and remembered after it, so a later change does not
-  sample.LAD = [9, 9, 9]
+  decoded.LAD = [9, 9, 9]
   expect(decoded.AD).toEqual([1, undefined, 2, undefined, 3])
+  // the decoded sample is its own object either way
+  expect(sample.AD).toBeUndefined()
 })
 
 test('enumerating a decoded sample materializes every field', () => {
@@ -328,4 +330,70 @@ test('a sample with no local fields decodes to a plain copy', () => {
   // a plain value rather than an accessor onto the source
   sample.AD = [7, 8]
   expect(decoded.AD).toEqual([5, 6])
+})
+
+test('SAMPLES reports local fields under their non-local keys', () => {
+  const variant = parse('test/data/local-alleles.vcf')[0]!
+  const sample = variant.SAMPLES().NA3!
+  // nothing here mentions local alleles
+  expect(sample.AD).toEqual([
+    2,
+    undefined,
+    undefined,
+    9,
+    undefined,
+    undefined,
+    undefined,
+  ])
+  expect(sample.PL![6]).toBe(180)
+  expect(sample.PL![9]).toBe(150)
+  expect(sample.LAD).toEqual([2, 9])
+})
+
+test('SAMPLES matches the bcftools --LXX-to-XX expansion for every sample', () => {
+  const local = parse('test/data/local-alleles.vcf')
+  const expanded = parse('test/data/local-alleles.expanded.vcf')
+  for (const [i, variant] of local.entries()) {
+    const localSamples = variant.SAMPLES()
+    const globalSamples = expanded[i]!.SAMPLES()
+    for (const name of variant.sampleNames) {
+      expect({ name, ...localSamples[name] }).toMatchObject({
+        name,
+        AD: globalSamples[name]!.AD,
+        PL: globalSamples[name]!.PL,
+      })
+    }
+  }
+})
+
+test('a MISSING global field defers to its local equivalent', () => {
+  // the spec lets either of the pair be ignored "by containing the MISSING
+  // value", and a MISSING field still occupies a FORMAT column
+  const parser = new VCF({
+    header: [
+      '##fileformat=VCFv4.5',
+      '##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">',
+      '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1\tS2',
+    ].join('\n'),
+  })
+  const variant = parser.parseLine(
+    '1\t100\t.\tG\tA,C,T\t.\t.\t.\tGT:AD:LAA:LAD\t0/2:.:2:7,8\t0/2:1,2,3,4:2:7,8',
+  )
+  const samples = variant.SAMPLES()
+  expect(samples.S1!.AD).toEqual([7, undefined, 8, undefined])
+  // and a global field that is actually present wins
+  expect(samples.S2!.AD).toEqual([1, 2, 3, 4])
+})
+
+test('a record without local fields gains no extra keys', () => {
+  const parser = new VCF({
+    header: [
+      '##fileformat=VCFv4.3',
+      '##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">',
+      '##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Depths">',
+      '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1',
+    ].join('\n'),
+  })
+  const variant = parser.parseLine('1\t100\t.\tG\tA\t.\t.\t.\tGT:AD\t0/1:5,6')
+  expect(Object.keys(variant.SAMPLES().S1!)).toEqual(['GT', 'AD'])
 })

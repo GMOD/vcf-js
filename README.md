@@ -85,25 +85,21 @@ variant.processGenotypes((str, start, end, sampleIdx) => {
 ## Local alleles
 
 VCF 4.5 records can give a sample's FORMAT values against a subset of the site's
-alleles (`LAA` plus `LAD`, `LPL`, and friends). `GT` stays globally indexed, so
-genotype readers need no changes; for the rest, `decodeLocalAlleles` reports a
-sample's local fields under their non-local keys:
+alleles (`LAA` plus `LAD`, `LPL`, and friends). `SAMPLES()` reports those under
+their non-local keys as well, which is the transparency the spec asks libraries
+for — read `AD` and you get it whether the record wrote `AD` or `LAD`:
 
 ```typescript
-import VCF, { decodeLocalAlleles } from '@gmod/vcf'
-
-const sample = decodeLocalAlleles(
-  variant.SAMPLES().NA00001!,
-  variant.ALT!.length,
-)
-sample.AD // expanded from LAD
-sample.PL // expanded from LPL
+const sample = variant.SAMPLES().NA00001!
+sample.AD // from the record's AD, or expanded from its LAD
+sample.PL // from the record's PL, or expanded from its LPL
 ```
 
-Each field is expanded on first read and remembered, so asking for `AD` never
-builds the `PL` beside it — which matters because `Number=G` is quadratic in the
-ALT count, the cost local alleles exist to avoid. A whole-file pass should skip
-the expansion entirely and use the allocation-free `readLocalAlleles`. See
+`GT` keeps global allele indices either way, so genotype readers are unaffected,
+and a record with no local fields is untouched. Expansion happens on first read,
+since `Number=G` fields are quadratic in the ALT count — the cost local alleles
+exist to avoid. A whole-file pass should skip it entirely and use the
+allocation-free `readLocalAlleles`. See
 [docs/local-alleles.md](docs/local-alleles.md) for that path, the memoized
 genotype mapping, and the spec corners worth knowing about.
 
