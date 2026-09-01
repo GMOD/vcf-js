@@ -397,3 +397,42 @@ test('a record without local fields gains no extra keys', () => {
   const variant = parser.parseLine('1\t100\t.\tG\tA\t.\t.\t.\tGT:AD\t0/1:5,6')
   expect(Object.keys(variant.SAMPLES().S1!)).toEqual(['GT', 'AD'])
 })
+
+test('a REF-only sample takes its ploidy from GT', () => {
+  const parser = new VCF({
+    header: [
+      '##fileformat=VCFv4.5',
+      '##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">',
+      '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tHAP\tDIP\tTRIP',
+    ].join('\n'),
+  })
+  // LPL is one value at every ploidy for a REF-only sample, so its own length
+  // cannot say which - a diploid guess would widen a haploid chrY or chrM
+  // record to 15 entries instead of 5
+  const variant = parser.parseLine(
+    '1\t100\t.\tG\tA,C,T,<*>\t.\t.\t.\tGT:LAA:LAD:LPL\t0:.:30:0\t0/0:.:30:0\t0|0|0:.:30:0',
+  )
+  const samples = variant.SAMPLES()
+  expect(samples.HAP!.PL).toHaveLength(5)
+  expect(samples.DIP!.PL).toHaveLength(15)
+  expect(samples.TRIP!.PL).toHaveLength(35)
+  // and the value still lands on the all-REF genotype, which is index 0 at
+  // every ploidy
+  expect(samples.HAP!.PL![0]).toBe(0)
+  expect(samples.TRIP!.PL![0]).toBe(0)
+})
+
+test('an unambiguous local count wins over the GT ploidy', () => {
+  const parser = new VCF({
+    header: [
+      '##fileformat=VCFv4.5',
+      '##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">',
+      '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tS1',
+    ].join('\n'),
+  })
+  // two local alleles with three LPL values is diploid, whatever GT says
+  const variant = parser.parseLine(
+    '1\t100\t.\tG\tA,C,T,<*>\t.\t.\t.\tGT:LAA:LPL\t2:2:40,0,80',
+  )
+  expect(variant.SAMPLES().S1!.PL).toHaveLength(15)
+})

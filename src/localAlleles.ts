@@ -1,7 +1,9 @@
 import type { SampleData, SampleValue } from './Variant.ts'
 
 const COMMA = 44
+const SLASH = 47
 const ZERO = 48
+const PIPE = 124
 const NINE = 57
 
 const MAX_PLOIDY = 12
@@ -237,7 +239,7 @@ export function localToGlobalG(
   values: SampleValue,
   alleles: ArrayLike<number>,
   alleleCount: number,
-  ploidyHint = 2,
+  ploidyHint: number | undefined = 2,
 ) {
   const localCount = alleles.length
   const ploidy =
@@ -274,6 +276,27 @@ export function hasLocalAlleleFields(formatKeys: string[]) {
   return formatKeys.some(key => LOCAL_KEYS.has(key))
 }
 
+/**
+ * Ploidy of a parsed GT, by counting its allele separators. Used only to settle
+ * a `Number=LG` field whose own length cannot: a REF-only sample has exactly one
+ * genotype at every ploidy, so its LPL says nothing, and a diploid guess would
+ * expand a haploid chrY or chrM record to the wrong width.
+ */
+function ploidyFromGenotype(gt: SampleValue) {
+  const value = gt === undefined ? undefined : gt[0]
+  let ploidy: number | undefined
+  if (typeof value === 'string' && value.length > 0) {
+    ploidy = 1
+    for (let i = 0; i < value.length; i++) {
+      const c = value.charCodeAt(i)
+      if (c === SLASH || c === PIPE) {
+        ploidy++
+      }
+    }
+  }
+  return ploidy
+}
+
 export interface LocalAlleleField {
   local: string
   global: string
@@ -295,7 +318,11 @@ export function localAlleleFields(formatKeys: string[], altCount: number) {
   const add = (
     local: string,
     global: string,
-    compute: (values: SampleValue, list: number[]) => SampleValue,
+    compute: (
+      sample: SampleData,
+      values: SampleValue,
+      list: number[],
+    ) => SampleValue,
   ) => {
     if (formatKeys.includes(local)) {
       fields.push({
@@ -305,7 +332,7 @@ export function localAlleleFields(formatKeys: string[], altCount: number) {
           configurable: true,
           enumerable: true,
           get(this: SampleData) {
-            const value = compute(this[local], localAlleles(this.LAA))
+            const value = compute(this, this[local], localAlleles(this.LAA))
             Object.defineProperty(this, global, {
               configurable: true,
               enumerable: true,
@@ -327,16 +354,18 @@ export function localAlleleFields(formatKeys: string[], altCount: number) {
     }
   }
   for (const [local, global] of Object.entries(LOCAL_R)) {
-    add(local, global, (values, list) =>
+    add(local, global, (sample, values, list) =>
       localToGlobalR(values, list, alleleCount),
     )
   }
   for (const [local, global] of Object.entries(LOCAL_A)) {
-    add(local, global, (values, list) => localToGlobalA(values, list, altCount))
+    add(local, global, (sample, values, list) =>
+      localToGlobalA(values, list, altCount),
+    )
   }
   for (const [local, global] of Object.entries(LOCAL_G)) {
-    add(local, global, (values, list) =>
-      localToGlobalG(values, list, alleleCount),
+    add(local, global, (sample, values, list) =>
+      localToGlobalG(values, list, alleleCount, ploidyFromGenotype(sample.GT)),
     )
   }
   return fields
