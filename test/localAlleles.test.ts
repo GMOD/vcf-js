@@ -116,9 +116,11 @@ test('the spec worked example round-trips', () => {
 
 test('LAA given out of order is honoured in its stated order', () => {
   // LAA=[4,2], so local allele 1 is global 4 and local allele 2 is global 2.
-  // The cross term is local 1/2 = global {4,2}, which must be sorted to 2/4
-  // before indexing: the spec's Index() formula is only defined for ascending
-  // alleles. bcftools 1.24 applies it unsorted and lands on 1/3 instead.
+  // The cross term is local 1/2 = global {4,2}, sorted to 2/4 before indexing
+  // since the spec's Index() formula is only defined for ascending alleles.
+  // Whether an unsorted LAA is legal at all is unsettled - bcftools assumes it
+  // is not and lands on 1/3 here - so this is the defensive reading, and is
+  // identical to bcftools' whenever LAA is already ascending.
   const alleles = [0, 4, 2]
   expect(localToGlobalR([5, 6, 7], alleles, 5)).toEqual([
     5,

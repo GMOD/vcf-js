@@ -107,13 +107,18 @@ it, falling back to diploid only when `GT` is MISSING too. Guessing diploid
 outright would widen a haploid chrY or chrM reference block to 15 entries where
 it should have 5.
 
-**`LAA` need not be sorted.** The spec defines it as "the order in which they
-are interpreted", and the `Index(k1/.../kP)` formula it gives for genotype
-ordering is only valid for ascending alleles. Mapping a local genotype to a
-global one therefore has to sort the allele tuple before indexing it. bcftools
-1.24 does not: for `LAA=4,2` it places the local `1/2` value at global index 7
-(genotype 1/3) rather than 12 (genotype 2/4). The other values in that record
-agree with this implementation.
+**Whether `LAA` may be unsorted is unsettled.** The spec defines it as "the
+order in which they are interpreted" and never requires ascending order, but the
+`Index(k1/.../kP)` formula it gives for genotype ordering is only valid for
+ascending alleles. This implementation sorts the mapped allele tuple before
+indexing, which is identical to not sorting whenever `LAA` is already ascending
+— so it only differs on input the ecosystem may not consider valid in the first
+place. bcftools assumes ascending and does not sort: for `LAA=4,2` it places the
+local `1/2` value at global index 7 (genotype 1/3) rather than 12 (2/4). Its
+maintainer treats unsorted `LAA` as a writer bug (hts-specs#758, on DRAGEN's UK
+Biobank files), while requiring sorted `LAA` was argued against as awkward for
+merging (hts-specs#434). Since the shipped text says neither, sorting here is
+the defensive reading rather than a claim that bcftools is wrong.
 
 **`LAA` is not necessarily early in FORMAT.** The spec says it "must precede all
 fields other than GT", but `bcftools merge -L` writes it last —
