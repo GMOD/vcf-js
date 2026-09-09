@@ -173,5 +173,7 @@ and the edge cases.
 - [docs/api.md](docs/api.md) — every constructor arg, method and type
 - [docs/optimizations.md](docs/optimizations.md) — why the parser is lazy about
   sample data, what that measured, and what a consumer has to do
+- [docs/local-alleles.md](docs/local-alleles.md) — how VCF 4.5 local alleles
+  decode, what they cost, and where the spec runs out
 - [CONTRIBUTING.md](CONTRIBUTING.md) — development, benchmarking and release
   steps
