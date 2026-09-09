@@ -37,6 +37,9 @@ Reuse one parser for all lines — each `VCF` parses its header once. Pass
 `strict: false` to accept a line with no INFO column; by default `parseLine`
 throws on one, since the spec requires at least a `.` there.
 
+The VCF 4.5 local-allele encoding (`LAA` with `LAD`, `LPL`, and friends) is
+decoded transparently — see [Local alleles](#local-alleles).
+
 ## Variant
 
 `parseLine(line)` returns a `Variant`:
@@ -81,6 +84,27 @@ variant.processGenotypes((str, start, end, sampleIdx) => {
   }
 })
 ```
+
+## Local alleles
+
+VCF 4.5 records can give a sample's FORMAT values against a subset of the site's
+alleles (`LAA` plus `LAD`, `LPL`, and friends). `SAMPLES()` reports those under
+their non-local keys as well, which is the transparency the spec asks libraries
+for — read `AD` and you get it whether the record wrote `AD` or `LAD`:
+
+```typescript
+const sample = variant.SAMPLES().NA00001!
+sample.AD // from the record's AD, or expanded from its LAD
+sample.PL // from the record's PL, or expanded from its LPL
+```
+
+`GT` keeps global allele indices either way, so genotype readers are unaffected,
+and a record with no local fields is untouched. Expansion happens on first read,
+since `Number=G` fields are quadratic in the ALT count — the cost local alleles
+exist to avoid. A whole-file pass should skip it entirely and use the
+allocation-free `readLocalAlleles`. See
+[docs/local-alleles.md](docs/local-alleles.md) for that path, the memoized
+genotype mapping, and the spec corners worth knowing about.
 
 ## Performance
 
@@ -149,5 +173,7 @@ and the edge cases.
 - [docs/api.md](docs/api.md) — every constructor arg, method and type
 - [docs/optimizations.md](docs/optimizations.md) — why the parser is lazy about
   sample data, what that measured, and what a consumer has to do
+- [docs/local-alleles.md](docs/local-alleles.md) — how VCF 4.5 local alleles
+  decode, what they cost, and where the spec runs out
 - [CONTRIBUTING.md](CONTRIBUTING.md) — development, benchmarking and release
   steps

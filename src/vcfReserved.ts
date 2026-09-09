@@ -311,6 +311,63 @@ export default {
       Type: 'Integer',
       Description: 'Phase set',
     },
+    // from the VCF4.5 spec, https://samtools.github.io/hts-specs/VCFv4.5.pdf
+    PP: {
+      Number: 'G',
+      Type: 'Integer',
+      Description: 'Phred-scaled genotype posterior probabilities',
+    },
+    LEN: {
+      Number: 1,
+      Type: 'Integer',
+      Description: 'Length of <*> reference block',
+    },
+    LAA: {
+      Number: null,
+      Type: 'Integer',
+      Description:
+        '1-based indices into ALT, indicating which alleles are relevant (local) for the current sample',
+    },
+    LAD: {
+      Number: 'LR',
+      Type: 'Integer',
+      Description: 'Local-allele representation of AD',
+    },
+    LADF: {
+      Number: 'LR',
+      Type: 'Integer',
+      Description: 'Local-allele representation of ADF',
+    },
+    LADR: {
+      Number: 'LR',
+      Type: 'Integer',
+      Description: 'Local-allele representation of ADR',
+    },
+    LEC: {
+      Number: 'LA',
+      Type: 'Integer',
+      Description: 'Local-allele representation of EC',
+    },
+    LGL: {
+      Number: 'LG',
+      Type: 'Float',
+      Description: 'Local-allele representation of GL',
+    },
+    LGP: {
+      Number: 'LG',
+      Type: 'Float',
+      Description: 'Local-allele representation of GP',
+    },
+    LPL: {
+      Number: 'LG',
+      Type: 'Integer',
+      Description: 'Local-allele representation of PL',
+    },
+    LPP: {
+      Number: 'LG',
+      Type: 'Integer',
+      Description: 'Local-allele representation of PP',
+    },
   },
 
   // ALT fields

@@ -80,6 +80,11 @@ Re-parses on every call — call it once and keep the result — and costs an ob
 plus an array per sample. Prefer `processFormatFields` when you want particular
 fields.
 
+A record carrying VCF 4.5 local-allele fields also reports them under their
+non-local keys, so a sample can hold an `AD` its FORMAT never declared, expanded
+from `LAD`. Those keys are lazy accessors that reconstruct on first read; the
+local keys stay alongside them. See [docs/local-alleles.md](local-alleles.md).
+
 ### `variant.GENOTYPES(): Record<string, string>`
 
 GT strings only, keyed by sample name. Returns a null-prototype object, so use
@@ -183,8 +188,37 @@ parseBreakend('ACGT<DUP>')
 // { Join: 'right', Replacement: 'ACGT', MateDirection: 'right', MatePosition: '<DUP>:1' }
 ```
 
+## Local alleles
+
+VCF 4.5's local-allele encoding, decoded. `SAMPLES()` applies it already — reach
+for these only for sample data assembled some other way, or for a whole-file
+pass that cannot afford `SAMPLES()`. [docs/local-alleles.md](local-alleles.md)
+has the reasoning, the costs and the spec corners.
+
+| Export                                                      | What it does                                                                                                |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `decodeLocalAlleles(sample, altCount)`                      | A copy of one sample with its local fields also reported under their non-local keys, expanded on first read |
+| `localAlleles(laa)`                                         | The local allele list `[0, ...LAA]` from a parsed `LAA` value                                               |
+| `localToGlobalR(values, alleles, alleleCount)`              | Expand a `Number=LR` field (`LAD`, `LADF`, `LADR`) to `Number=R`                                            |
+| `localToGlobalA(values, alleles, altCount)`                 | Expand a `Number=LA` field (`LEC`) to `Number=A`                                                            |
+| `localToGlobalG(values, alleles, alleleCount, ploidyHint?)` | Expand a `Number=LG` field (`LPL`, `LGL`, `LGP`, `LPP`) to `Number=G`                                       |
+| `readLocalAlleles(str, start, end, out)`                    | Fill `out` from a `processFormatFields` range, returning the count — allocates nothing per sample           |
+| `LocalAlleleGenotypeMaps`                                   | `.get(alleles, count, ploidy)` memoizes the local-to-global genotype permutation across samples             |
+
+`alleles` throughout is the local allele list, REF first, in the order `LAA`
+states — which need not ascend, and which decides the order local genotypes are
+enumerated in.
+
+`localToGlobalG` takes ploidy from the value count where that is unambiguous,
+falling back to `ploidyHint` (default 2) for a REF-only sample, which has one
+genotype at every ploidy. Its output is `C(alleleCount + ploidy - 1, ploidy)`
+long, so a high-ploidy site with many ALTs expands to an array JS cannot
+allocate — the cost local alleles exist to avoid.
+
 ## Exports
 
-`default` (the parser), `Variant`, `parseBreakend`, and the types `Breakend`,
-`Samples`, `SampleData`, `SampleValue`, `InfoValue`, `MetaMap`, `MetaField`,
-`GenotypeCallback`, `FormatFieldsCallback`.
+`default` (the parser), `Variant`, `parseBreakend`, the local-allele exports
+above (`decodeLocalAlleles`, `localAlleles`, `localToGlobalR`, `localToGlobalA`,
+`localToGlobalG`, `readLocalAlleles`, `LocalAlleleGenotypeMaps`), and the types
+`Breakend`, `Samples`, `SampleData`, `SampleValue`, `InfoValue`, `MetaMap`,
+`MetaField`, `GenotypeCallback`, `FormatFieldsCallback`.
