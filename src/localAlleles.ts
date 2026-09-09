@@ -23,10 +23,10 @@ export function genotypeCount(alleleCount: number, ploidy: number) {
 
 /**
  * Position of a genotype in the GL/PL ordering, per the spec's
- * `Index(k1/.../kP) = sum C(km + m - 1, m)`. That formula holds only for
- * ascending `alleles`, which is why every caller here sorts first: LAA may be
- * given in any order, and feeding the formula an unsorted pair silently returns
- * the index of a different genotype.
+ * `Index(k1/.../kP) = sum C(km + m - 1, m)`. Defined only for ascending
+ * `alleles`: a genotype is an unordered multiset, so a caller holding one in
+ * some other order has to sort before asking. Feeding the formula a descending
+ * pair returns the index of a different genotype rather than failing.
  */
 export function genotypeIndex(alleles: ArrayLike<number>) {
   let index = 0
@@ -105,6 +105,12 @@ export function readLocalAlleles(
  * set. Depends only on the alleles and the ploidy, never on the values, so a
  * caller reading many samples should build it once per distinct LAA — that is
  * what `LocalAlleleGenotypeMaps` is for.
+ *
+ * Local genotypes are enumerated over local indices, so an unsorted LAA orders
+ * them differently; the alleles they map to are then sorted, since a genotype
+ * is a multiset and `genotypeIndex` wants it ascending. bcftools instead
+ * indexes the mapped tuple as-is, so the two disagree on the cross terms of an
+ * unsorted LAA — see docs/local-alleles.md.
  */
 export function localGenotypeMap(
   alleles: ArrayLike<number>,

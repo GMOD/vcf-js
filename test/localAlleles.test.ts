@@ -120,10 +120,8 @@ test('the spec worked example round-trips', () => {
 test('LAA given out of order is honoured in its stated order', () => {
   // LAA=[4,2], so local allele 1 is global 4 and local allele 2 is global 2.
   // The cross term is local 1/2 = global {4,2}, sorted to 2/4 before indexing
-  // since the spec's Index() formula is only defined for ascending alleles.
-  // Whether an unsorted LAA is legal at all is unsettled - bcftools assumes it
-  // is not and lands on 1/3 here - so this is the defensive reading, and is
-  // identical to bcftools' whenever LAA is already ascending.
+  // since the spec's Index() formula is defined only for ascending alleles.
+  // bcftools indexes the tuple unsorted and lands on 1/3 instead.
   const alleles = [0, 4, 2]
   expect(localToGlobalR([5, 6, 7], alleles, 5)).toEqual([
     5,
@@ -139,6 +137,24 @@ test('LAA given out of order is honoured in its stated order', () => {
   expect(pl[3]).toBe(44)
   expect(pl[12]).toBe(55)
   expect(pl[5]).toBe(66)
+})
+
+test('the two orderings of one local allele set decode alike', () => {
+  // the same genotype spelled both ways round: LAA=[4,2] enumerates its local
+  // genotypes in a different order from LAA=[2,4], so the LPL values are
+  // permuted to match, and both must land on the same global vectors. This is
+  // what sorting the mapped tuple buys, and what bcftools 1.24 does not do -
+  // it puts the cross term at global index 7 rather than 12 for the unsorted
+  // spelling, so its two expansions disagree
+  const up = [0, 2, 4]
+  const down = [0, 4, 2]
+  expect(localToGlobalR([5, 6, 7], down, 5)).toEqual(
+    localToGlobalR([5, 7, 6], up, 5),
+  )
+  expect(localToGlobalG([11, 22, 33, 44, 55, 66], down, 5)).toEqual(
+    localToGlobalG([11, 44, 66, 22, 55, 33], up, 5),
+  )
+  expect(localToGlobalG([11, 44, 66, 22, 55, 33], up, 5)[12]).toBe(55)
 })
 
 test('Number=LA expands over ALT alone', () => {

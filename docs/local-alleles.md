@@ -107,18 +107,50 @@ it, falling back to diploid only when `GT` is MISSING too. Guessing diploid
 outright would widen a haploid chrY or chrM reference block to 15 entries where
 it should have 5.
 
-**Whether `LAA` may be unsorted is unsettled.** The spec defines it as "the
-order in which they are interpreted" and never requires ascending order, but the
-`Index(k1/.../kP)` formula it gives for genotype ordering is only valid for
-ascending alleles. This implementation sorts the mapped allele tuple before
-indexing, which is identical to not sorting whenever `LAA` is already ascending
-— so it only differs on input the ecosystem may not consider valid in the first
-place. bcftools assumes ascending and does not sort: for `LAA=4,2` it places the
-local `1/2` value at global index 7 (genotype 1/3) rather than 12 (2/4). Its
-maintainer treats unsorted `LAA` as a writer bug (hts-specs#758, on DRAGEN's UK
-Biobank files), while requiring sorted `LAA` was argued against as awkward for
-merging (hts-specs#434). Since the shipped text says neither, sorting here is
-the defensive reading rather than a claim that bcftools is wrong.
+**Sorting the mapped tuple is not the same question as whether `LAA` is
+sorted.** Two orderings get conflated here, so they are worth separating.
+
+The first is settled: `LAA` need not ascend. The 4.5 draft did require it — "a
+sorted list of n distinct integers", "the strictly increasing index into REF and
+ALT" — and hts-specs commit `be3b990` deleted every such phrase before #758
+merged, replacing them with "the order in which they are interpreted", a clause
+it added twice. So the shipped text permits `LAA=4,2` and makes its stated order
+load-bearing: local genotypes are enumerated over local _indices_, so `LAA=4,2`
+and `LAA=2,4` order the same six `LPL` values differently.
+
+The second is not a spec question at all. `Index(k1/.../kP)` is defined only for
+ascending arguments, and a genotype is an unordered multiset of alleles, so
+mapping local `1/2` under `LAA=4,2` to global `{4,2}` and asking for its index
+means asking for the index of `2/4`. Sorting is what the formula requires, not a
+reading of anything — and where `LAA` already ascends it is a no-op.
+
+What the spec genuinely leaves open is narrower than either, and only bites
+`Number=LG`: having permitted an unsorted `LAA`, it never says how a local
+genotype's alleles land in the _global_ genotype ordering. `Number=LR` and
+`Number=LA` have no such gap, since they are indexed by allele identity.
+
+bcftools 1.24 resolves it the other way — it feeds the mapped tuple to the
+formula unsorted. Both samples below carry the same information, differing only
+in the order `LAA` names the alleles:
+
+```
+GT:LAA:LAD:LPL  2/4:4,2:5,6,7:11,22,33,44,55,66
+GT:LAA:LAD:LPL  2/4:2,4:5,7,6:11,44,66,22,55,33
+```
+
+Through `bcftools +tag2tag -- --LXX-to-XX` the `AD`s agree (`5,.,7,.,6` for
+both, so bcftools does honour an unsorted `LAA` for `Number=LR`), while the
+`PL`s do not: the cross term lands at global index 7 (genotype `1/3`) for the
+unsorted spelling and 12 (`2/4`) for the sorted one. This implementation gives
+12 for both, which is the point of sorting — two spellings of one genotype
+decode alike.
+
+The divergence is therefore confined to `Number=LG` fields whose `LAA` does not
+ascend, and it is where the ecosystem was already unsure: pd3 called unsorted
+`LAA` in DRAGEN's UK Biobank VCFs a writer bug against the draft's then-standing
+ascending requirement (hts-specs#758, eight days before that requirement was
+removed), while requiring sorted `LAA` had been argued against as "annoying when
+merging files" (hts-specs#434).
 
 **`LAA` is not necessarily early in FORMAT.** The spec says it "must precede all
 fields other than GT", but `bcftools merge -L` writes it last —
