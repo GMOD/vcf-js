@@ -2,7 +2,7 @@
 
 ## `new VCF({ header, strict })`
 
-| Arg      | Type       | Description                                                                                                    |
+| arg      | type       | description                                                                                                    |
 | -------- | ---------- | -------------------------------------------------------------------------------------------------------------- |
 | `header` | `string`   | The whole VCF header, `##` lines through the `#CHROM` line. Throws if empty, malformed, or missing `#CHROM`    |
 | `strict` | `boolean?` | Default `true`. When true, `parseLine` throws on a line with no INFO column, which the spec requires to be `.` |
@@ -192,10 +192,10 @@ parseBreakend('ACGT<DUP>')
 
 VCF 4.5's local-allele encoding, decoded. `SAMPLES()` applies it already — reach
 for these only for sample data assembled some other way, or for a whole-file
-pass that cannot afford `SAMPLES()`. [docs/local-alleles.md](local-alleles.md)
+pass where `SAMPLES()` costs too much. [docs/local-alleles.md](local-alleles.md)
 has the reasoning, the costs and the spec corners.
 
-| Export                                                      | What it does                                                                                                |
+| export                                                      | what it does                                                                                                |
 | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `decodeLocalAlleles(sample, altCount)`                      | A copy of one sample with its local fields also reported under their non-local keys, expanded on first read |
 | `localAlleles(laa)`                                         | The local allele list `[0, ...LAA]` from a parsed `LAA` value                                               |
@@ -206,14 +206,14 @@ has the reasoning, the costs and the spec corners.
 | `LocalAlleleGenotypeMaps`                                   | `.get(alleles, count, ploidy)` memoizes the local-to-global genotype permutation across samples             |
 
 `alleles` throughout is the local allele list, REF first, in the order `LAA`
-states — which need not ascend, and which decides the order local genotypes are
+lists — which need not ascend, and which decides the order local genotypes are
 enumerated in.
 
 `localToGlobalG` takes ploidy from the value count where that is unambiguous,
 falling back to `ploidyHint` (default 2) for a REF-only sample, which has one
 genotype at every ploidy. Its output is `C(alleleCount + ploidy - 1, ploidy)`
 long, so a high-ploidy site with many ALTs expands to an array JS cannot
-allocate — the cost local alleles exist to avoid.
+allocate — the cost the local-allele encoding avoids.
 
 ## Exports
 

@@ -19,10 +19,10 @@ The local-allele keys are `LAD`, `LADF`, `LADR` (`Number=LR`), `LEC`
 uses local alleles, so anything that reads only genotypes needs no changes at
 all.
 
-Everything else `SAMPLES()` reports under both keys. The spec asks that "local
-allele encoding can be abstracted away from the API consumer and values accessed
-through their corresponding non-local key", so a consumer that has never heard
-of local alleles reads `AD` and gets the right thing:
+Everything else `SAMPLES()` reports under both keys. The spec requires that
+"local allele encoding can be abstracted away from the API consumer and values
+accessed through their corresponding non-local key", so a consumer that has
+never heard of local alleles reads `AD` and gets the right thing:
 
 ```typescript
 const sample = variant.SAMPLES().NA00001!
@@ -41,19 +41,19 @@ its `LAD`, and the sample beside it with a real `AD` does not.
 
 ## What decodes when
 
-Nothing decodes until asked. Each expanded field is an accessor that
-reconstructs on first read and then replaces itself with the value, so a panel
-showing depths never builds the likelihoods sitting beside them. Enumerating a
-sample (spreading it, `Object.keys`, `JSON.stringify`) reads every key and
-materializes everything, which is what a view listing the whole sample wants.
+Decoding is lazy: each expanded field is an accessor that reconstructs on first
+read and then replaces itself with the value, so a panel showing depths never
+builds the likelihoods sitting beside them. Enumerating a sample (spreading it,
+`Object.keys`, `JSON.stringify`) reads every key and materializes everything,
+exactly what a view listing the whole sample needs.
 
-Two costs, both paid only by records that use local alleles. Whether to attach
-the accessors at all is decided once per record from its FORMAT keys, so a file
-without local fields is untouched — measured at 5000 samples, `SAMPLES()` on a
-`GT:AD:DP:GQ:PL` record is unchanged. On a record that does use them, attaching
-the accessors costs about 1.5x (7.9ms to 12.1ms at 5000 samples); the getters
-themselves are built once for the record and shared by every sample, so what is
-left is the property slots rather than a closure apiece.
+Two costs, both incurred only by records that use local alleles. Whether to
+attach the accessors at all is decided once per record from its FORMAT keys, so
+a file without local fields is untouched — measured at 5000 samples, `SAMPLES()`
+on a `GT:AD:DP:GQ:PL` record is unchanged. On a record that does use them,
+attaching the accessors costs about 1.5x (7.9ms to 12.1ms at 5000 samples); the
+getters themselves are built once for the record and shared by every sample, so
+only the property slots remain rather than a closure apiece.
 
 The second cost is the expansion, and it is why the accessors are lazy:
 `Number=G` is quadratic in the allele count — a diploid 60-ALT site has 1891
@@ -70,10 +70,10 @@ as the ALT count grows, while also reading `PL` does not:
 ## Reading many samples
 
 Even reading one field, `SAMPLES()` is ~30x the cost of scanning, because it
-builds an object and an array per FORMAT key before any of this starts. So use
-it for detail panels and per-record inspection, and for a whole-file pass map
-the few indices you need instead. `readLocalAlleles` fills a reusable
-`Int32Array` from a `processFormatFields` range, allocating nothing per sample:
+builds an object and an array per FORMAT key before any of this starts. Use it
+for detail panels and per-record inspection, and for a whole-file pass map the
+few indices you need instead. `readLocalAlleles` fills a reusable `Int32Array`
+from a `processFormatFields` range, allocating nothing per sample:
 
 ```typescript
 const alleles = new Int32Array(altCount + 1)
@@ -97,34 +97,34 @@ const map = maps.get(alleles, count, 2)
 // map[i] is the global PL index of the i'th LPL value
 ```
 
-## Things that bite
+## Edge cases
 
-**Ploidy comes from the value count first, then GT.** `GT` can be MISSING while
-the likelihoods are not, so `localToGlobalG` solves `C(n + ploidy - 1, ploidy)`
+Ploidy comes from the value count first, then GT. `GT` can be MISSING while the
+likelihoods are not, so `localToGlobalG` solves `C(n + ploidy - 1, ploidy)`
 against the field's length. A REF-only sample is the one case that cannot be
 solved — it has exactly one genotype at every ploidy — and there `GT` settles
 it, falling back to diploid only when `GT` is MISSING too. Guessing diploid
 outright would widen a haploid chrY or chrM reference block to 15 entries where
 it should have 5.
 
-**Sorting the mapped tuple is not the same question as whether `LAA` is
-sorted.** Two orderings get conflated here, so they are worth separating.
+Sorting the mapped tuple is not the same question as whether `LAA` is sorted.
+Two orderings get conflated here, so they are worth separating.
 
 The first is settled: `LAA` need not ascend. The 4.5 draft did require it — "a
 sorted list of n distinct integers", "the strictly increasing index into REF and
 ALT" — and hts-specs commit `be3b990` deleted every such phrase before #758
 merged, replacing them with "the order in which they are interpreted", a clause
 it added twice. So the shipped text permits `LAA=4,2` and makes its stated order
-load-bearing: local genotypes are enumerated over local _indices_, so `LAA=4,2`
-and `LAA=2,4` order the same six `LPL` values differently.
+required: local genotypes are enumerated over local _indices_, so `LAA=4,2` and
+`LAA=2,4` order the same six `LPL` values differently.
 
 The second is not a spec question at all. `Index(k1/.../kP)` is defined only for
 ascending arguments, and a genotype is an unordered multiset of alleles, so
 mapping local `1/2` under `LAA=4,2` to global `{4,2}` and asking for its index
-means asking for the index of `2/4`. Sorting is what the formula requires, not a
-reading of anything — and where `LAA` already ascends it is a no-op.
+means asking for the index of `2/4`. The formula requires sorting, not a reading
+of anything — and where `LAA` already ascends it is a no-op.
 
-What the spec genuinely leaves open is narrower than either, and only bites
+What the spec genuinely leaves open is narrower than either, and only affects
 `Number=LG`: having permitted an unsorted `LAA`, it never says how a local
 genotype's alleles land in the _global_ genotype ordering. `Number=LR` and
 `Number=LA` have no such gap, since they are indexed by allele identity.
@@ -142,8 +142,7 @@ Through `bcftools +tag2tag -- --LXX-to-XX` the `AD`s agree (`5,.,7,.,6` for
 both, so bcftools does honour an unsorted `LAA` for `Number=LR`), while the
 `PL`s do not: the cross term lands at global index 7 (genotype `1/3`) for the
 unsorted spelling and 12 (`2/4`) for the sorted one. This implementation gives
-12 for both, which is the point of sorting — two spellings of one genotype
-decode alike.
+12 for both: two spellings of one genotype decode alike.
 
 The divergence is therefore confined to `Number=LG` fields whose `LAA` does not
 ascend, and it is where the ecosystem was already unsure: pd3 called unsorted
@@ -152,18 +151,18 @@ ascending requirement (hts-specs#758, eight days before that requirement was
 removed), while requiring sorted `LAA` had been argued against as "annoying when
 merging files" (hts-specs#434).
 
-**`LAA` is not necessarily early in FORMAT.** The spec says it "must precede all
+`LAA` is not necessarily early in FORMAT. The spec says it "must precede all
 fields other than GT", but `bcftools merge -L` writes it last —
-`GT:LAD:LPL:GQ:LAA` — so nothing here depends on its position.
+`GT:LAD:LPL:GQ:LAA` — so this implementation does not depend on its position.
 
-**`GT` can name alleles outside `LAA`.** `bcftools merge -L N` caps the local
-set at N alts and does not narrow `GT` to match, so a truncated record can carry
+`GT` can name alleles outside `LAA`. `bcftools merge -L N` caps the local set at
+N alts and does not narrow `GT` to match, so a truncated record can carry
 `GT=3/4` with `LAA=3`.
 
-**Headers may declare `Number=.`** rather than `Number=LR`/`LG` — bcftools
-writes `.` — so local fields have to be recognised by key name, not by
-cardinality. The reserved-key table carries the spec's cardinalities for files
-that declare nothing at all.
+Headers may declare `Number=.` rather than `Number=LR`/`LG` — bcftools writes
+`.` — so local fields have to be recognised by key name, not by cardinality. The
+reserved-key table carries the spec's cardinalities for files that declare
+nothing at all.
 
 ## Test data
 

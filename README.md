@@ -63,8 +63,8 @@ The header metadata types the INFO and FORMAT values — see
 
 ### Sample methods
 
-Nothing touches the sample data until you call one of these, so lines from a
-many-sample file are cheap to parse if you only need the columns above.
+The parser leaves sample data untouched until you call one of these, so lines
+from a many-sample file are cheap to parse if you only need the columns above.
 
 - `variant.SAMPLES()` — all FORMAT fields, keyed by sample name
 - `variant.GENOTYPES()` — GT strings only, keyed by sample name
@@ -89,8 +89,8 @@ variant.processGenotypes((str, start, end, sampleIdx) => {
 
 VCF 4.5 records can give a sample's FORMAT values against a subset of the site's
 alleles (`LAA` plus `LAD`, `LPL`, and friends). `SAMPLES()` reports those under
-their non-local keys as well, which is the transparency the spec asks libraries
-for — read `AD` and you get it whether the record wrote `AD` or `LAD`:
+their non-local keys as well, matching what the spec requires of libraries —
+read `AD` and you get it whether the record wrote `AD` or `LAD`:
 
 ```typescript
 const sample = variant.SAMPLES().NA00001!
@@ -100,9 +100,9 @@ sample.PL // from the record's PL, or expanded from its LPL
 
 `GT` keeps global allele indices either way, so genotype readers are unaffected,
 and a record with no local fields is untouched. Expansion happens on first read,
-since `Number=G` fields are quadratic in the ALT count — the cost local alleles
-exist to avoid. A whole-file pass should skip it entirely and use the
-allocation-free `readLocalAlleles`. See
+since `Number=G` fields are quadratic in the ALT count — the cost the
+local-allele encoding avoids. A whole-file pass should skip it entirely and use
+the allocation-free `readLocalAlleles`. See
 [docs/local-alleles.md](docs/local-alleles.md) for that path, the memoized
 genotype mapping, and the spec corners worth knowing about.
 
@@ -116,11 +116,11 @@ measurements behind them, and what a consumer has to do to keep the wins.
 
 Three rules that are easy to get wrong:
 
-- **Both `process*` methods ignore the callback's return value**, so there is no
+- Both `process*` methods ignore the callback's return value, so there is no
   early exit — they always visit every sample.
-- **Key off the callback's `sampleIdx`, not a running count.** A sample whose
-  fields stop short still gets a callback.
-- **`SAMPLES()` re-parses on every call.** Call it once and keep the result.
+- Key off the callback's `sampleIdx`, not a running count. A sample whose fields
+  stop short still gets a callback.
+- `SAMPLES()` re-parses on every call. Call it once and keep the result.
 
 ## Streaming
 

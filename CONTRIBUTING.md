@@ -28,9 +28,9 @@ BRANCH1=origin/main BRANCH2=my-branch pnpm bench     # or name them
 The script builds each ref in a throwaway git worktree into `esm_branch1/` and
 `esm_branch2/`, so your checkout is never switched — but each ref is built as
 committed, so commit before benchmarking. The two directories stick around
-afterwards; `pnpm benchonly` on its own will happily compare whatever was left
-there last time, and the benchmark labels each side from the `branchname.txt`
-the script writes.
+afterwards; `pnpm benchonly` on its own compares whatever was left there last
+time, and the benchmark labels each side from the `branchname.txt` the script
+writes.
 
 ## Publishing
 
