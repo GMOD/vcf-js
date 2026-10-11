@@ -1,3 +1,36 @@
+## [7.3.0](https://github.com/GMOD/vcf-js/compare/v7.2.0...v7.3.0) (2026-10-11)
+
+### Chores
+
+- Keep agent worktrees out of the toolchain's way ([b357fff](https://github.com/GMOD/vcf-js/commit/b357ffffbf0ee1bba44f7f1d7e970478131044e8))
+- Build each ref in a worktree, with pnpm ([46f156f](https://github.com/GMOD/vcf-js/commit/46f156f7688e9090e43e149f048eb660dd230690))
+- Install each ref with --frozen-lockfile ([99bea7f](https://github.com/GMOD/vcf-js/commit/99bea7f99d9bf37c44b2a0f6f41e0d30be295867))
+
+### Documentation
+
+- Document processFormatFields, tighten the README ([5c699fc](https://github.com/GMOD/vcf-js/commit/5c699fc5b953057744179d520c24b05f55323dc4))
+- Add docs/optimizations.md and docs/api.md, make the README an overview ([9ef7a6b](https://github.com/GMOD/vcf-js/commit/9ef7a6b580350e36beaa7e28f164419923aa417c))
+- Tighten optimizations.md ([7ec5623](https://github.com/GMOD/vcf-js/commit/7ec5623745e67e884b799a70f325e9aecbd4e4a4))
+- Drop the perf table dupe from the README ([d5f240c](https://github.com/GMOD/vcf-js/commit/d5f240c86cf46971d5f1567edb9350e49983ea4d))
+- Split consumer advice from the jbrowse case study, add a tldr opener ([d6f9fdb](https://github.com/GMOD/vcf-js/commit/d6f9fdba8958b3a48ab363fc34636a07f740acf5))
+- Rewrite optimizations.md prose in plainer language ([c92ed97](https://github.com/GMOD/vcf-js/commit/c92ed97b1b5d782b1a370befb65f4c4c6e7fccbb))
+- Show the Int32Array layout, and say where the numbers come from ([39add8e](https://github.com/GMOD/vcf-js/commit/39add8ece917b379cba81b042c1db552637aa9d0))
+- Put the prose in the active voice ([6a09e31](https://github.com/GMOD/vcf-js/commit/6a09e31a4accf4bfc1075d67cb6f3806890c171f))
+- Correct the release command in CONTRIBUTING, and its voice ([19b360f](https://github.com/GMOD/vcf-js/commit/19b360f3daeb3f73a9c12ba326b7058a3ed98a82))
+- Describe the release gate CONTRIBUTING actually runs ([afe69da](https://github.com/GMOD/vcf-js/commit/afe69dafb74fdb427f92728936380ea2fa558ce5))
+- Point remote readers at @gmod/range-cache-filehandle ([1b8a710](https://github.com/GMOD/vcf-js/commit/1b8a710dfa79021e0972142d32a697bdf5872dc3))
+- Say it in full sentences ([0cc8ca1](https://github.com/GMOD/vcf-js/commit/0cc8ca147062d261ab6d4727f1712c2f4b257518))
+- Fix agency, clefts, figures of speech, and decorative bold in prose ([e8753f5](https://github.com/GMOD/vcf-js/commit/e8753f51d84af2dadd50192b8bea721ffeb51646))
+
+### Other Changes
+
+- Backfill CHANGELOG.md gaps for v6.0.3 through v7.0.7 ([b1215c8](https://github.com/GMOD/vcf-js/commit/b1215c873c1e55f01c426af46da0438e5eab097f))
+- Decode VCF 4.5 local alleles (#130) ([23ce943](https://github.com/GMOD/vcf-js/commit/23ce943efed2e2faad41663d39c4d5c350427e46))
+
+### Tests
+
+- Fail when docs/api.md misses a public member or export ([df38cb7](https://github.com/GMOD/vcf-js/commit/df38cb736420fe61261a112dc2348c644bfa51f5))
+
 ## [7.2.0](https://github.com/GMOD/vcf-js/compare/v7.1.1...v7.2.0) (2026-08-11)
 
 ### Chores
