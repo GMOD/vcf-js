@@ -60,12 +60,15 @@ when the header doesn't define them.
 }
 ```
 
+`CHROM`, `POS`, `ID`, `REF`, `ALT`, `QUAL`, `FILTER`, `INFO` and `FORMAT` hold
+the first nine columns, parsed as the example shows.
+
 Header metadata types the INFO and FORMAT values. Values come back as arrays
 unless `Type=Flag`, where they are `true`. A `.` inside a value becomes
 `undefined`, and the parser percent-decodes `%XX` escapes.
 
 `JSON.stringify(variant)` serializes the columns above only — sample data is not
-included.
+included. `toJSON()` returns that object of nine column fields.
 
 Also on the instance: `line` (the whole input line), `restStart`/`restEnd` (the
 sample columns' bounds within it), `rest` (a getter that slices them out), and
@@ -162,6 +165,9 @@ which way the mate sequence extends, `[` rightward and `]` leftward:
 | `t]p]`   | right | left          |
 | `[p[t`   | left  | right         |
 | `]p]t`   | left  | left          |
+
+In every form, `Replacement` is the ALT's own bases, without the brackets and
+mate position, the `.`, or the symbol.
 
 ### Single breakends
 
