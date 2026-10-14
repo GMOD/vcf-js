@@ -80,6 +80,18 @@ test('escaped quotes and backslashes in a quoted value', () => {
   })
 })
 
+test('a backslash before anything but a quote or backslash is literal', () => {
+  expect(
+    parseMetaString(
+      String.raw`<ID=X,Description="matches \d+, or \w",Type=String>`,
+    ),
+  ).toEqual({
+    ID: 'X',
+    Description: String.raw`matches \d+, or \w`,
+    Type: 'String',
+  })
+})
+
 test('a bracket inside quotes does not swallow later fields', () => {
   expect(
     parseMetaString('<ID=X,Description="range [0",Type=Float,Number=1>'),

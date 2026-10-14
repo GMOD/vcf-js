@@ -1,5 +1,11 @@
-// Split on commas outside double quotes and square brackets. Inside quotes a
-// backslash escapes the next character, as the VCF spec allows for \" and \\.
+// The VCF spec's only escapes inside a quoted value; any other backslash is a
+// literal, as in Description="matches \d+"
+function isEscape(str: string, i: number) {
+  const next = str[i + 1]
+  return str[i] === '\\' && (next === '"' || next === '\\')
+}
+
+// Split on commas outside double quotes and square brackets
 function splitTopLevel(str: string) {
   const result = []
   let inQuotes = false
@@ -10,7 +16,7 @@ function splitTopLevel(str: string) {
   for (let i = 0; i < strLen; i++) {
     const char = str[i]
     if (inQuotes) {
-      if (char === '\\') {
+      if (isEscape(str, i)) {
         i++
       } else if (char === '"') {
         inQuotes = false
@@ -61,7 +67,7 @@ export function parseMetaString(metaString: string) {
         .split(',')
         .map(s => s.trim())
     } else if (val.length > 1 && val.startsWith('"') && val.endsWith('"')) {
-      result[key] = val.slice(1, -1).replaceAll(/\\(.)/g, '$1')
+      result[key] = val.slice(1, -1).replaceAll(/\\(["\\])/g, '$1')
     } else {
       result[key] = val
     }
