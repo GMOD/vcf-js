@@ -88,6 +88,15 @@ test('localAlleles prepends REF to a parsed LAA value', () => {
   expect(localAlleles(['2', '4'])).toEqual([0, 2, 4])
 })
 
+test('both LAA readers drop malformed entries whole', () => {
+  const out = new Int32Array(8)
+  for (const laa of ['1.5,2', '-1,2', '2,x3']) {
+    const n = readLocalAlleles(laa, 0, laa.length, out)
+    expect([...out.slice(0, n)]).toEqual([0, 2])
+    expect(localAlleles(laa.split(','))).toEqual([0, 2])
+  }
+})
+
 test('the spec worked example round-trips', () => {
   // VCF 4.5 section 1.6.2: REF G, ALT A,C,T,<*>, LAA=[2,4]
   const alleles = [0, 2, 4]

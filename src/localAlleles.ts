@@ -78,22 +78,24 @@ export function readLocalAlleles(
   if (start >= 0 && end > start) {
     let value = 0
     let digits = 0
+    let valid = true
     for (let i = start; i <= end; i++) {
       const c = i === end ? COMMA : str.charCodeAt(i)
       if (c === COMMA) {
-        if (digits > 0 && count < out.length) {
+        if (valid && digits > 0 && count < out.length) {
           out[count] = value
           count++
         }
         value = 0
         digits = 0
+        valid = true
       } else if (c >= ZERO && c <= NINE) {
         value = value * 10 + (c - ZERO)
         digits++
       } else {
         // '.' is the MISSING entry, anything else is malformed; either way the
-        // partially read number is dropped rather than half-counted
-        digits = 0
+        // whole entry is dropped, as localAlleles() drops it
+        valid = false
       }
     }
   }
@@ -183,7 +185,7 @@ export function localAlleles(laa: SampleValue) {
   if (laa) {
     for (const entry of laa) {
       const value = typeof entry === 'string' ? Number(entry) : entry
-      if (value !== undefined && Number.isInteger(value)) {
+      if (value !== undefined && Number.isInteger(value) && value >= 0) {
         alleles.push(value)
       }
     }
