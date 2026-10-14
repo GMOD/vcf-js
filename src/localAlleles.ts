@@ -1,7 +1,6 @@
 import type { SampleData, SampleValue } from './Variant.ts'
 
 const COMMA = 44
-const DOT = 46
 const SLASH = 47
 const ZERO = 48
 const PIPE = 124
@@ -62,10 +61,10 @@ export function ploidyForLocalGenotypes(
  * `[0, ...LAA]` — REF is always local allele 0 — returning its length. LAA
  * entries are 1-based indices into ALT, which are already global allele
  * indices, so no shift is needed. A MISSING or empty LAA yields `[0]`, the
- * REF-only site the spec calls for.
+ * REF-only site the spec calls for, as does one whose only entry is malformed.
  *
- * An entry that isn't a 1-based index (`0`, `.`, `1.5`, `-1`) reads as -1,
- * which keeps the later entries lined up with their local values; the
+ * Otherwise an entry that isn't a 1-based index (`0`, `.`, `1.5`, `-1`) reads
+ * as -1, which keeps the later entries lined up with their local values; the
  * `localToGlobal*` functions skip it, and a caller reading values by hand
  * should too.
  *
@@ -82,30 +81,29 @@ export function readLocalAlleles(
   out[0] = 0
   let count = 1
   if (start >= 0 && end > start) {
+    // a non-digit sets -Infinity, which no later digit brings back above 0
     let value = 0
-    let digits = 0
-    let valid = true
     for (let i = start; i <= end; i++) {
       const c = i === end ? COMMA : str.charCodeAt(i)
       if (c === COMMA) {
         if (count < out.length) {
-          out[count] = valid && digits > 0 && value > 0 ? value : -1
-          count++
+          if (value > 0) {
+            out[count] = value
+            count++
+          } else if (count > 1 || i < end) {
+            out[count] = -1
+            count++
+          }
         }
         value = 0
-        digits = 0
-        valid = true
       } else if (c >= ZERO && c <= NINE) {
         value = value * 10 + (c - ZERO)
-        digits++
       } else {
-        valid = false
+        value = -Infinity
       }
     }
   }
-  const missing =
-    count === 2 && end - start === 1 && str.charCodeAt(start) === DOT
-  return missing ? 1 : count
+  return count
 }
 
 /**
@@ -193,7 +191,7 @@ export class LocalAlleleGenotypeMaps {
  */
 export function localAlleles(laa: SampleValue) {
   const alleles = [0]
-  if (laa && !(laa.length === 1 && laa[0] === undefined)) {
+  if (laa) {
     for (const entry of laa) {
       const value = typeof entry === 'string' ? Number(entry) : entry
       alleles.push(
@@ -203,7 +201,7 @@ export function localAlleles(laa: SampleValue) {
       )
     }
   }
-  return alleles
+  return alleles.length === 2 && alleles[1] === -1 ? [0] : alleles
 }
 
 /** Expand a `Number=LR` field (LAD, LADF, LADR) to its `Number=R` form. */

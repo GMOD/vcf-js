@@ -95,6 +95,11 @@ test('both LAA readers hold a malformed entry slot with -1', () => {
     expect([...out.slice(0, n)]).toEqual([0, -1, 2])
     expect(localAlleles(laa.split(','))).toEqual([0, -1, 2])
   }
+  // a lone bad entry is the same REF-only site as a MISSING LAA
+  for (const laa of ['.', '0', 'x', '1.5']) {
+    expect(readLocalAlleles(laa, 0, laa.length, out)).toBe(1)
+    expect(localAlleles([laa])).toEqual([0])
+  }
 })
 
 test('a malformed LAA entry drops its own values and no others', () => {
