@@ -29,7 +29,8 @@ const COLON = 58
  * 3202-sample record. The offsets the callback reports are into `prerest`,
  * whatever it is, so a consumer's `str.slice(start, end)` is unaffected.
  * @param samplesLen - Number of samples
- * @param callback - Called for each genotype with (string, startIndex, endIndex)
+ * @param callback - Called for each genotype with (string, startIndex,
+ * endIndex, sampleIdx)
  * @param from - Offset of the first sample column in `prerest`
  * @param to - Offset just past the last sample column in `prerest`
  */

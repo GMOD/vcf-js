@@ -13,9 +13,10 @@ import { processGenotypes } from '../src/processGenotypes.ts'
 // declaration order and re-run - and note that whole runs drift by ~40% when
 // the machine is otherwise busy, so compare within a run, not across runs.
 //
-// The FORMAT shapes matter more than they look: GT-first and GT-not-first take
-// different paths through processGenotypes. GT must come first per the VCF
-// spec, but out-of-spec files exist and used to be ~2x slower to scan.
+// The FORMAT shapes matter more than they look: a sole GT has its own loop in
+// processGenotypes, and GT-first hops the rest of each sample with indexOf
+// where GT-last has nothing left to hop. GT must come first per the VCF spec,
+// but out-of-spec files exist and used to be ~2x slower to scan.
 const FORMATS = {
   'GT only': { format: 'GT', cell: '0/1' },
   'GT first': { format: 'GT:AD:DP:GQ:PL', cell: '0/1:10,12:22:99:255,0,255' },
