@@ -39,7 +39,7 @@ checks the value, not whether FORMAT declares the column, so a sample whose `AD`
 is `.` still defers to its `LAD`, and the sample beside it with a real `AD` does
 not.
 
-## What decodes when
+## Expanded fields decode on first read, not in `SAMPLES()`
 
 Each expanded field is a lazy accessor that reconstructs on first read and then
 replaces itself with the value, so a panel showing depths never builds the
