@@ -73,7 +73,7 @@ export default {
     },
     MQ: {
       Number: 1,
-      Type: 'Integer',
+      Type: 'Float',
       Description: 'RMS mapping quality',
     },
     MQ0: {
@@ -123,7 +123,7 @@ export default {
       Description: 'Type of structural variant',
     },
     SVLEN: {
-      Number: null,
+      Number: '.',
       Type: 'Integer',
       Description: 'Difference in length between REF and ALT alleles',
     },
@@ -138,19 +138,19 @@ export default {
       Description: 'Confidence interval around END for imprecise variants',
     },
     HOMLEN: {
-      Number: null,
+      Number: '.',
       Type: 'Integer',
       Description:
         'Length of base pair identical micro-homology at event breakpoints',
     },
     HOMSEQ: {
-      Number: null,
+      Number: '.',
       Type: 'String',
       Description:
         'Sequence of base pair identical micro-homology at event breakpoints',
     },
     BKPTID: {
-      Number: null,
+      Number: '.',
       Type: 'String',
       Description: 'ID of the assembled alternate allele in the assembly file',
     },
@@ -181,7 +181,7 @@ export default {
       Description: 'ID of this element in DBRIP',
     },
     MATEID: {
-      Number: null,
+      Number: '.',
       Type: 'String',
       Description: 'ID of mate breakends',
     },
@@ -202,7 +202,7 @@ export default {
         'Confidence interval around the inserted material between breakend',
     },
     DPADJ: {
-      Number: null,
+      Number: '.',
       Type: 'Integer',
       Description: 'Read Depth of adjacency',
     },
@@ -212,7 +212,7 @@ export default {
       Description: 'Copy number of segment containing breakend',
     },
     CNADJ: {
-      Number: null,
+      Number: '.',
       Type: 'Integer',
       Description: 'Copy number of adjacency',
     },
@@ -222,7 +222,7 @@ export default {
       Description: 'Confidence interval around copy number for the segment',
     },
     CICNADJ: {
-      Number: null,
+      Number: '.',
       Type: 'Integer',
       Description: 'Confidence interval around copy number for the adjacency',
     },
@@ -319,7 +319,7 @@ export default {
       Description: 'Length of <*> reference block',
     },
     LAA: {
-      Number: null,
+      Number: '.',
       Type: 'Integer',
       Description:
         '1-based indices into ALT, indicating which alleles are relevant (local) for the current sample',
