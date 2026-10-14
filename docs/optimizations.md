@@ -56,9 +56,9 @@ later scan has to handle it.
 The parser reads INFO on every line whether you use it or not. INFO is a column
 rather than sample data, and typing its values needs header metadata that only
 the parser holds. A file with a large INFO column incurs this cost even when you
-only want `CHROM` and `POS`. Two shortcuts keep the cost down. The parser skips
-percent-decoding unless the raw string contains a `%`, and it skips `split()` on
-a value that has no comma.
+only want `CHROM` and `POS`. The parser keeps the cost down by skipping
+percent-decoding unless the raw string contains a `%`, and by skipping `split()`
+on a value that has no comma.
 
 ## Reading sample data
 
@@ -181,10 +181,10 @@ after that depends on the code above this library.
   them and again to draw them, that is two traversals for an intermediate result
   the final output never needs.
 - Key off `sampleIdx` rather than a counter of your own, as above.
-- Do not hold onto `Variant`s from a file with many samples. Each `Variant`
-  keeps its whole input line, which lets the scans stay lazy, so an array
-  holding a region's worth of them keeps every one of those lines in memory.
-  Streaming them is fine. Serializing a feature with `toJSON` is the one
+- Do not hold onto `Variant`s from a file with many samples, though streaming
+  them is fine. Each `Variant` keeps its whole input line, which lets the scans
+  stay lazy, so an array holding a region's worth of them keeps every one of
+  those lines in memory. Serializing a feature with `toJSON` is the one
   operation that builds everything at once.
 
 ### A worked example: jbrowse-components

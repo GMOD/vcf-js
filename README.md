@@ -120,7 +120,7 @@ Three rules that are easy to get wrong:
   stop early and always visit every sample.
 - Key off the callback's `sampleIdx`, not a running count. A sample whose fields
   stop short still gets a callback.
-- `SAMPLES()` re-parses on every call. Call it once and keep the result.
+- `SAMPLES()` re-parses on every call, so call it once and keep the result.
 
 ## Streaming
 

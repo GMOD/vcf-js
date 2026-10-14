@@ -224,7 +224,7 @@ genotypes are enumerated in it.
 falling back to `ploidyHint` (default 2) for a REF-only sample, which has one
 genotype at every ploidy. Its output is `C(alleleCount + ploidy - 1, ploidy)`
 long, so at a high-ploidy site with many ALTs the output is an array too large
-for JS to allocate. The local-allele encoding avoids that cost.
+for JS to allocate, while the local-allele encoding avoids that cost.
 
 ## Exports
 
