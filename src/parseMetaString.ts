@@ -5,8 +5,10 @@ function isEscape(str: string, i: number) {
   return str[i] === '\\' && (next === '"' || next === '\\')
 }
 
-// Split on commas outside double quotes and square brackets
-function splitTopLevel(str: string) {
+// Split on commas outside double quotes and square brackets. Returns undefined
+// when honouring escapes leaves a quote open, as a pre-4.3 value ending in an
+// unescaped backslash ("C:\data\") does.
+function splitTopLevel(str: string, escapes: boolean) {
   const result = []
   let inQuotes = false
   let inBrackets = false
@@ -16,7 +18,7 @@ function splitTopLevel(str: string) {
   for (let i = 0; i < strLen; i++) {
     const char = str[i]
     if (inQuotes) {
-      if (isEscape(str, i)) {
+      if (escapes && isEscape(str, i)) {
         i++
       } else if (char === '"') {
         inQuotes = false
@@ -37,7 +39,7 @@ function splitTopLevel(str: string) {
     result.push(str.slice(start).trim())
   }
 
-  return result
+  return escapes && inQuotes ? undefined : result
 }
 
 export function parseStructuredMetaVal(metaVal: string) {
@@ -56,8 +58,9 @@ export function parseStructuredMetaVal(metaVal: string) {
 
 export function parseMetaString(metaString: string) {
   const inside = metaString.slice(1, -1)
+  const escaped = splitTopLevel(inside, true)
   const result: Record<string, string | string[]> = {}
-  for (const f of splitTopLevel(inside)) {
+  for (const f of escaped ?? splitTopLevel(inside, false) ?? []) {
     const eq = f.indexOf('=')
     const key = eq === -1 ? f : f.slice(0, eq)
     const val = eq === -1 ? '' : f.slice(eq + 1)
@@ -67,7 +70,8 @@ export function parseMetaString(metaString: string) {
         .split(',')
         .map(s => s.trim())
     } else if (val.length > 1 && val.startsWith('"') && val.endsWith('"')) {
-      result[key] = val.slice(1, -1).replaceAll(/\\(["\\])/g, '$1')
+      const quoted = val.slice(1, -1)
+      result[key] = escaped ? quoted.replaceAll(/\\(["\\])/g, '$1') : quoted
     } else {
       result[key] = val
     }

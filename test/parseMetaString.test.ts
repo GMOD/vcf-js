@@ -92,6 +92,18 @@ test('a backslash before anything but a quote or backslash is literal', () => {
   })
 })
 
+test('a quoted value ending in an unescaped backslash still closes', () => {
+  expect(
+    parseMetaString(
+      String.raw`<ID=X,Description="files in C:\data\",Type=String>`,
+    ),
+  ).toEqual({
+    ID: 'X',
+    Description: 'files in C:\\data\\',
+    Type: 'String',
+  })
+})
+
 test('a bracket inside quotes does not swallow later fields', () => {
   expect(
     parseMetaString('<ID=X,Description="range [0",Type=Float,Number=1>'),
