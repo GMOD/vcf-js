@@ -564,3 +564,19 @@ test('a Variant reports genotype ranges into the whole line, not into rest', () 
   // `rest` still answers with the sample columns alone
   expect(variant.rest).toBe('0/1:20\t1/1:30')
 })
+
+test('GT in a middle column, with offsets that stop short of the string', () => {
+  const str = 'xx\t5:0|1:9\t7\t3:1/1:2:8\r\nnext\tline'
+  const from = 3
+  const to = str.indexOf('\r')
+  const seen: string[] = []
+  processGenotypes(
+    'DP:GT:GQ',
+    str,
+    3,
+    (s, start, end) => seen.push(s.slice(start, end)),
+    from,
+    to,
+  )
+  expect(seen).toEqual(['0|1', '', '1/1'])
+})

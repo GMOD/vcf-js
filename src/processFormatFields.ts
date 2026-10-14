@@ -15,38 +15,31 @@ const TAB = 9
 const COLON = 58
 
 /**
- * Column index of each requested key among the colon-separated FORMAT keys, or
- * -1 for a key FORMAT doesn't declare. Matched exactly, so a key that merely
- * contains another (GATK's PGT against GT) is not mistaken for it.
+ * Column index of `key` among the colon-separated FORMAT keys, or -1 if FORMAT
+ * doesn't declare it. Matched exactly, so a key that merely contains another
+ * (GATK's PGT against GT) is not mistaken for it.
  */
-function formatColumnIndices(format: string, keys: string[]) {
-  const cols = new Int32Array(keys.length).fill(-1)
+export function formatColumnIndex(format: string, key: string) {
   let col = 0
   let start = 0
   const len = format.length
   for (let j = 0; j <= len; j++) {
     if (j === len || format.charCodeAt(j) === COLON) {
-      const fieldLen = j - start
-      for (let k = 0; k < keys.length; k++) {
-        const key = keys[k]!
-        if (cols[k] === -1 && key.length === fieldLen) {
-          let eq = true
-          for (let i = 0; i < fieldLen; i++) {
-            if (format.charCodeAt(start + i) !== key.charCodeAt(i)) {
-              eq = false
-              break
-            }
-          }
-          if (eq) {
-            cols[k] = col
-          }
-        }
+      if (j - start === key.length && format.startsWith(key, start)) {
+        return col
       }
       col++
       start = j + 1
     }
   }
-  return cols
+  return -1
+}
+
+// `indexOf` searches to the end of the whole string, so a caller passing the
+// line with offsets needs the hit clamped back to `to`
+export function nextTab(str: string, from: number, to: number) {
+  const tab = str.indexOf('\t', from)
+  return tab === -1 || tab > to ? to : tab
 }
 
 /**
@@ -82,13 +75,8 @@ export function processFormatFields(
   if (numKeys === 0) {
     return
   }
-  const cols = formatColumnIndices(format, keys)
-  let maxCol = -1
-  for (let k = 0; k < numKeys; k++) {
-    if (cols[k]! > maxCol) {
-      maxCol = cols[k]!
-    }
-  }
+  const cols = Int32Array.from(keys, key => formatColumnIndex(format, key))
+  const maxCol = Math.max(...cols)
   // FORMAT declares none of the requested keys, so there is nothing any sample
   // could report — matches processGenotypes' behaviour for a GT-less record.
   if (maxCol === -1) {
@@ -128,10 +116,7 @@ export function processFormatFields(
         // hop and the loop below runs as before.
         if (col > maxCol) {
           closed = true
-          // clamped back to `to`, since `indexOf` searches past it when the
-          // caller passed the whole line with offsets
-          const tab = prerest.indexOf('\t', pos)
-          pos = tab === -1 || tab > prerestLen ? prerestLen : tab
+          pos = nextTab(prerest, pos, prerestLen)
           break
         }
       }
