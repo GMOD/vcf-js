@@ -209,6 +209,14 @@ test('editing one parser metadata leaves other parsers alone', () => {
   })
 })
 
+test('SAMPLES reads an empty list item as missing, not zero', () => {
+  const parser = new VCF({
+    header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\ts1',
+  })
+  const variant = parser.parseLine('1\t1\t.\tA\tT,G\t.\t.\t.\tAD\t5,,7')
+  expect(variant.SAMPLES()).toEqual({ s1: { AD: [5, undefined, 7] } })
+})
+
 test('empty header lines', () => {
   expect(() => new VCF({ header: '\n' })).toThrow(/no non-empty/)
 })

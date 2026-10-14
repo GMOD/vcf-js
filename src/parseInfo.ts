@@ -44,7 +44,7 @@ export function parseInfo(
       const items: (string | number | undefined)[] = []
       for (let j = 0; j < itemsLen; j++) {
         const v = rawItems[j] ?? ''
-        if (v === '.') {
+        if (v === '.' || v === '') {
           items.push(undefined)
         } else {
           const w = hasDecode ? decodeURIComponentNoThrow(v) : v

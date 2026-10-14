@@ -158,7 +158,9 @@ export class Variant {
               const result: (string | number | undefined)[] = []
               for (let k = 0; k < itemsLen; k++) {
                 const ent = items[k] ?? ''
-                result.push(ent === '.' ? undefined : isNum ? +ent : ent)
+                result.push(
+                  ent === '.' || ent === '' ? undefined : isNum ? +ent : ent,
+                )
               }
               sampleData[key] = result
             }

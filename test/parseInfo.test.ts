@@ -24,6 +24,10 @@ test('empty pairs from a stray semicolon are skipped', () => {
   expect(parseInfo('DP=10;;DB', meta)).toEqual({ DP: [10], DB: true })
 })
 
+test('empty list items are missing, not zero', () => {
+  expect(parseInfo('DP=1,,2', meta)).toEqual({ DP: [1, undefined, 2] })
+})
+
 test('Integer and Float values are coerced to numbers', () => {
   expect(parseInfo('DP=10;AF=0.5', meta)).toEqual({
     DP: [10],
