@@ -189,6 +189,15 @@ test('test no info non-strict', () => {
   expect(VCFParser.parseLine(lines[0]!).GENOTYPES()).toEqual({})
 })
 
+test('reserved INFO fields parse with their spec types when the header omits them', () => {
+  const parser = new VCF({
+    header: '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO',
+  })
+  expect(
+    parser.parseLine('1\t1\t.\tA\tAT,AG\t.\t.\tCIGAR=1M1I,1X;MQ=60').INFO,
+  ).toEqual({ CIGAR: ['1M1I', '1X'], MQ: [60] })
+})
+
 test('empty header lines', () => {
   expect(() => new VCF({ header: '\n' })).toThrow(/no non-empty/)
 })

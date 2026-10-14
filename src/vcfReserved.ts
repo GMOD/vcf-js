@@ -41,8 +41,8 @@ export default {
       Description: 'RMS base quality',
     },
     CIGAR: {
-      Number: 1,
-      Type: 'Float',
+      Number: 'A',
+      Type: 'String',
       Description:
         'Cigar string describing how to align an alternate allele to the reference allele',
     },
@@ -73,7 +73,7 @@ export default {
     },
     MQ: {
       Number: 1,
-      Type: null,
+      Type: 'Integer',
       Description: 'RMS mapping quality',
     },
     MQ0: {
@@ -145,16 +145,19 @@ export default {
       Description: 'Confidence interval around END for imprecise variants',
     },
     HOMLEN: {
+      Number: null,
       Type: 'Integer',
       Description:
         'Length of base pair identical micro-homology at event breakpoints',
     },
     HOMSEQ: {
+      Number: null,
       Type: 'String',
       Description:
         'Sequence of base pair identical micro-homology at event breakpoints',
     },
     BKPTID: {
+      Number: null,
       Type: 'String',
       Description: 'ID of the assembled alternate allele in the assembly file',
     },
@@ -209,7 +212,11 @@ export default {
       Description:
         'Confidence interval around the inserted material between breakend',
     },
-    DPADJ: { Type: 'Integer', Description: 'Read Depth of adjacency' },
+    DPADJ: {
+      Number: null,
+      Type: 'Integer',
+      Description: 'Read Depth of adjacency',
+    },
     CN: {
       Number: 1,
       Type: 'Integer',

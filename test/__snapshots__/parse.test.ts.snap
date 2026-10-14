@@ -225,6 +225,7 @@ exports[`can get metadata from the header 1`] = `
     },
     "BKPTID": {
       "Description": "ID of the assembled alternate allele in the assembly file",
+      "Number": null,
       "Type": "String",
     },
     "BQ": {
@@ -249,8 +250,8 @@ exports[`can get metadata from the header 1`] = `
     },
     "CIGAR": {
       "Description": "Cigar string describing how to align an alternate allele to the reference allele",
-      "Number": 1,
-      "Type": "Float",
+      "Number": "A",
+      "Type": "String",
     },
     "CILEN": {
       "Description": "Confidence interval around the inserted material between breakend",
@@ -299,6 +300,7 @@ exports[`can get metadata from the header 1`] = `
     },
     "DPADJ": {
       "Description": "Read Depth of adjacency",
+      "Number": null,
       "Type": "Integer",
     },
     "END": {
@@ -323,10 +325,12 @@ exports[`can get metadata from the header 1`] = `
     },
     "HOMLEN": {
       "Description": "Length of base pair identical micro-homology at event breakpoints",
+      "Number": null,
       "Type": "Integer",
     },
     "HOMSEQ": {
       "Description": "Sequence of base pair identical micro-homology at event breakpoints",
+      "Number": null,
       "Type": "String",
     },
     "IMPRECISE": {
@@ -352,7 +356,7 @@ exports[`can get metadata from the header 1`] = `
     "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
-      "Type": null,
+      "Type": "Integer",
     },
     "MQ0": {
       "Description": "Number of MAPQ == 0 reads",
@@ -466,6 +470,7 @@ exports[`can get metadata from the header 2`] = `
   },
   "BKPTID": {
     "Description": "ID of the assembled alternate allele in the assembly file",
+    "Number": null,
     "Type": "String",
   },
   "BQ": {
@@ -490,8 +495,8 @@ exports[`can get metadata from the header 2`] = `
   },
   "CIGAR": {
     "Description": "Cigar string describing how to align an alternate allele to the reference allele",
-    "Number": 1,
-    "Type": "Float",
+    "Number": "A",
+    "Type": "String",
   },
   "CILEN": {
     "Description": "Confidence interval around the inserted material between breakend",
@@ -540,6 +545,7 @@ exports[`can get metadata from the header 2`] = `
   },
   "DPADJ": {
     "Description": "Read Depth of adjacency",
+    "Number": null,
     "Type": "Integer",
   },
   "END": {
@@ -564,10 +570,12 @@ exports[`can get metadata from the header 2`] = `
   },
   "HOMLEN": {
     "Description": "Length of base pair identical micro-homology at event breakpoints",
+    "Number": null,
     "Type": "Integer",
   },
   "HOMSEQ": {
     "Description": "Sequence of base pair identical micro-homology at event breakpoints",
+    "Number": null,
     "Type": "String",
   },
   "IMPRECISE": {
@@ -593,7 +601,7 @@ exports[`can get metadata from the header 2`] = `
   "MQ": {
     "Description": "RMS mapping quality",
     "Number": 1,
-    "Type": null,
+    "Type": "Integer",
   },
   "MQ0": {
     "Description": "Number of MAPQ == 0 reads",
@@ -1324,6 +1332,7 @@ exports[`clinvar metadata 1`] = `
     },
     "BKPTID": {
       "Description": "ID of the assembled alternate allele in the assembly file",
+      "Number": null,
       "Type": "String",
     },
     "BQ": {
@@ -1348,8 +1357,8 @@ exports[`clinvar metadata 1`] = `
     },
     "CIGAR": {
       "Description": "Cigar string describing how to align an alternate allele to the reference allele",
-      "Number": 1,
-      "Type": "Float",
+      "Number": "A",
+      "Type": "String",
     },
     "CILEN": {
       "Description": "Confidence interval around the inserted material between breakend",
@@ -1458,6 +1467,7 @@ exports[`clinvar metadata 1`] = `
     },
     "DPADJ": {
       "Description": "Read Depth of adjacency",
+      "Number": null,
       "Type": "Integer",
     },
     "END": {
@@ -1487,10 +1497,12 @@ exports[`clinvar metadata 1`] = `
     },
     "HOMLEN": {
       "Description": "Length of base pair identical micro-homology at event breakpoints",
+      "Number": null,
       "Type": "Integer",
     },
     "HOMSEQ": {
       "Description": "Sequence of base pair identical micro-homology at event breakpoints",
+      "Number": null,
       "Type": "String",
     },
     "IMPRECISE": {
@@ -1521,7 +1533,7 @@ exports[`clinvar metadata 1`] = `
     "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
-      "Type": null,
+      "Type": "Integer",
     },
     "MQ0": {
       "Description": "Number of MAPQ == 0 reads",
@@ -1934,6 +1946,7 @@ exports[`pedigree 1`] = `
     },
     "BKPTID": {
       "Description": "ID of the assembled alternate allele in the assembly file",
+      "Number": null,
       "Type": "String",
     },
     "BQ": {
@@ -1958,8 +1971,8 @@ exports[`pedigree 1`] = `
     },
     "CIGAR": {
       "Description": "Cigar string describing how to align an alternate allele to the reference allele",
-      "Number": 1,
-      "Type": "Float",
+      "Number": "A",
+      "Type": "String",
     },
     "CILEN": {
       "Description": "Confidence interval around the inserted material between breakend",
@@ -2008,6 +2021,7 @@ exports[`pedigree 1`] = `
     },
     "DPADJ": {
       "Description": "Read Depth of adjacency",
+      "Number": null,
       "Type": "Integer",
     },
     "END": {
@@ -2032,10 +2046,12 @@ exports[`pedigree 1`] = `
     },
     "HOMLEN": {
       "Description": "Length of base pair identical micro-homology at event breakpoints",
+      "Number": null,
       "Type": "Integer",
     },
     "HOMSEQ": {
       "Description": "Sequence of base pair identical micro-homology at event breakpoints",
+      "Number": null,
       "Type": "String",
     },
     "IMPRECISE": {
@@ -2061,7 +2077,7 @@ exports[`pedigree 1`] = `
     "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
-      "Type": null,
+      "Type": "Integer",
     },
     "MQ0": {
       "Description": "Number of MAPQ == 0 reads",
@@ -3273,6 +3289,7 @@ exports[`x simple spec 1`] = `
     },
     "BKPTID": {
       "Description": "ID of the assembled alternate allele in the assembly file",
+      "Number": null,
       "Type": "String",
     },
     "BQ": {
@@ -3297,8 +3314,8 @@ exports[`x simple spec 1`] = `
     },
     "CIGAR": {
       "Description": "Cigar string describing how to align an alternate allele to the reference allele",
-      "Number": 1,
-      "Type": "Float",
+      "Number": "A",
+      "Type": "String",
     },
     "CILEN": {
       "Description": "Confidence interval around the inserted material between breakend",
@@ -3347,6 +3364,7 @@ exports[`x simple spec 1`] = `
     },
     "DPADJ": {
       "Description": "Read Depth of adjacency",
+      "Number": null,
       "Type": "Integer",
     },
     "END": {
@@ -3371,10 +3389,12 @@ exports[`x simple spec 1`] = `
     },
     "HOMLEN": {
       "Description": "Length of base pair identical micro-homology at event breakpoints",
+      "Number": null,
       "Type": "Integer",
     },
     "HOMSEQ": {
       "Description": "Sequence of base pair identical micro-homology at event breakpoints",
+      "Number": null,
       "Type": "String",
     },
     "IMPRECISE": {
@@ -3400,7 +3420,7 @@ exports[`x simple spec 1`] = `
     "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
-      "Type": null,
+      "Type": "Integer",
     },
     "MQ0": {
       "Description": "Number of MAPQ == 0 reads",
@@ -4025,6 +4045,7 @@ exports[`x vcf44 spec 1`] = `
     },
     "BKPTID": {
       "Description": "ID of the assembled alternate allele in the assembly file",
+      "Number": null,
       "Type": "String",
     },
     "BQ": {
@@ -4049,8 +4070,8 @@ exports[`x vcf44 spec 1`] = `
     },
     "CIGAR": {
       "Description": "Cigar string describing how to align an alternate allele to the reference allele",
-      "Number": 1,
-      "Type": "Float",
+      "Number": "A",
+      "Type": "String",
     },
     "CILEN": {
       "Description": "Confidence interval for the SVLEN field",
@@ -4099,6 +4120,7 @@ exports[`x vcf44 spec 1`] = `
     },
     "DPADJ": {
       "Description": "Read Depth of adjacency",
+      "Number": null,
       "Type": "Integer",
     },
     "END": {
@@ -4128,10 +4150,12 @@ exports[`x vcf44 spec 1`] = `
     },
     "HOMLEN": {
       "Description": "Length of base pair identical micro-homology at event breakpoints",
+      "Number": null,
       "Type": "Integer",
     },
     "HOMSEQ": {
       "Description": "Sequence of base pair identical micro-homology at event breakpoints",
+      "Number": null,
       "Type": "String",
     },
     "IMPRECISE": {
@@ -4157,7 +4181,7 @@ exports[`x vcf44 spec 1`] = `
     "MQ": {
       "Description": "RMS mapping quality",
       "Number": 1,
-      "Type": null,
+      "Type": "Integer",
     },
     "MQ0": {
       "Description": "Number of MAPQ == 0 reads",
