@@ -146,7 +146,7 @@ parseBreakend('C[2:321682[')
 ```
 
 `parseBreakend` handles all four bracket forms, single breakends and symbolic
-[docs/api.md](docs/api.md#parsebreakendalt-breakend--undefined).
+alleles; see [docs/api.md](docs/api.md#parsebreakendalt-breakend--undefined).
 
 ## Docs
 
