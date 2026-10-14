@@ -30,15 +30,15 @@ await tbiIndexed.getLines('ctgA', 200, 300, line => {
 
 If the `.vcf.gz` is remote, give `TabixIndexedFile` a filehandle from
 [`@gmod/range-cache-filehandle`](https://github.com/GMOD/range-cache-filehandle),
-so that the scattered block reads a query makes are cached and coalesced into a
-few requests.
+so that the filehandle caches the scattered block reads a query makes and merges
+them into a few requests.
 
-Reuse one parser for all lines — each `VCF` parses its header once. Pass
+Reuse one parser for all lines, since each `VCF` parses its header once. Pass
 `strict: false` to accept a line with no INFO column; by default `parseLine`
 throws on one, since the spec requires at least a `.` there.
 
-The VCF 4.5 local-allele encoding (`LAA` with `LAD`, `LPL`, and friends) is
-decoded transparently — see [Local alleles](#local-alleles).
+`SAMPLES()` decodes the VCF 4.5 local-allele encoding (`LAA` with `LAD`, `LPL`,
+and friends); see [Local alleles](#local-alleles).
 
 ## Variant
 
@@ -58,7 +58,7 @@ decoded transparently — see [Local alleles](#local-alleles).
 }
 ```
 
-The header metadata types the INFO and FORMAT values — see
+The parser types the INFO and FORMAT values from the header metadata. See
 [docs/api.md](docs/api.md) for the rules, and for `parser.getMetadata`.
 
 ### Sample methods
@@ -99,25 +99,25 @@ sample.PL // from the record's PL, or expanded from its LPL
 ```
 
 `GT` keeps global allele indices either way, so genotype readers are unaffected,
-and a record with no local fields is untouched. Expansion happens on first read,
-since `Number=G` fields are quadratic in the ALT count — the cost the
-local-allele encoding avoids. A whole-file pass should skip it entirely and use
-the allocation-free `readLocalAlleles`. See
+and a record with no local fields is untouched. `SAMPLES()` expands each field
+on first read, because `Number=G` fields are quadratic in the ALT count, which
+is the cost the local-allele encoding avoids. A whole-file pass should skip the
+expansion entirely and use the allocation-free `readLocalAlleles`. See
 [docs/local-alleles.md](docs/local-alleles.md) for that path, the memoized
-genotype mapping, and the spec corners worth knowing about.
+genotype mapping, and the spec's edge cases.
 
 ## Performance
 
-On a many-sample file the choice of sample method dominates everything else —
-the `process*` pair allocates nothing per sample, `SAMPLES()` allocates an
-object and an array per FORMAT key. See
+On a many-sample file, the `process*` pair allocates nothing per sample and
+`SAMPLES()` allocates an object and an array per FORMAT key, so the choice of
+sample method outweighs every other parsing cost. See
 [docs/optimizations.md](docs/optimizations.md) for the per-method costs, the
-measurements behind them, and what a consumer has to do to keep the wins.
+measurements behind them, and what a consumer has to do to keep those savings.
 
 Three rules that are easy to get wrong:
 
-- Both `process*` methods ignore the callback's return value, so there is no
-  early exit — they always visit every sample.
+- Both `process*` methods ignore the callback's return value, so they cannot
+  stop early and always visit every sample.
 - Key off the callback's `sampleIdx`, not a running count. A sample whose fields
   stop short still gets a callback.
 - `SAMPLES()` re-parses on every call. Call it once and keep the result.
@@ -164,8 +164,9 @@ parseBreakend('C[2:321682[')
 // { MateDirection: 'right', Replacement: 'C', MatePosition: '2:321682', Join: 'right' }
 ```
 
-All four bracket forms from the spec, plus single breakends and symbolic alleles
-— [docs/api.md](docs/api.md#parsebreakendalt-breakend--undefined) has the table
+`parseBreakend` handles all four bracket forms from the spec, plus single
+breakends and symbolic alleles.
+[docs/api.md](docs/api.md#parsebreakendalt-breakend--undefined) has the table
 and the edge cases.
 
 ## Docs
@@ -174,6 +175,6 @@ and the edge cases.
 - [docs/optimizations.md](docs/optimizations.md) — why the parser is lazy about
   sample data, what that measured, and what a consumer has to do
 - [docs/local-alleles.md](docs/local-alleles.md) — how VCF 4.5 local alleles
-  decode, what they cost, and where the spec runs out
+  decode, what they cost, and the questions the spec leaves open
 - [CONTRIBUTING.md](CONTRIBUTING.md) — development, benchmarking and release
   steps

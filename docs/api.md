@@ -7,8 +7,8 @@
 | `header` | `string`   | The whole VCF header, `##` lines through the `#CHROM` line. Throws if empty, malformed, or missing `#CHROM`    |
 | `strict` | `boolean?` | Default `true`. When true, `parseLine` throws on a line with no INFO column, which the spec requires to be `.` |
 
-Parse the header once and reuse the parser for every line — it holds the
-INFO/FORMAT/ALT/FILTER metadata that types values, plus the sample list.
+Parse the header once and reuse the parser for every line. The parser holds the
+INFO/FORMAT/ALT/FILTER metadata it uses to type values, plus the sample list.
 
 ## `parser.parseLine(line): Variant`
 
@@ -34,7 +34,7 @@ parser.getMetadata('INFO', 'DP', 'Number')
 // 1
 ```
 
-With no arguments, everything. Fields reserved by the
+With no arguments, `getMetadata` returns all of it. Fields reserved by the
 [VCF spec](https://samtools.github.io/hts-specs/VCFv4.3.pdf) are present even
 when the header doesn't define them.
 
@@ -63,12 +63,12 @@ when the header doesn't define them.
 `CHROM`, `POS`, `ID`, `REF`, `ALT`, `QUAL`, `FILTER`, `INFO` and `FORMAT` hold
 the first nine columns, parsed as the example shows.
 
-Header metadata types the INFO and FORMAT values. Values come back as arrays
-unless `Type=Flag`, where they are `true`. A `.` inside a value becomes
-`undefined`, and the parser percent-decodes `%XX` escapes.
+The parser types the INFO and FORMAT values from the header metadata. Values
+come back as arrays unless `Type=Flag`, where they are `true`. A `.` inside a
+value becomes `undefined`, and the parser percent-decodes `%XX` escapes.
 
-`JSON.stringify(variant)` serializes the columns above only — sample data is not
-included. `toJSON()` returns that object of nine column fields.
+`JSON.stringify(variant)` serializes the columns above and leaves out the sample
+data, because `toJSON()` returns an object of just those nine column fields.
 
 Also on the instance: `line` (the whole input line), `restStart`/`restEnd` (the
 sample columns' bounds within it), `rest` (a getter that slices them out), and
@@ -76,28 +76,30 @@ sample columns' bounds within it), `rest` (a getter that slices them out), and
 
 ### `variant.SAMPLES(): Record<string, Record<string, SampleValue>>`
 
-Every FORMAT field of every sample, keyed by sample name then FORMAT key.
-Numeric per the header's `Type`; `.` and empty become `undefined`.
+Returns every FORMAT field of every sample, keyed by sample name then FORMAT
+key. Values are numeric where the header declares a numeric `Type`, and `.` and
+empty values become `undefined`.
 
-Re-parses on every call — call it once and keep the result — and costs an object
-plus an array per sample. Prefer `processFormatFields` when you want particular
-fields.
+`SAMPLES()` re-parses on every call and costs an object plus an array per
+sample, so call it once and keep the result. Prefer `processFormatFields` when
+you want particular fields.
 
-A record carrying VCF 4.5 local-allele fields also reports them under their
-non-local keys, so a sample can hold an `AD` its FORMAT never declared, expanded
-from `LAD`. Those keys are lazy accessors that reconstruct on first read; the
-local keys stay alongside them. See [docs/local-alleles.md](local-alleles.md).
+For a record with VCF 4.5 local-allele fields, `SAMPLES()` also reports them
+under their non-local keys, so a sample can hold an `AD` its FORMAT never
+declared, expanded from `LAD`. Those keys are lazy accessors that decode the
+value on first read, and the local keys stay alongside them. See
+[docs/local-alleles.md](local-alleles.md).
 
 ### `variant.GENOTYPES(): Record<string, string>`
 
-GT strings only, keyed by sample name. Returns a null-prototype object, so use
+Returns the GT strings, keyed by sample name, as a null-prototype object, so use
 `Object.keys` / `in`, not `hasOwnProperty`.
 
 ### `variant.processGenotypes(callback)`
 
-`callback(str, start, end, sampleIdx)` per sample, where the genotype is
-`str.slice(start, end)` — reported as a range so a caller that only classifies
-it allocates nothing.
+Calls `callback(str, start, end, sampleIdx)` once per sample, where the genotype
+is `str.slice(start, end)`. The method reports the genotype as a range, so a
+caller that only classifies it allocates nothing.
 
 ```typescript
 let homRef = 0
@@ -112,18 +114,19 @@ variant.processGenotypes((str, start, end, sampleIdx) => {
 })
 ```
 
-Does nothing when FORMAT has no `GT`. A sample whose fields stop before the GT
-column gets an empty range rather than a skipped callback, so `sampleIdx` always
-tracks `parser.samples`.
+`processGenotypes` does nothing when FORMAT has no `GT`. A sample whose fields
+stop before the GT column still gets a callback, with an empty range, so
+`sampleIdx` always matches the sample's index in `parser.samples`.
 
 ### `variant.processFormatFields(keys, callback)`
 
-The same idea past GT. `callback(str, ranges, sampleIdx)`, where key `k` spans
+`processFormatFields` works like `processGenotypes` for any FORMAT keys you
+name. It calls `callback(str, ranges, sampleIdx)`, where key `k` spans
 `ranges[2 * k]` to `ranges[2 * k + 1]`, both `-1` when that sample has no value
 for it:
 
 ```typescript
-// samples carrying a phase set, and their genotype
+// samples with a phase set, and their genotype
 const phased: { sampleIdx: number; gt: string; ps: string }[] = []
 variant.processFormatFields(['GT', 'PS'], (str, ranges, sampleIdx) => {
   if (ranges[2] !== -1) {
@@ -136,13 +139,13 @@ variant.processFormatFields(['GT', 'PS'], (str, ranges, sampleIdx) => {
 })
 ```
 
-One pass locates each sample, so it costs the sample's length however many keys
-you ask for. `ranges` is scratch, reused for every sample — read it inside the
-callback rather than retaining it. If FORMAT declares none of the requested keys
-the callback never fires.
+The method walks each sample once, so its cost is the sample's length however
+many keys you ask for. It reuses one `ranges` array for every sample, so read it
+inside the callback rather than retaining it. If FORMAT declares none of the
+requested keys the callback never fires.
 
-Neither `process*` method reads the callback's return value, so there is no
-early exit: both always visit every sample.
+`processGenotypes` and `processFormatFields` ignore the callback's return value,
+so they cannot stop early and always visit every sample.
 
 ## `parseBreakend(alt): Breakend | undefined`
 
@@ -155,9 +158,10 @@ parseBreakend('C[2:321682[')
 // { MateDirection: 'right', Replacement: 'C', MatePosition: '2:321682', Join: 'right' }
 ```
 
-All four bracket forms from the spec. `Join` is whether the replacement base
-comes before (`right`) or after (`left`) the mate position; `MateDirection` is
-which way the mate sequence extends, `[` rightward and `]` leftward:
+`parseBreakend` handles all four bracket forms from the spec. `Join` is whether
+the replacement base comes before (`right`) or after (`left`) the mate position;
+`MateDirection` is which way the mate sequence extends, `[` rightward and `]`
+leftward:
 
 | ALT form | Join  | MateDirection |
 | -------- | ----- | ------------- |
@@ -196,10 +200,11 @@ parseBreakend('ACGT<DUP>')
 
 ## Local alleles
 
-VCF 4.5's local-allele encoding, decoded. `SAMPLES()` applies it already — reach
-for these only for sample data assembled some other way, or for a whole-file
-pass where `SAMPLES()` costs too much. [docs/local-alleles.md](local-alleles.md)
-has the reasoning, the costs and the spec corners.
+The exports below decode VCF 4.5's local-allele encoding. `SAMPLES()` already
+decodes it, so use them only for sample data assembled some other way, or for a
+whole-file pass where `SAMPLES()` costs too much.
+[docs/local-alleles.md](local-alleles.md) has the reasoning, the costs and the
+spec's edge cases.
 
 | export                                                      | what it does                                                                                                |
 | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
@@ -211,15 +216,15 @@ has the reasoning, the costs and the spec corners.
 | `readLocalAlleles(str, start, end, out)`                    | Fill `out` from a `processFormatFields` range, returning the count — allocates nothing per sample           |
 | `LocalAlleleGenotypeMaps`                                   | `.get(alleles, count, ploidy)` memoizes the local-to-global genotype permutation across samples             |
 
-`alleles` throughout is the local allele list, REF first, in the order `LAA`
-lists — which need not ascend, and which decides the order local genotypes are
-enumerated in.
+Wherever a function above takes `alleles`, it is the local allele list, REF
+first, in the order `LAA` lists them. That order need not ascend, and local
+genotypes are enumerated in it.
 
 `localToGlobalG` takes ploidy from the value count where that is unambiguous,
 falling back to `ploidyHint` (default 2) for a REF-only sample, which has one
 genotype at every ploidy. Its output is `C(alleleCount + ploidy - 1, ploidy)`
-long, so a high-ploidy site with many ALTs expands to an array JS cannot
-allocate — the cost the local-allele encoding avoids.
+long, so at a high-ploidy site with many ALTs the output is an array too large
+for JS to allocate. The local-allele encoding avoids that cost.
 
 ## Exports
 
