@@ -1,3 +1,35 @@
+## [7.4.0](https://github.com/GMOD/vcf-js/compare/v7.3.0...v7.4.0) (2026-10-14)
+
+### Other Changes
+
+- Rewrite AI-writing tropes in README and docs ([f958561](https://github.com/GMOD/vcf-js/commit/f9585611a63ac08290524ab35b122ec71ae21b3a))
+- Restore claims changed by the tropes rewrite ([0d7f3a1](https://github.com/GMOD/vcf-js/commit/0d7f3a19781b55c8af493d511f986d22c44956df))
+- Fold short verdict sentences into their neighbours ([765371d](https://github.com/GMOD/vcf-js/commit/765371ddbd4a04cf252685792f611ddd7a4a9988))
+- Restore wording the tropes rewrite changed without a trope ([3a93077](https://github.com/GMOD/vcf-js/commit/3a9307752557069b8578b89ad1eab17f74212024))
+- State the section's finding in vague headings ([fc9c317](https://github.com/GMOD/vcf-js/commit/fc9c3170983c172376cd4e9dc75e8a9fbe93027d))
+- Trim README wordiness, defer detail to docs/ ([8b9171a](https://github.com/GMOD/vcf-js/commit/8b9171ab5c50a582eaffbfbff6ea34e406e20dfd))
+- Restore words dropped from the breakends sentence ([caeae6a](https://github.com/GMOD/vcf-js/commit/caeae6a8ba4371ea3570448290e8126c1e050012))
+- Trim docs: point optimizations.md at api.md instead of restating it ([8d47923](https://github.com/GMOD/vcf-js/commit/8d479233e7087d93e1f1da87f5a8731dbc58fc45))
+- Restore the api.md sentence naming the column fields ([3c739ba](https://github.com/GMOD/vcf-js/commit/3c739bab8493ebc3a48fc862139e20ccbe792815))
+- Fix the reserved INFO types for CIGAR and MQ ([3e5b012](https://github.com/GMOD/vcf-js/commit/3e5b012b911848fb3cc0709f0c6282e13041bcf6))
+- Skip empty INFO pairs instead of reporting an empty key ([5e2bf7e](https://github.com/GMOD/vcf-js/commit/5e2bf7e11da41d0f21999e6419c3d9f68e2093c2))
+- Honour quoted escapes and quoted brackets in header meta values ([cb2243f](https://github.com/GMOD/vcf-js/commit/cb2243f0d0de34f808f48db06c46b7bd87240776))
+- Drop malformed LAA entries whole in both readers ([86c26b1](https://github.com/GMOD/vcf-js/commit/86c26b14b97e9665ca131b026e35ea24f2012ce4))
+- Share the FORMAT column lookup between the two genotype scanners ([e693f11](https://github.com/GMOD/vcf-js/commit/e693f1189ed9b51010b3b5c9ed0c6e138b154009))
+- Fold the duplicated local-allele property descriptor into a helper ([27d6026](https://github.com/GMOD/vcf-js/commit/27d6026304f2c0ebb35184dacceccd013a86d396))
+- Deep-copy the reserved header fields per parser ([7e92d36](https://github.com/GMOD/vcf-js/commit/7e92d36a2f8db44148f137847263dd87002631a4))
+- Drop spec comments that sat above the wrong reserved field ([82f7fe8](https://github.com/GMOD/vcf-js/commit/82f7fe8e313236a8db7327df6633526a543ccd7f))
+- Treat only \" and \\ as escapes in quoted header values ([fa3d8f2](https://github.com/GMOD/vcf-js/commit/fa3d8f240ed41e795eeb9cb37df12d3a58715750))
+- Update two comments the scanner refactor left stale ([e92f287](https://github.com/GMOD/vcf-js/commit/e92f2877ec79e92c1a67148de494a674c3e65375))
+- Make reserved INFO MQ a Float and write Number=. as '.' ([347549f](https://github.com/GMOD/vcf-js/commit/347549fafd3db0b58649c10adaa447bc08f38b77))
+- Build the reserved header fields with a factory, not structuredClone ([21ec8f3](https://github.com/GMOD/vcf-js/commit/21ec8f3c97b7370087154482ae2cbc8128370d11))
+- Read an empty list item as missing rather than zero ([2fd8832](https://github.com/GMOD/vcf-js/commit/2fd883212378b15409f960bb93af80d954041f6c))
+- Keep a malformed LAA entry's slot instead of dropping it ([c8bd7e3](https://github.com/GMOD/vcf-js/commit/c8bd7e39299fdd63ed5e1d0b964872c40180551b))
+- Fall back to literal backslashes when escapes leave a quote open ([06cb7da](https://github.com/GMOD/vcf-js/commit/06cb7da5fe4d3a70463ecf345debc081121e336a))
+- Keep cross-module calls and per-call allocations out of the scanners ([bc00167](https://github.com/GMOD/vcf-js/commit/bc00167f0a28e550266bfc6876eb8486bee65a1d))
+- Track readLocalAlleles' entry state in one variable ([ccfd81c](https://github.com/GMOD/vcf-js/commit/ccfd81c756ec944999c00aa8aaa3017212d2dc32))
+- Benchmark every per-line and per-sample path between two refs ([6d4adc7](https://github.com/GMOD/vcf-js/commit/6d4adc7618e018595792a16bd50f3b72a83dc42e))
+
 ## [7.3.0](https://github.com/GMOD/vcf-js/compare/v7.2.0...v7.3.0) (2026-10-11)
 
 ### Chores
