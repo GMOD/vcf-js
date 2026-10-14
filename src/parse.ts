@@ -38,7 +38,7 @@ export default class VCFParser {
     }
 
     this.strict = strict
-    const reserved = structuredClone(vcfReserved)
+    const reserved = vcfReserved()
     this.metadata = {
       INFO: reserved.InfoFields,
       FORMAT: reserved.GenotypeFields,
