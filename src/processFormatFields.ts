@@ -35,13 +35,6 @@ export function formatColumnIndex(format: string, key: string) {
   return -1
 }
 
-// `indexOf` searches to the end of the whole string, so a caller passing the
-// line with offsets needs the hit clamped back to `to`
-export function nextTab(str: string, from: number, to: number) {
-  const tab = str.indexOf('\t', from)
-  return tab === -1 || tab > to ? to : tab
-}
-
 /**
  * Report several named FORMAT fields per sample as ranges into the line,
  * allocating nothing. The generalization of `processGenotypes` past GT: reading
@@ -75,8 +68,15 @@ export function processFormatFields(
   if (numKeys === 0) {
     return
   }
-  const cols = Int32Array.from(keys, key => formatColumnIndex(format, key))
-  const maxCol = Math.max(...cols)
+  const cols = new Int32Array(numKeys)
+  let maxCol = -1
+  for (let k = 0; k < numKeys; k++) {
+    const col = formatColumnIndex(format, keys[k]!)
+    cols[k] = col
+    if (col > maxCol) {
+      maxCol = col
+    }
+  }
   // FORMAT declares none of the requested keys, so there is nothing any sample
   // could report — matches processGenotypes' behaviour for a GT-less record.
   if (maxCol === -1) {
@@ -116,7 +116,10 @@ export function processFormatFields(
         // hop and the loop below runs as before.
         if (col > maxCol) {
           closed = true
-          pos = nextTab(prerest, pos, prerestLen)
+          // clamped back to `to`, since `indexOf` searches past it when the
+          // caller passed the whole line with offsets
+          const tab = prerest.indexOf('\t', pos)
+          pos = tab === -1 || tab > prerestLen ? prerestLen : tab
           break
         }
       }

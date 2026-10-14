@@ -1,4 +1,4 @@
-import { formatColumnIndex, nextTab } from './processFormatFields.ts'
+import { formatColumnIndex } from './processFormatFields.ts'
 
 /**
  * Callback type for processGenotypes - receives the raw string and
@@ -82,7 +82,10 @@ export function processGenotypes(
       if (c === COLON) {
         if (col === gtCol) {
           gtEnd = pos
-          pos = nextTab(prerest, pos, to)
+          // clamped back to `to`, since `indexOf` searches past it when the
+          // caller passed the whole line with offsets
+          const tab = prerest.indexOf('\t', pos)
+          pos = tab === -1 || tab > to ? to : tab
           break
         }
         col++
