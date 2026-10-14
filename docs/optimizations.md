@@ -9,10 +9,6 @@ tens of kilobytes of genotypes. The parser therefore tries to touch as little of
 the sample data as it can, and to walk what you do ask for without allocating
 memory per sample.
 
-On a file with many samples, read sample data with `processGenotypes` or
-`processFormatFields`. Use `SAMPLES()` only when you really want every field,
-and then call it once and keep what it returns.
-
 ## About the numbers in this document
 
 Two kinds of measurement appear below, and they are not comparable.
@@ -23,12 +19,10 @@ implementation of that same scan. Run them with `pnpm benchonly`. Figures in
 milliseconds and megabytes measure a whole operation end to end, so they include
 work this parser does not do.
 
-Take the ratios as evidence that one approach beats another, not as a promise of
-what your own machine will do. Whole runs drift by around 40% when the machine
-is busy, and the first benchmark declared in a group runs slow enough to show a
-10-30% gap between two functions running identical code; the benchmark file
-explains why in more detail. Compare within a run rather than across runs, and
-swap the declaration order before you believe a small difference.
+Whole runs drift by around 40% when the machine is busy, and the first benchmark
+declared in a group runs 10-30% slow even against identical code (the benchmark
+file explains why). Compare within a run, and swap the declaration order before
+you believe a small difference.
 
 ## Parsing a line
 
@@ -72,10 +66,8 @@ methods. The table lists what each one allocates per sample.
 | `GENOTYPES()`           | one string                              |
 | `SAMPLES()`             | one object plus an array per FORMAT key |
 
-`processGenotypes` and `processFormatFields` pass you the line itself and report
-each value as a `start` and `end` range into it. If you only need to classify a
-genotype, such as counting its alleles or picking a color, you never have to
-build the substring.
+The `process*` pair reports each value as a range into the line, so a caller
+that only classifies a genotype never builds the substring.
 
 ### The scans walk the flat line instead of a `rest` slice
 
@@ -124,27 +116,9 @@ characters. That way it does not mistake GATK's `PGT` for `GT`, or its `PID` for
 
 As `processFormatFields` walks a sample, at each colon it closes the range of
 any requested key whose value ends there. A call for five fields therefore makes
-the same single walk as a call for one.
-
-The bounds for all of your keys come back in one `Int32Array`, laid out as pairs
-in the order you asked for them. Key `k` occupies `ranges[2 * k]` and
-`ranges[2 * k + 1]`, and both entries are `-1` when that sample has no value for
-it.
-
-```typescript
-variant.processFormatFields(['GT', 'PS'], (str, ranges, sampleIdx) => {
-  const gt = str.slice(ranges[0], ranges[1])
-  const ps = ranges[2] === -1 ? undefined : str.slice(ranges[2], ranges[3])
-  // ...
-})
-```
-
-The parser reuses that same array for every sample, so treat it as scratch
-space. Read what you need inside the callback. If you hold onto the array, the
-next sample overwrites it.
-
-If FORMAT declares none of the keys you asked for, the callback never fires,
-which matches how `processGenotypes` behaves on a record with no GT.
+the same single walk as a call for one, and the bounds for all of them come back
+in one reused `Int32Array`; see
+[api.md](api.md#variantprocessformatfieldskeys-callback) for its layout.
 
 ### `SAMPLES()` is the fallback, and it costs like one
 
@@ -157,17 +131,10 @@ line every time you call it, so call it once and hold onto the result.
 `SAMPLES()` skips `split()` on fields with a single value, which is the common
 case, and `split()` is most of what remains of the method's cost.
 
-### A sample that stops short still gets a callback
-
-When a sample's colon-separated fields run out before the column you asked for,
-the callback still fires for that sample, with an empty range or with `-1`
-bounds. `sampleIdx` always follows the sample order from the header, so use it
-rather than counting the callbacks yourself.
-
 ## What the consumer has to do
 
-The parser can only make sample data cheap to reach. What you do with it after
-that is up to the code above this library.
+The parser can only make sample data cheap to reach; the rest is up to the
+caller.
 
 ### Applies to any consumer
 
@@ -181,7 +148,9 @@ that is up to the code above this library.
 - Do all your work in one callback. If you walk the samples once to classify
   them and again to draw them, that is two traversals for an intermediate result
   the final output never needs.
-- Key off `sampleIdx` rather than a counter of your own, as above.
+- Key off `sampleIdx` rather than a counter of your own. A sample whose fields
+  run out before the requested column still gets a callback, with an empty range
+  or `-1` bounds.
 - Do not hold onto `Variant`s from a file with many samples, though streaming
   them is fine. Each `Variant` keeps its whole input line, which lets the scans
   stay lazy, so an array holding a region's worth of them keeps every one of

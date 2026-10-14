@@ -60,9 +60,6 @@ when the header doesn't define them.
 }
 ```
 
-`CHROM`, `POS`, `ID`, `REF`, `ALT`, `QUAL`, `FILTER`, `INFO` and `FORMAT` hold
-the first nine columns, parsed as the example shows.
-
 The parser types the INFO and FORMAT values from the header metadata. Values
 come back as arrays unless `Type=Flag`, where they are `true`. A `.` inside a
 value becomes `undefined`, and the parser percent-decodes `%XX` escapes.

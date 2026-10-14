@@ -33,11 +33,10 @@ sample.LAD // the local field is kept alongside
 `decodeLocalAlleles` does the same to sample data assembled some other way.
 
 Where a sample has both a field and its local equivalent, `SAMPLES()` reports
-the global one. The spec has the pair encode identical information anyway, and
-offers MISSING as the way to say which to ignore. This implementation therefore
-checks the value, not whether FORMAT declares the column, so a sample whose `AD`
-is `.` still defers to its `LAD`, and the sample beside it with a real `AD` does
-not.
+the global one. The spec has the pair encode identical information, and offers
+MISSING as the way to say which to ignore, so `SAMPLES()` checks the value. A
+sample whose `AD` is `.` defers to its `LAD`, and the sample beside it with a
+real `AD` does not.
 
 ## Expanded fields decode on first read, not in `SAMPLES()`
 
