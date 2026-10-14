@@ -92,8 +92,8 @@ value on first read, and the local keys stay alongside them. See
 
 ### `variant.GENOTYPES(): Record<string, string>`
 
-Returns the GT strings, keyed by sample name, as a null-prototype object, so use
-`Object.keys` / `in`, not `hasOwnProperty`.
+Returns only the GT strings, keyed by sample name, as a null-prototype object,
+so use `Object.keys` / `in`, not `hasOwnProperty`.
 
 ### `variant.processGenotypes(callback)`
 

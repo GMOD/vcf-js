@@ -99,9 +99,9 @@ sample.PL // from the record's PL, or expanded from its LPL
 ```
 
 `GT` keeps global allele indices either way, so genotype readers are unaffected,
-and a record with no local fields is untouched. `SAMPLES()` expands each field
-on first read, because `Number=G` fields are quadratic in the ALT count, which
-is the cost the local-allele encoding avoids. A whole-file pass should skip the
+and a record with no local fields is untouched. Each field expands on its first
+read, because `Number=G` fields are quadratic in the ALT count, which is the
+cost the local-allele encoding avoids. A whole-file pass should skip the
 expansion entirely and use the allocation-free `readLocalAlleles`. See
 [docs/local-alleles.md](docs/local-alleles.md) for that path, the memoized
 genotype mapping, and the spec's edge cases.

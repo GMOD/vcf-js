@@ -106,7 +106,7 @@ The short scans use `charCodeAt` loops on purpose. Reading the genotype itself
 has nothing to skip, and neither does the `format === 'GT'` fast path. There the
 call to `indexOf` costs more than it saves, and it measured **0.86x**. tabix-js
 reached the same conclusion for its `Uint8Array` scans in
-[ADR 0003](https://github.com/GMOD/tabix-js/blob/main/agent-docs/adr/0003-keep-indexof-based-byte-scans.md).
+[ADR 0003](https://github.com/GMOD/tabix-js/blob/main/agent-docs/architecture-decision-records/0003-keep-indexof-based-byte-scans.md).
 
 `indexOf` searches all the way to the end of the string, so the scan clamps
 every hit back to `restEnd`. The clamp is the cost of passing the scans the
