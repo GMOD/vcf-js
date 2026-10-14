@@ -38,11 +38,12 @@ export default class VCFParser {
     }
 
     this.strict = strict
+    const reserved = structuredClone(vcfReserved)
     this.metadata = {
-      INFO: { ...vcfReserved.InfoFields },
-      FORMAT: { ...vcfReserved.GenotypeFields },
-      ALT: { ...vcfReserved.AltTypes },
-      FILTER: { ...vcfReserved.FilterTypes },
+      INFO: reserved.InfoFields,
+      FORMAT: reserved.GenotypeFields,
+      ALT: reserved.AltTypes,
+      FILTER: reserved.FilterTypes,
     }
 
     let lastLine: string | undefined

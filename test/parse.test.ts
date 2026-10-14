@@ -198,6 +198,17 @@ test('reserved INFO fields parse with their spec types when the header omits the
   ).toEqual({ CIGAR: ['1M1I', '1X'], MQ: [60] })
 })
 
+test('editing one parser metadata leaves other parsers alone', () => {
+  const header = '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO'
+  const first = new VCF({ header })
+  const dp = first.getMetadata('INFO', 'DP') as Record<string, unknown>
+  dp.Type = 'String'
+  const second = new VCF({ header })
+  expect(second.parseLine('1\t1\t.\tA\tT\t.\t.\tDP=5').INFO).toEqual({
+    DP: [5],
+  })
+})
+
 test('empty header lines', () => {
   expect(() => new VCF({ header: '\n' })).toThrow(/no non-empty/)
 })
