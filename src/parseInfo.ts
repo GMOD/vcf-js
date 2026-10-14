@@ -26,6 +26,9 @@ export function parseInfo(
 
   for (let i = 0; i < pairsLen; i++) {
     const pair = infoPairs[i] ?? ''
+    if (pair === '') {
+      continue
+    }
     const eqIdx = pair.indexOf('=')
     const key = eqIdx === -1 ? pair : pair.slice(0, eqIdx)
     const val = eqIdx === -1 ? undefined : pair.slice(eqIdx + 1)

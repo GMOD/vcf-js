@@ -19,6 +19,11 @@ test('keys without a value become true', () => {
   expect(parseInfo('SOMEFLAG=', meta)).toEqual({ SOMEFLAG: true })
 })
 
+test('empty pairs from a stray semicolon are skipped', () => {
+  expect(parseInfo('DP=10;', meta)).toEqual({ DP: [10] })
+  expect(parseInfo('DP=10;;DB', meta)).toEqual({ DP: [10], DB: true })
+})
+
 test('Integer and Float values are coerced to numbers', () => {
   expect(parseInfo('DP=10;AF=0.5', meta)).toEqual({
     DP: [10],
