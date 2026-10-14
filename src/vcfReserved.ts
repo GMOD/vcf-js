@@ -117,23 +117,16 @@ export default {
       Type: 'Flag',
       Description: 'Indicates a novel structural variation',
     },
-    // For precise variants, END is POS + length of REF allele - 1,
-    // and the for imprecise variants the corresponding best estimate.
     SVTYPE: {
       Number: 1,
       Type: 'String',
       Description: 'Type of structural variant',
     },
-    // Value should be one of DEL, INS, DUP, INV, CNV, BND. This key can
-    // be derived from the REF/ALT fields but is useful for filtering.
     SVLEN: {
       Number: null,
       Type: 'Integer',
       Description: 'Difference in length between REF and ALT alleles',
     },
-    // One value for each ALT allele. Longer ALT alleles (e.g. insertions)
-    // have positive values, shorter ALT alleles (e.g. deletions)
-    // have negative values.
     CIPOS: {
       Number: 2,
       Type: 'Integer',
@@ -161,10 +154,6 @@ export default {
       Type: 'String',
       Description: 'ID of the assembled alternate allele in the assembly file',
     },
-    // For precise variants, the consensus sequence the alternate allele assembly
-    // is derivable from the REF and ALT fields. However, the alternate allele
-    // assembly file may contain additional information about the characteristics
-    // of the alt allele contigs.
     MEINFO: {
       Number: 4,
       Type: 'String',
