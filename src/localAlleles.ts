@@ -1,6 +1,7 @@
 import type { SampleData, SampleValue } from './Variant.ts'
 
 const COMMA = 44
+const DOT = 46
 const SLASH = 47
 const ZERO = 48
 const PIPE = 124
@@ -60,8 +61,13 @@ export function ploidyForLocalGenotypes(
  * Read a sample's LAA field into `out` as the full local allele list
  * `[0, ...LAA]` — REF is always local allele 0 — returning its length. LAA
  * entries are 1-based indices into ALT, which are already global allele
- * indices, so no shift is needed. A MISSING LAA yields `[0]`, the REF-only
- * site the spec calls for.
+ * indices, so no shift is needed. A MISSING or empty LAA yields `[0]`, the
+ * REF-only site the spec calls for.
+ *
+ * An entry that isn't a 1-based index (`0`, `.`, `1.5`, `-1`) reads as -1,
+ * which keeps the later entries lined up with their local values; the
+ * `localToGlobal*` functions skip it, and a caller reading values by hand
+ * should too.
  *
  * Takes a range rather than a string so the per-sample loop under
  * `processFormatFields` allocates nothing; `out` is scratch, sized once at
@@ -82,8 +88,8 @@ export function readLocalAlleles(
     for (let i = start; i <= end; i++) {
       const c = i === end ? COMMA : str.charCodeAt(i)
       if (c === COMMA) {
-        if (valid && digits > 0 && count < out.length) {
-          out[count] = value
+        if (count < out.length) {
+          out[count] = valid && digits > 0 && value > 0 ? value : -1
           count++
         }
         value = 0
@@ -93,13 +99,13 @@ export function readLocalAlleles(
         value = value * 10 + (c - ZERO)
         digits++
       } else {
-        // '.' is the MISSING entry, anything else is malformed; either way the
-        // whole entry is dropped, as localAlleles() drops it
         valid = false
       }
     }
   }
-  return count
+  const missing =
+    count === 2 && end - start === 1 && str.charCodeAt(start) === DOT
+  return missing ? 1 : count
 }
 
 /**
@@ -113,6 +119,8 @@ export function readLocalAlleles(
  * is a multiset and `genotypeIndex` wants it ascending. bcftools instead
  * indexes the mapped tuple as-is, so the two disagree on the cross terms of an
  * unsorted LAA — see docs/local-alleles.md.
+ *
+ * A local genotype involving a -1 placeholder allele maps to -1.
  */
 export function localGenotypeMap(
   alleles: ArrayLike<number>,
@@ -129,7 +137,7 @@ export function localGenotypeMap(
         globals[i] = alleles[tuple[i]!]!
       }
       globals.sort()
-      map[next] = genotypeIndex(globals)
+      map[next] = globals[0]! < 0 ? -1 : genotypeIndex(globals)
       next++
     } else {
       for (let a = 0; a <= max; a++) {
@@ -179,15 +187,20 @@ export class LocalAlleleGenotypeMaps {
   }
 }
 
-/** The local allele list `[0, ...LAA]` from an already-parsed LAA value. */
+/**
+ * The local allele list `[0, ...LAA]` from an already-parsed LAA value, with
+ * the same -1 placeholders as `readLocalAlleles`.
+ */
 export function localAlleles(laa: SampleValue) {
   const alleles = [0]
-  if (laa) {
+  if (laa && !(laa.length === 1 && laa[0] === undefined)) {
     for (const entry of laa) {
       const value = typeof entry === 'string' ? Number(entry) : entry
-      if (value !== undefined && Number.isInteger(value) && value >= 0) {
-        alleles.push(value)
-      }
+      alleles.push(
+        value !== undefined && Number.isInteger(value) && value > 0
+          ? value
+          : -1,
+      )
     }
   }
   return alleles
@@ -206,7 +219,7 @@ export function localToGlobalR(
     const len = Math.min(values.length, alleles.length)
     for (let i = 0; i < len; i++) {
       const global = alleles[i]!
-      if (global < alleleCount) {
+      if (global >= 0 && global < alleleCount) {
         out[global] = values[i]
       }
     }
@@ -261,7 +274,7 @@ export function localToGlobalG(
     const len = Math.min(values.length, map.length)
     for (let i = 0; i < len; i++) {
       const global = map[i]!
-      if (global < out.length) {
+      if (global >= 0 && global < out.length) {
         out[global] = values[i]
       }
     }

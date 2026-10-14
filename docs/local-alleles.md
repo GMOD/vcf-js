@@ -80,7 +80,8 @@ const alleles = new Int32Array(altCount + 1)
 variant.processFormatFields(['LAA', 'LAD'], (str, ranges, sampleIdx) => {
   const count = readLocalAlleles(str, ranges[0]!, ranges[1]!, alleles)
   // alleles[0..count) are this sample's global allele indices, REF first;
-  // the k'th LAD value belongs to allele alleles[k]
+  // the k'th LAD value belongs to allele alleles[k], or to nothing where a
+  // malformed LAA entry left -1
 })
 ```
 
@@ -94,7 +95,7 @@ contain, a lookup builds no key at all.
 const maps = new LocalAlleleGenotypeMaps()
 const count = readLocalAlleles(str, ranges[0]!, ranges[1]!, alleles)
 const map = maps.get(alleles, count, 2)
-// map[i] is the global PL index of the i'th LPL value
+// map[i] is the global PL index of the i'th LPL value, or -1 to skip it
 ```
 
 ## Edge cases

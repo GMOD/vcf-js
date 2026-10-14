@@ -88,13 +88,27 @@ test('localAlleles prepends REF to a parsed LAA value', () => {
   expect(localAlleles(['2', '4'])).toEqual([0, 2, 4])
 })
 
-test('both LAA readers drop malformed entries whole', () => {
+test('both LAA readers hold a malformed entry slot with -1', () => {
   const out = new Int32Array(8)
-  for (const laa of ['1.5,2', '-1,2', '2,x3']) {
+  for (const laa of ['1.5,2', '-1,2', '0,2', '.,2', 'x3,2']) {
     const n = readLocalAlleles(laa, 0, laa.length, out)
-    expect([...out.slice(0, n)]).toEqual([0, 2])
-    expect(localAlleles(laa.split(','))).toEqual([0, 2])
+    expect([...out.slice(0, n)]).toEqual([0, -1, 2])
+    expect(localAlleles(laa.split(','))).toEqual([0, -1, 2])
   }
+})
+
+test('a malformed LAA entry drops its own values and no others', () => {
+  const alleles = localAlleles(['x', 2])
+  expect(localToGlobalR([10, 20, 30], alleles, 3)).toEqual([10, undefined, 30])
+  // local genotypes 0/0, 0/1, 1/1, 0/2, 1/2, 2/2; those using local 1 drop
+  expect(localToGlobalG([0, 1, 2, 3, 4, 5], alleles, 3)).toEqual([
+    0,
+    undefined,
+    undefined,
+    3,
+    undefined,
+    5,
+  ])
 })
 
 test('the spec worked example round-trips', () => {
