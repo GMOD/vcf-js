@@ -1,5 +1,6 @@
-// Split on commas that are not inside quotes or square brackets
-function customSplit(str: string) {
+// Split on commas outside double quotes and square brackets. Inside quotes a
+// backslash escapes the next character, as the VCF spec allows for \" and \\.
+function splitTopLevel(str: string) {
   const result = []
   let inQuotes = false
   let inBrackets = false
@@ -8,13 +9,19 @@ function customSplit(str: string) {
 
   for (let i = 0; i < strLen; i++) {
     const char = str[i]
-    if (char === '"') {
-      inQuotes = !inQuotes
+    if (inQuotes) {
+      if (char === '\\') {
+        i++
+      } else if (char === '"') {
+        inQuotes = false
+      }
+    } else if (char === '"') {
+      inQuotes = true
     } else if (char === '[') {
       inBrackets = true
     } else if (char === ']') {
       inBrackets = false
-    } else if (char === ',' && !inQuotes && !inBrackets) {
+    } else if (char === ',' && !inBrackets) {
       result.push(str.slice(start, i).trim())
       start = i + 1
     }
@@ -25,13 +32,6 @@ function customSplit(str: string) {
   }
 
   return result
-}
-
-function splitFirst(str: string, split: string) {
-  const index = str.indexOf(split)
-  return index === -1
-    ? ([str, ''] as const)
-    : ([str.slice(0, index), str.slice(index + 1)] as const)
 }
 
 export function parseStructuredMetaVal(metaVal: string) {
@@ -50,17 +50,18 @@ export function parseStructuredMetaVal(metaVal: string) {
 
 export function parseMetaString(metaString: string) {
   const inside = metaString.slice(1, -1)
-  const parts = customSplit(inside)
   const result: Record<string, string | string[]> = {}
-  for (const f of parts) {
-    const [key, val] = splitFirst(f, '=')
-    if (val && val.startsWith('[') && val.endsWith(']')) {
+  for (const f of splitTopLevel(inside)) {
+    const eq = f.indexOf('=')
+    const key = eq === -1 ? f : f.slice(0, eq)
+    const val = eq === -1 ? '' : f.slice(eq + 1)
+    if (val.startsWith('[') && val.endsWith(']')) {
       result[key] = val
         .slice(1, -1)
         .split(',')
         .map(s => s.trim())
-    } else if (val && val.startsWith('"') && val.endsWith('"')) {
-      result[key] = val.slice(1, -1)
+    } else if (val.length > 1 && val.startsWith('"') && val.endsWith('"')) {
+      result[key] = val.slice(1, -1).replaceAll(/\\(.)/g, '$1')
     } else {
       result[key] = val
     }

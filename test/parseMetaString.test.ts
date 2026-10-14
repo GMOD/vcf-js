@@ -67,3 +67,21 @@ test('parseStructuredMetaVal returns undefined id when ID missing', () => {
   expect(id).toBeUndefined()
   expect(rest).toEqual({ Description: 'ClinVar Variation ID' })
 })
+
+test('escaped quotes and backslashes in a quoted value', () => {
+  expect(
+    parseMetaString(
+      String.raw`<ID=X,Description="say \"hi, there\" C:\\tmp",Type=String>`,
+    ),
+  ).toEqual({
+    ID: 'X',
+    Description: String.raw`say "hi, there" C:\tmp`,
+    Type: 'String',
+  })
+})
+
+test('a bracket inside quotes does not swallow later fields', () => {
+  expect(
+    parseMetaString('<ID=X,Description="range [0",Type=Float,Number=1>'),
+  ).toEqual({ ID: 'X', Description: 'range [0', Type: 'Float', Number: '1' })
+})
