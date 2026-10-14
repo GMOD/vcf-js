@@ -305,6 +305,15 @@ function ploidyFromGenotype(gt: SampleValue) {
   return ploidy
 }
 
+function replaceWithValue(sample: SampleData, key: string, value: SampleValue) {
+  Object.defineProperty(sample, key, {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    value,
+  })
+}
+
 export interface LocalAlleleField {
   local: string
   global: string
@@ -341,21 +350,11 @@ export function localAlleleFields(formatKeys: string[], altCount: number) {
           enumerable: true,
           get(this: SampleData) {
             const value = compute(this, this[local], localAlleles(this.LAA))
-            Object.defineProperty(this, global, {
-              configurable: true,
-              enumerable: true,
-              writable: true,
-              value,
-            })
+            replaceWithValue(this, global, value)
             return value
           },
           set(this: SampleData, value: SampleValue) {
-            Object.defineProperty(this, global, {
-              configurable: true,
-              enumerable: true,
-              writable: true,
-              value,
-            })
+            replaceWithValue(this, global, value)
           },
         },
       })

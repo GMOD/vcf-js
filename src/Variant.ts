@@ -129,10 +129,7 @@ export class Variant {
       // the record: a file without them pays one scan of the FORMAT keys, and
       // the expansions themselves are built only if something reads them.
       const localFields = hasLocalAlleleFields(formatKeys)
-        ? localAlleleFields(
-            formatKeys,
-            this.ALT === undefined ? 0 : this.ALT.length,
-          )
+        ? localAlleleFields(formatKeys, this.ALT?.length ?? 0)
         : undefined
       const numKeys = formatKeys.length
       const samplesLen = this.sampleNames.length
