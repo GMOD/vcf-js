@@ -49,6 +49,6 @@ vcf-js is already configured. To set up a new package:
 npm >=11.10.0 and 2FA).
 
 Once npm publish succeeds, the `release` job creates the GitHub release for the
-tag, with notes that `scripts/release-notes.sh` extracts from that version's
-CHANGELOG.md section. Run the script with a version to preview a release's
-notes.
+tag, taking its notes from that version's CHANGELOG.md section.
+`scripts/release-notes.sh` extracts the section, so run the script with a
+version to preview a release's notes.

@@ -30,10 +30,10 @@ await tbiIndexed.getLines('ctgA', 200, 300, line => {
 
 If the `.vcf.gz` is remote, give `TabixIndexedFile` a filehandle from
 [`@gmod/range-cache-filehandle`](https://github.com/GMOD/range-cache-filehandle),
-so that the filehandle caches the scattered block reads a query makes and merges
-them into a few requests.
+so that the filehandle caches the scattered block reads a query makes and
+coalesces them into a few requests.
 
-Reuse one parser for all lines, since each `VCF` parses its header once. Pass
+Reuse one parser for all lines — each `VCF` parses its header once. Pass
 `strict: false` to accept a line with no INFO column; by default `parseLine`
 throws on one, since the spec requires at least a `.` there.
 

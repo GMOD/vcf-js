@@ -3,9 +3,9 @@
 VCF 4.5 lets a sample give its FORMAT values against a subset of the site's
 alleles instead of all of them. At a site with 60 ALTs a sample that only saw
 two of them writes three `LAD` values rather than 61, and six `LPL` values
-rather than 1891. `Number=G` is quadratic in the allele count, so once a callset
-grows to many samples, the saving makes the difference between a readable file
-and an unreadable one.
+rather than 1891. `Number=G` is quadratic in the allele count, so the saving is
+the difference between a readable file and an unreadable one once a callset
+grows to many samples.
 
 `FORMAT/LAA` names the subset, as 1-based indices into ALT. Those are already
 global allele indices, since global allele 0 is REF and 1..n are the ALTs, so
@@ -16,7 +16,7 @@ The local-allele keys are `LAD`, `LADF`, `LADR` (`Number=LR`), `LEC`
 ## Reading a record
 
 `GT` keeps global allele indices whether or not the record uses local alleles,
-so code that reads only genotypes needs no changes.
+so anything that reads only genotypes needs no changes at all.
 
 `SAMPLES()` reports every other local field under both keys. The spec requires
 that "local allele encoding can be abstracted away from the API consumer and
@@ -39,18 +39,18 @@ checks the value, not whether FORMAT declares the column, so a sample whose `AD`
 is `.` still defers to its `LAD`, and the sample beside it with a real `AD` does
 not.
 
-## Lazy decoding
+## What decodes when
 
-Each expanded field is a lazy accessor that decodes the value on first read and
-then replaces itself with it, so a panel showing depths never builds the
+Each expanded field is a lazy accessor that reconstructs on first read and then
+replaces itself with the value, so a panel showing depths never builds the
 likelihoods beside them. Code that enumerates a sample (spreading it,
-`Object.keys`, `JSON.stringify`) reads every key and so decodes every field,
+`Object.keys`, `JSON.stringify`) reads every key and materializes everything,
 which is what a view listing the whole sample needs.
 
-Local alleles add two costs, and only records that use them pay either.
+Local alleles add two costs, both incurred only by records that use them.
 `SAMPLES()` decides once per record, from its FORMAT keys, whether to attach the
-accessors at all, so a file without local fields is untouched. At 5000 samples,
-`SAMPLES()` on a `GT:AD:DP:GQ:PL` record measured unchanged. On a record that
+accessors at all, so a file without local fields is untouched — measured at 5000
+samples, `SAMPLES()` on a `GT:AD:DP:GQ:PL` record is unchanged. On a record that
 does use local alleles, attaching the accessors makes `SAMPLES()` about 1.5x
 slower (7.9ms to 12.1ms at 5000 samples). This implementation builds the getters
 once per record and shares them across every sample, so each sample adds
@@ -124,18 +124,17 @@ Sorting the mapped tuple is not a spec question. `Index(k1/.../kP)` is defined
 only for ascending arguments, and a genotype is an unordered multiset of
 alleles, so mapping local `1/2` under `LAA=4,2` to global `{4,2}` and asking for
 its index means asking for the index of `2/4`. The sort follows from the formula
-rather than from any reading of the spec, and where `LAA` already ascends the
-sort changes nothing.
+rather than from any reading of the spec, and where `LAA` already ascends it is
+a no-op.
 
 The spec leaves open one question narrower than either ordering, and it affects
 only `Number=LG`. Having permitted an unsorted `LAA`, the spec never says how a
 local genotype's alleles map into the _global_ genotype ordering. `Number=LR`
 and `Number=LA` have no such gap, since they are indexed by allele identity.
 
-bcftools 1.24 answers that question differently from this implementation, which
-sorts the tuple; bcftools passes the mapped tuple to the formula unsorted. The
-two samples below hold the same information and differ only in the order `LAA`
-names the alleles:
+bcftools 1.24 resolves the question the other way — it feeds the mapped tuple to
+the formula unsorted. Both samples below hold the same information, differing
+only in the order `LAA` names the alleles:
 
 ```
 GT:LAA:LAD:LPL  2/4:4,2:5,6,7:11,22,33,44,55,66
@@ -146,14 +145,14 @@ Through `bcftools +tag2tag -- --LXX-to-XX` the `AD`s agree (`5,.,7,.,6` for
 both, so bcftools does honour an unsorted `LAA` for `Number=LR`), while the
 `PL`s do not. The cross term goes to global index 7 (genotype `1/3`) for the
 unsorted spelling and 12 (`2/4`) for the sorted one. This implementation gives
-12 for both, so two spellings of one genotype decode alike.
+12 for both: two spellings of one genotype decode alike.
 
-This implementation and bcftools therefore diverge only on `Number=LG` fields
-whose `LAA` does not ascend, a case the ecosystem was already unsure about. pd3
-called unsorted `LAA` in DRAGEN's UK Biobank VCFs a writer bug against the
-draft's then-standing ascending requirement (hts-specs#758, eight days before
-that requirement was removed), while requiring sorted `LAA` had been argued
-against as "annoying when merging files" (hts-specs#434).
+The divergence is therefore confined to `Number=LG` fields whose `LAA` does not
+ascend, a case the ecosystem was already unsure about. pd3 called unsorted `LAA`
+in DRAGEN's UK Biobank VCFs a writer bug against the draft's then-standing
+ascending requirement (hts-specs#758, eight days before that requirement was
+removed), while requiring sorted `LAA` had been argued against as "annoying when
+merging files" (hts-specs#434).
 
 The spec says `LAA` "must precede all fields other than GT", but
 `bcftools merge -L` writes it last (`GT:LAD:LPL:GQ:LAA`), so this implementation

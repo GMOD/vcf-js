@@ -86,8 +86,8 @@ you want particular fields.
 
 For a record with VCF 4.5 local-allele fields, `SAMPLES()` also reports them
 under their non-local keys, so a sample can hold an `AD` its FORMAT never
-declared, expanded from `LAD`. Those keys are lazy accessors that decode the
-value on first read, and the local keys stay alongside them. See
+declared, expanded from `LAD`. Those keys are lazy accessors that reconstruct on
+first read; the local keys stay alongside them. See
 [docs/local-alleles.md](local-alleles.md).
 
 ### `variant.GENOTYPES(): Record<string, string>`
@@ -139,8 +139,8 @@ variant.processFormatFields(['GT', 'PS'], (str, ranges, sampleIdx) => {
 })
 ```
 
-The method walks each sample once, so its cost is the sample's length however
-many keys you ask for. It reuses one `ranges` array for every sample, so read it
+The method walks each sample once, so it costs the sample's length however many
+keys you ask for. `ranges` is scratch, reused for every sample, so read it
 inside the callback rather than retaining it. If FORMAT declares none of the
 requested keys the callback never fires.
 

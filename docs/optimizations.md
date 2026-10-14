@@ -87,7 +87,8 @@ ran **1.3x** faster on a 3202-sample record.
 
 `rest` is a public getter that builds the slice only when something reads it.
 Use it if you want the sample columns as a string, but on a file with many
-samples, reading it allocates the copy that the flat-line scan avoids.
+samples, reading it allocates the copy that the flat-line optimization above
+avoids.
 
 The offsets in the callbacks point into whichever string the parser passed you,
 so calling `str.slice(start, end)` in your own code still works the same way.
@@ -145,7 +146,7 @@ next sample overwrites it.
 If FORMAT declares none of the keys you asked for, the callback never fires,
 which matches how `processGenotypes` behaves on a record with no GT.
 
-### `SAMPLES()` is the slow fallback
+### `SAMPLES()` is the fallback, and it costs like one
 
 `SAMPLES()` parses every field of every sample into an object, with an array for
 each FORMAT key. Reading two fields that way from a 2504-sample `GT:AD:DP:GQ:PL`
@@ -165,10 +166,10 @@ rather than counting the callbacks yourself.
 
 ## What the consumer has to do
 
-The parser can make sample data cheap to reach, but what happens to the data
-after that depends on the code above this library.
+The parser can only make sample data cheap to reach. What you do with it after
+that is up to the code above this library.
 
-### Rules for any consumer
+### Applies to any consumer
 
 - Build one parser per file, once, from the header, and not one per record. The
   header holds the INFO, FORMAT, ALT and FILTER metadata, plus a sample list
@@ -204,8 +205,8 @@ Two of those rules made a measured difference in
   F×S string allocations, all to rebuild a payload the worker only ever sends as
   integer codes. jbrowse now does the work in a single `processGenotypes`
   callback, which cut the analyze and paint step from **613ms to 168ms** on 2504
-  samples across 400 variants, and the 168ms includes painting that the 613ms
-  did not.
+  samples across 400 variants, and the 168ms covers painting that the 613ms did
+  not.
 
 jbrowse's genotype code uses two more techniques that help a workload like this
 one.
