@@ -28,17 +28,9 @@ await tbiIndexed.getLines('ctgA', 200, 300, line => {
 })
 ```
 
-If the `.vcf.gz` is remote, give `TabixIndexedFile` a filehandle from
-[`@gmod/range-cache-filehandle`](https://github.com/GMOD/range-cache-filehandle),
-so that the filehandle caches the scattered block reads a query makes and
-coalesces them into a few requests.
-
 Reuse one parser for all lines — each `VCF` parses its header once. Pass
 `strict: false` to accept a line with no INFO column; by default `parseLine`
 throws on one, since the spec requires at least a `.` there.
-
-`SAMPLES()` decodes the VCF 4.5 local-allele encoding (`LAA` with `LAD`, `LPL`,
-and friends); see [Local alleles](#local-alleles).
 
 ## Variant
 
@@ -63,8 +55,7 @@ The parser types the INFO and FORMAT values from the header metadata. See
 
 ### Sample methods
 
-The parser leaves sample data untouched until you call one of these, so lines
-from a many-sample file are cheap to parse if you only need the columns above.
+The parser leaves sample data unparsed until you call one of these.
 
 - `variant.SAMPLES()` — all FORMAT fields, keyed by sample name
 - `variant.GENOTYPES()` — GT strings only, keyed by sample name
@@ -88,9 +79,8 @@ variant.processGenotypes((str, start, end, sampleIdx) => {
 ## Local alleles
 
 VCF 4.5 records can give a sample's FORMAT values against a subset of the site's
-alleles (`LAA` plus `LAD`, `LPL`, and friends). `SAMPLES()` reports those under
-their non-local keys as well, matching what the spec requires of libraries —
-read `AD` and you get it whether the record wrote `AD` or `LAD`:
+alleles (`LAA` plus `LAD`, `LPL`, and friends). `SAMPLES()` also reports those
+under their non-local keys, as the spec requires:
 
 ```typescript
 const sample = variant.SAMPLES().NA00001!
@@ -98,23 +88,14 @@ sample.AD // from the record's AD, or expanded from its LAD
 sample.PL // from the record's PL, or expanded from its LPL
 ```
 
-`GT` keeps global allele indices either way, so genotype readers are unaffected,
-and a record with no local fields is untouched. Each field expands on its first
-read, because `Number=G` fields are quadratic in the ALT count, which is the
-cost the local-allele encoding avoids. A whole-file pass should skip the
-expansion entirely and use the allocation-free `readLocalAlleles`. See
-[docs/local-alleles.md](docs/local-alleles.md) for that path, the memoized
-genotype mapping, and the spec's edge cases.
+For a whole-file pass, skip the expansion and use the allocation-free
+`readLocalAlleles`. See [docs/local-alleles.md](docs/local-alleles.md).
 
 ## Performance
 
-On a many-sample file, the `process*` pair allocates nothing per sample and
-`SAMPLES()` allocates an object and an array per FORMAT key, so the choice of
-sample method outweighs every other parsing cost. See
-[docs/optimizations.md](docs/optimizations.md) for the per-method costs, the
-measurements behind them, and what a consumer has to do to keep those savings.
-
-Three rules that are easy to get wrong:
+On a many-sample file, the choice of sample method outweighs every other parsing
+cost; see [docs/optimizations.md](docs/optimizations.md). Three rules that are
+easy to get wrong:
 
 - Both `process*` methods ignore the callback's return value, so they cannot
   stop early and always visit every sample.
@@ -164,17 +145,12 @@ parseBreakend('C[2:321682[')
 // { MateDirection: 'right', Replacement: 'C', MatePosition: '2:321682', Join: 'right' }
 ```
 
-`parseBreakend` handles all four bracket forms from the spec, plus single
-breakends and symbolic alleles.
-[docs/api.md](docs/api.md#parsebreakendalt-breakend--undefined) has the table
-and the edge cases.
+`parseBreakend` handles all four bracket forms, single breakends and symbolic
+[docs/api.md](docs/api.md#parsebreakendalt-breakend--undefined).
 
 ## Docs
 
 - [docs/api.md](docs/api.md) — every constructor arg, method and type
-- [docs/optimizations.md](docs/optimizations.md) — why the parser is lazy about
-  sample data, what that measured, and what a consumer has to do
-- [docs/local-alleles.md](docs/local-alleles.md) — how VCF 4.5 local alleles
-  decode, what they cost, and the questions the spec leaves open
+- [docs/optimizations.md](docs/optimizations.md) — sample-data performance
+- [docs/local-alleles.md](docs/local-alleles.md) — VCF 4.5 local alleles
 - [CONTRIBUTING.md](CONTRIBUTING.md) — development, benchmarking and release
-  steps
