@@ -6,8 +6,6 @@ import tseslint from 'typescript-eslint'
 export default defineConfig(
   {
     ignores: [
-      'esm_*/',
-      'benchmark/',
       'esm/',
       'dist/',
       '*.js',

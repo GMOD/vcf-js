@@ -57,9 +57,9 @@ property slots and no closure.
 
 The second cost is the expansion, which is why the accessors are lazy.
 `Number=G` is quadratic in the allele count, and a diploid 60-ALT site has 1891
-genotypes against 61 for `Number=R`. Measured over
-`benchmark/localAlleles.bench.ts` at 5000 samples, reading only `AD` stays flat
-as the ALT count grows, while also reading `PL` does not:
+genotypes against 61 for `Number=R`. Measured with the vitest benchmark
+`benchmark/localAlleles.bench.ts` (since removed) at 5000 samples, reading only
+`AD` stays flat as the ALT count grows, while also reading `PL` does not:
 
 | 5000 samples                               | 4 ALTs | 20 ALTs | 60 ALTs |
 | ------------------------------------------ | ------ | ------- | ------- |

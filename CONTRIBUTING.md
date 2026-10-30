@@ -18,26 +18,6 @@ when a public member of `VCFParser`, `Variant`, `Breakend`,
 member, or add it to the test's `undocumented` list with the reason it is
 internal.
 
-## Benchmarking
-
-`pnpm benchonly` runs `benchmark/parse.bench.ts` against `src/`.
-
-`benchmark/master-vs-current.bench.ts` compares two refs, and needs them built
-first:
-
-```sh
-pnpm bench                                          # origin/main vs your HEAD
-BRANCH1=origin/main BRANCH2=my-branch pnpm bench     # or name them
-./scripts/build-both-branches.sh origin/main my-branch && pnpm benchonly
-```
-
-The script builds each ref in a throwaway git worktree into `esm_branch1/` and
-`esm_branch2/`, so your checkout stays on its branch. It builds each ref as
-committed, so commit before benchmarking. The script leaves both directories in
-place afterwards; `pnpm benchonly` on its own compares whatever the last run
-left there, and the benchmark labels each side from the `branchname.txt` the
-script writes.
-
 ## Publishing
 
 Releases publish automatically via GitHub Actions using npm trusted publishing

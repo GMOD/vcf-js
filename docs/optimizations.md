@@ -13,16 +13,15 @@ memory per sample.
 
 Two kinds of measurement appear below, and they are not comparable.
 
-Figures written as a ratio, such as **1.3x**, come from
-`benchmark/parse.bench.ts` and time a single scan against an alternative
-implementation of that same scan. Run them with `pnpm benchonly`. Figures in
-milliseconds and megabytes measure a whole operation end to end, so they include
-work this parser does not do.
+Figures written as a ratio, such as **1.3x**, time a single scan against an
+alternative implementation of that same scan. They came from vitest benchmarks
+in `benchmark/`, which the repo removed in October 2026 when vitest 5 dropped
+`bench`. Figures in milliseconds and megabytes measure a whole operation end to
+end, so they include work this parser does not do.
 
-Whole runs drift by around 40% when the machine is busy, and the first benchmark
-declared in a group runs 10-30% slow even against identical code (the benchmark
-file explains why). Compare within a run, and swap the declaration order before
-you believe a small difference.
+In that harness, whole runs drifted by around 40% when the machine was busy, and
+the first benchmark declared in a group ran 10-30% slow even against identical
+code, so read a small ratio with care.
 
 ## Parsing a line
 
