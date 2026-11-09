@@ -153,4 +153,3 @@ alleles; see [docs/api.md](docs/api.md#parsebreakendalt-breakend--undefined).
 - [docs/api.md](docs/api.md) — every constructor arg, method and type
 - [docs/optimizations.md](docs/optimizations.md) — sample-data performance
 - [docs/local-alleles.md](docs/local-alleles.md) — VCF 4.5 local alleles
-- [CONTRIBUTING.md](CONTRIBUTING.md) — development and release
